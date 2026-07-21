@@ -1,0 +1,401 @@
+/* Fonts are loaded via next/font in layout.tsx */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0F141F;
+  --color-surface: #171E2C;
+  --color-surface-alt: #1F2837;
+  --color-border: #2A3446;
+  --color-ink: #EDEFF3;
+  --color-muted: #8996AC;
+  --color-amber: #E8B34D;
+  --color-rec: #E4572E;
+  --font-display: var(--next-font-display), 'Space Grotesk', sans-serif;
+  --font-body: var(--next-font-body), 'Inter', sans-serif;
+  --font-mono: var(--next-font-mono), 'JetBrains Mono', monospace;
+  --theme-font: 'Inter', sans-serif;
+  --modal-backdrop-bg: rgba(0, 0, 0, 0.6);
+  --modal-backdrop-blur: 4px;
+  --scrollbar-width: 10px;
+  --scrollbar-track-bg: #0F141F;
+  --scrollbar-track-radius: 0px;
+  --scrollbar-track-shadow: none;
+  --scrollbar-thumb-bg: #2A3441;
+  --scrollbar-thumb-radius: 5px;
+  --scrollbar-thumb-border: 2px solid #0F141F;
+  --scrollbar-thumb-shadow: none;
+  --scrollbar-thumb-hover: #3c495a;
+}
+
+body {
+  background-color: var(--color-bg);
+}
+
+/* Global Modal Backdrop Intercepts */
+.bg-bg\/80, .bg-black\/80, .bg-black\/60 {
+  background-color: var(--modal-backdrop-bg) !important;
+  backdrop-filter: blur(var(--modal-backdrop-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--modal-backdrop-blur)) !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-bg);
+  border-radius: var(--scrollbar-track-radius);
+  box-shadow: var(--scrollbar-track-shadow);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-bg);
+  border-radius: var(--scrollbar-thumb-radius);
+  border: var(--scrollbar-thumb-border);
+  box-shadow: var(--scrollbar-thumb-shadow);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ----------------------------------
+   Aero Theme Overrides
+   ---------------------------------- */
+[data-theme="aero"] .bg-surface,
+[data-theme="aero"] .bg-surface-alt {
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  background-color: rgba(32, 208, 192, 0.06);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1rem !important; /* Rounder corners for Aero */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Card hover edge shimmer */
+[data-theme="aero"] .bg-surface,
+[data-theme="aero"] .bg-surface-alt {
+  transition: all 0.3s ease, box-shadow 0.3s ease;
+}
+[data-theme="aero"] .bg-surface:hover,
+[data-theme="aero"] .bg-surface-alt:hover {
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.2), 0 0 40px rgba(32, 208, 192, 0.25), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(32, 208, 192, 0.5) !important;
+}
+
+[data-theme="aero"] .bg-bg\/95 {
+  background-color: rgba(6, 14, 16, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+/* Universal lighter hover fills for interactive elements in Aero theme */
+[data-theme="aero"] .hover\:bg-surface:hover,
+[data-theme="aero"] .hover\:bg-surface-alt:hover,
+[data-theme="aero"] .group:hover .group-hover\:bg-surface,
+[data-theme="aero"] .group:hover .group-hover\:bg-surface-alt {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="aero"] .hover\:bg-amber\/10:hover,
+[data-theme="aero"] .group:hover .group-hover\:bg-amber\/10 {
+  background-color: rgba(32, 208, 192, 0.2) !important;
+}
+
+/* Custom Scrollbar for Aero */
+[data-theme="aero"] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+[data-theme="aero"] ::-webkit-scrollbar-thumb {
+  background: rgba(32, 208, 192, 0.3);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+[data-theme="aero"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(32, 208, 192, 0.6);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+[data-theme="aero"] button.bg-amber {
+  background: #20D0C0 !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  box-shadow: 
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    0 4px 12px rgba(32, 208, 192, 0.4) !important;
+  border-radius: 9999px !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="aero"] button.bg-amber:hover {
+  background: #2ED8C8 !important;
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    0 6px 16px rgba(32, 208, 192, 0.6) !important;
+}
+
+[data-theme="aero"] span.font-mono.text-amber,
+[data-theme="aero"] div.text-xs.font-bold.text-amber.ml-0\.5 {
+  text-shadow:
+    0 0 10px rgba(32, 208, 192, 0.8),
+    0 0 20px rgba(32, 208, 192, 0.5),
+    0 0 40px rgba(32, 208, 192, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Standardized Aero Toggle */
+[data-theme="aero"] .aero-toggle {
+  background-color: #04090A; /* Very dark */
+  border: 1px solid rgba(32, 208, 192, 0.2) !important;
+  border-radius: 9999px !important;
+  padding: 3px !important;
+  display: inline-flex !important;
+  align-items: center;
+}
+
+[data-theme="aero"] .aero-toggle button {
+  border-radius: 9999px !important;
+  padding: 4px 16px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: #8CB5C0 !important; /* Muted */
+  transition: all 0.2s ease;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-theme="aero"] .aero-toggle button[data-active="true"] {
+  background: #122A2F !important;
+  color: #E2F0F2 !important; /* Ink */
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(32, 208, 192, 0.4) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.02) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.02) !important;
+  box-shadow: 
+    inset 0 1px 1px rgba(255,255,255,0.1),
+    0 2px 8px rgba(32, 208, 192, 0.1) !important;
+}
+
+[data-theme="aero"] header nav a:hover {
+  color: var(--color-amber) !important;
+  text-shadow: 0 0 12px rgba(32, 208, 192, 0.6) !important;
+}
+[data-theme="aero"] header nav a.text-amber {
+  text-shadow: 0 0 16px rgba(32, 208, 192, 0.8), 0 0 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+[data-theme="aero"] .bg-bg.px-3.py-1.rounded-full.border.border-amber\/30,
+[data-theme="aero"] header nav a.bg-amber {
+  background: linear-gradient(180deg, rgba(32,208,192,0.3) 0%, rgba(32,208,192,0.15) 100%) !important;
+  border: 1px solid rgba(32,208,192,0.4) !important;
+  border-radius: 9999px !important;
+  color: var(--color-amber) !important;
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.3),
+    0 0 8px rgba(32,208,192,0.2) !important;
+  text-shadow: 0 0 8px rgba(32,208,192,0.5) !important;
+}
+
+/* Avatar / Channel glowing rings */
+[data-theme="aero"] img.rounded-full,
+[data-theme="aero"] div.rounded-full.bg-surface {
+  border: 1px solid rgba(32, 208, 192, 0.4) !important;
+  box-shadow: 0 0 8px rgba(32, 208, 192, 0.2);
+}
+[data-theme="aero"] a:hover img.rounded-full,
+[data-theme="aero"] button:hover img.rounded-full {
+  border-color: rgba(32, 208, 192, 0.8) !important;
+  box-shadow: 0 0 12px rgba(32, 208, 192, 0.5), inset 0 0 8px rgba(32, 208, 192, 0.3);
+}
+
+/* Inputs - recessed glass */
+[data-theme="aero"] input, 
+[data-theme="aero"] textarea {
+  background: rgba(0, 10, 15, 0.5) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-top-color: rgba(0, 0, 0, 0.3) !important;
+  border-radius: 12px;
+  color: var(--color-ink) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.25s ease;
+}
+[data-theme="aero"] input:focus,
+[data-theme="aero"] textarea:focus {
+  outline: none !important;
+  border-color: rgba(32, 208, 192, 0.6) !important;
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(32, 208, 192, 0.2),
+    0 0 12px rgba(32, 208, 192, 0.15) !important;
+}
+
+[data-theme="aero"] select {
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+}
+[data-theme="aero"] option {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+}
+
+[data-theme="aero"] .aero-orb {
+  animation: breathe 25s infinite ease-in-out;
+}
+
+[data-theme="aero"] .aero-bubble {
+  position: fixed;
+  border-radius: 50%;
+  background: radial-gradient(130% 130% at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 40%);
+  box-shadow: 
+    inset 0 0 20px rgba(255,255,255,0.2),
+    inset 0 0 5px rgba(255,255,255,0.5),
+    0 0 10px rgba(32,208,192,0.2);
+  backdrop-filter: blur(2px);
+  z-index: -1;
+  pointer-events: none;
+  animation: float-up 15s infinite linear;
+}
+
+@keyframes float-up {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  33%       { transform: scale(1.05) translate(20px, -15px); }
+  66%       { transform: scale(0.95) translate(-15px, 10px); }
+}
+
+[data-theme="aero"] .aero-light-ray {
+  position: fixed;
+  width: 1px;
+  height: 200vh;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.025) 30%,
+    rgba(32, 208, 192, 0.04) 50%,
+    rgba(255, 255, 255, 0.025) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="aero"] .aero-caustics {
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(32, 208, 192, 0.3) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.003' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-size: 100% 100%, cover;
+  background-repeat: no-repeat;
+}
+
+/* High Impact Overrides */
+/* Scrubber stars are back, liquid bar removed */
+
+[data-theme="aero"] .aero-progress-track {
+  background: rgba(0, 10, 15, 0.6);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+[data-theme="aero"] .aero-progress-fill {
+  background: linear-gradient(90deg, #12A89A 0%, #20D0C0 50%, #38E8D8 100%);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.5), 0 0 12px rgba(32, 208, 192, 0.6);
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="aero"] .aero-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  animation: shimmer-progress 2.5s infinite;
+}
+
+@keyframes shimmer-progress {
+  to { left: 200%; }
+}
+
+[data-theme="aero"] .aero-icon-container {
+  position: relative;
+  background: linear-gradient(145deg, rgba(64,228,212,0.8), rgba(32,160,140,0.8)) !important;
+  border: 1px solid rgba(64, 228, 212, 0.6) !important;
+  border-top-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(64, 228, 212, 0.4) !important;
+  overflow: hidden;
+}
+
+[data-theme="aero"] .aero-icon-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+[data-theme="aero"] .aero-modal {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(24px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(150%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-top-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+  position: relative;
+}
+
+[data-theme="aero"] .aero-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 1rem 1rem 0 0;
+  pointer-events: none;
+}
+
+[data-theme="aero"] .aero-navbar {
+  background: rgba(6, 14, 16, 0.72) !important;
+  backdrop-filter: blur(24px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(32, 208, 192, 0.1) !important;
+}

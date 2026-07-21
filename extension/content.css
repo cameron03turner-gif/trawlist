@@ -1,0 +1,77 @@
+#scrubbed-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+}
+.scrubbed-card {
+  background: #171E2C;
+  border: 1px solid #2A3446;
+  border-radius: 12px;
+  padding: 12px 14px;
+  width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+.scrubbed-title {
+  display: block;
+  color: #E8B34D;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+}
+.scrubbed-msg {
+  display: block;
+  color: #8996AC;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.scrubbed-scrubber {
+  position: relative;
+  height: 10px;
+  background: #1F2837;
+  border: 1px solid #2A3446;
+  border-radius: 999px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.scrubbed-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: #E8B34D;
+  border-radius: 999px;
+}
+.scrubbed-handle {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #F4E3C1;
+  border: 2px solid #E8B34D;
+  transform: translateY(-50%);
+}
+.scrubbed-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.scrubbed-value {
+  font-family: 'JetBrains Mono', monospace;
+  color: #E8B34D;
+  font-weight: 700;
+  font-size: 14px;
+}
+.scrubbed-save {
+  background: #E8B34D;
+  color: #0F141F;
+  border: none;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}

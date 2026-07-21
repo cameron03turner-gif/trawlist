@@ -1,0 +1,9 @@
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'My Log | Scrubbed',
+}
+
+export default function LogLayout({ children }: { children: React.ReactNode }) {
+  return children
+}
