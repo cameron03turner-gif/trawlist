@@ -7,15 +7,24 @@ export default function LoginPage() {
   const supabase = createClient()
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setStatus('sending')
+    setErrorMessage('')
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: `${location.origin}/auth/callback` },
     })
-    setStatus(error ? 'error' : 'sent')
+    
+    if (error) {
+      console.error('Supabase Auth Error:', error)
+      setErrorMessage(error.message)
+      setStatus('error')
+    } else {
+      setStatus('sent')
+    }
   }
 
   if (status === 'sent') {
@@ -45,7 +54,7 @@ export default function LoginPage() {
       >
         {status === 'sending' ? 'Sending…' : 'Send sign-in link'}
       </button>
-      {status === 'error' && <p className="text-sm text-rec text-center">Something went wrong. Try again.</p>}
+      {status === 'error' && <p className="text-sm text-rec text-center">{errorMessage || 'Something went wrong. Try again.'}</p>}
     </form>
   )
 }
