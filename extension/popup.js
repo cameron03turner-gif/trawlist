@@ -1,56 +1,50 @@
-const emailStep = document.getElementById('email-step')
-const codeStep = document.getElementById('code-step')
+const signinForm = document.getElementById('signin-form')
+const signinStep = document.getElementById('signin-step')
 const signedInStep = document.getElementById('signed-in-step')
 const emailInput = document.getElementById('email-input')
-const codeInput = document.getElementById('code-input')
+const passwordInput = document.getElementById('password-input')
+const signInBtn = document.getElementById('sign-in-btn')
 const statusEl = document.getElementById('status')
 const userEmailEl = document.getElementById('user-email')
-
-let pendingEmail = ''
 
 async function render() {
   const session = await getValidSession()
   if (session) {
-    emailStep.classList.add('hidden')
-    codeStep.classList.add('hidden')
+    signinForm.classList.add('hidden')
     signedInStep.classList.remove('hidden')
     userEmailEl.textContent = session.user.email
   } else {
     signedInStep.classList.add('hidden')
-    codeStep.classList.add('hidden')
-    emailStep.classList.remove('hidden')
+    signinForm.classList.remove('hidden')
   }
 }
 
-document.getElementById('send-code').addEventListener('click', async () => {
-  pendingEmail = emailInput.value.trim()
-  if (!pendingEmail) return
-  statusEl.textContent = 'Sending code…'
-  try {
-    await requestCode(pendingEmail)
-    emailStep.classList.add('hidden')
-    codeStep.classList.remove('hidden')
-    statusEl.textContent = ''
-  } catch (e) {
-    statusEl.textContent = e.message
-  }
-})
+signinForm.addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const email = emailInput.value.trim()
+  const password = passwordInput.value.trim()
 
-document.getElementById('verify-code').addEventListener('click', async () => {
-  const token = codeInput.value.trim()
-  if (!token) return
-  statusEl.textContent = 'Verifying…'
+  if (!email || !password) return
+
+  statusEl.className = ''
+  statusEl.textContent = 'Signing in…'
+  signInBtn.disabled = true
+
   try {
-    await verifyCode(pendingEmail, token)
+    await signInWithPassword(email, password)
     statusEl.textContent = ''
+    signInBtn.disabled = false
     render()
-  } catch (e) {
-    statusEl.textContent = e.message
+  } catch (err) {
+    signInBtn.disabled = false
+    statusEl.className = 'error'
+    statusEl.textContent = err.message || 'Invalid email or password.'
   }
 })
 
 document.getElementById('sign-out').addEventListener('click', async () => {
   await clearSession()
+  statusEl.textContent = ''
   render()
 })
 

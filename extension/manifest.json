@@ -1,13 +1,18 @@
 {
   "manifest_version": 3,
-  "name": "Scrubbed — Rate YouTube Videos",
+  "name": "Trawlist — Rate YouTube Videos",
   "version": "1.0.0",
-  "description": "Rate any YouTube video you watch, without leaving the page.",
+  "description": "Rate & review YouTube videos directly on the page. Only reads YouTube video IDs for rating sync. No outside tracking.",
   "permissions": ["storage"],
   "host_permissions": [
     "https://www.youtube.com/*",
-    "https://YOUR-PROJECT.supabase.co/*"
+    "https://gfsxhsztvufwywrfdatj.supabase.co/*"
   ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/watch*"],
@@ -16,8 +21,19 @@
       "run_at": "document_idle"
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["logo.png"],
+      "matches": ["https://www.youtube.com/*"]
+    }
+  ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Scrubbed"
+    "default_title": "Trawlist",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   }
 }

@@ -3,30 +3,239 @@
 <head>
 <meta charset="utf-8" />
 <style>
-  body { width: 260px; margin: 0; padding: 16px; font-family: Arial, sans-serif; background: #0F141F; color: #EDEFF3; }
-  h1 { font-size: 14px; margin: 0 0 10px; color: #E8B34D; letter-spacing: 0.03em; }
-  input { width: 100%; box-sizing: border-box; padding: 8px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #2A3446; background: #171E2C; color: #EDEFF3; }
-  button { width: 100%; padding: 8px; border-radius: 6px; border: none; background: #E8B34D; color: #0F141F; font-weight: 600; cursor: pointer; }
-  #status { font-size: 11px; color: #8996AC; margin-top: 8px; min-height: 14px; }
-  .hidden { display: none; }
-  #signed-in-step p { font-size: 12px; color: #8996AC; margin: 0 0 10px; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: transparent;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  body {
+    width: 290px;
+    margin: 0;
+    padding: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #081417;
+    color: #FFFFFF;
+    border-radius: 18px;
+    border: 1px solid rgba(32, 208, 192, 0.3);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(32, 208, 192, 0.2);
+  }
+
+  .logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(32, 208, 192, 0.4));
+  }
+
+  .title-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+    color: #FFFFFF;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .subtitle {
+    font-size: 11px;
+    color: #8CB5C0;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .card {
+    background: #0D1C20;
+    border: 1px solid rgba(32, 208, 192, 0.25);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8CB5C0;
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    background: #040B0E;
+    border: 1px solid rgba(32, 208, 192, 0.3);
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  input::placeholder {
+    color: #4B6E78;
+  }
+
+  input:focus {
+    border-color: #20D0C0;
+    box-shadow: 0 0 0 1px #20D0C0;
+  }
+
+  button.btn-primary {
+    width: 100%;
+    padding: 10px 16px;
+    margin-top: 4px;
+    border-radius: 9999px;
+    border: none;
+    background: #20D0C0;
+    color: #04090A;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(32, 208, 192, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  button.btn-primary:hover {
+    background: #2ED8C8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(32, 208, 192, 0.4);
+  }
+
+  button.btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  button.btn-secondary {
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 9999px;
+    border: 1px solid rgba(32, 208, 192, 0.3);
+    background: #0D1C20;
+    color: #FFFFFF;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  button.btn-secondary:hover {
+    border-color: #20D0C0;
+    color: #20D0C0;
+  }
+
+  #status {
+    font-size: 11px;
+    color: #20D0C0;
+    margin-top: 10px;
+    min-height: 14px;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  #status.error {
+    color: #E4572E;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .user-badge {
+    background: #040B0E;
+    border: 1px solid rgba(32, 208, 192, 0.25);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .user-badge .email {
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    word-break: break-all;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #20D0C0;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
 </style>
 </head>
 <body>
-  <h1>SCRUBBED</h1>
-  <div id="email-step">
-    <input id="email-input" type="email" placeholder="you@example.com" />
-    <button id="send-code">Send code</button>
+  <div class="header">
+    <img src="logo.png" alt="Trawlist Logo" class="logo-img" />
+    <div class="title-wrap">
+      <h1>Trawlist</h1>
+      <div class="subtitle">Ratings &amp; Reviews for YouTube</div>
+    </div>
   </div>
-  <div id="code-step" class="hidden">
-    <input id="code-input" type="text" placeholder="6-digit code" />
-    <button id="verify-code">Verify &amp; sign in</button>
+
+  <div class="card">
+    <form id="signin-form">
+      <div id="signin-step">
+        <label for="email-input">Email Address</label>
+        <input id="email-input" type="email" placeholder="you@example.com" required />
+        <label for="password-input">Password</label>
+        <input id="password-input" type="password" placeholder="••••••••" required />
+        <button id="sign-in-btn" type="submit" class="btn-primary">Sign In</button>
+      </div>
+    </form>
+
+    <div id="signed-in-step" class="hidden">
+      <div class="user-badge">
+        <div style="font-size: 11px; color: #8CB5C0; margin-bottom: 4px;">
+          <span class="status-dot"></span>Connected
+        </div>
+        <div id="user-email" class="email"></div>
+      </div>
+      <button id="sign-out" class="btn-secondary">Sign Out</button>
+    </div>
+
+    <div id="status"></div>
   </div>
-  <div id="signed-in-step" class="hidden">
-    <p>Signed in as <span id="user-email"></span></p>
-    <button id="sign-out">Sign out</button>
+
+  <div style="margin-top: 12px; font-size: 9px; color: #4B636A; text-align: center; line-height: 1.4; padding: 0 4px;">
+    <div>Trawlist only reads YouTube video IDs to attach ratings. No outside tracking.</div>
+    <div style="margin-top: 4px;">
+      <a href="https://trawlist.com/privacy" target="_blank" style="color: #20D0C0; text-decoration: none;">Privacy Policy</a> &bull; YouTube™ is a trademark of Google LLC.
+    </div>
   </div>
-  <div id="status"></div>
+
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script src="popup.js"></script>

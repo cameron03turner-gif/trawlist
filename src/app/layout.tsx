@@ -122,6 +122,8 @@ export default async function RootLayout({
             <Link href="/terms" className="hover:text-amber transition-colors">Terms of Service</Link>
             <span>•</span>
             <Link href="/privacy" className="hover:text-amber transition-colors">Privacy Policy</Link>
+            <span>•</span>
+            <Link href="/bug-report" className="hover:text-amber transition-colors">Bug Report</Link>
           </footer>
           <GlobalModals />
         </ThemeProvider>

@@ -22,23 +22,33 @@ export default function PrivacyPage() {
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-ink">2. How We Use Your Information</h2>
+          <h2 className="text-lg font-semibold text-ink">2. Browser Extension & Data Access</h2>
+          <p>
+            The Trawlist Chrome Extension strictly reads active YouTube video URLs and Video IDs solely for the purpose of attaching, saving, and displaying your ratings, likes, and reviews. The extension does <strong>NOT</strong> collect, track, store, or transmit your personal browsing history outside of YouTube, nor does it inspect your activity on any other websites.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-lg font-semibold text-ink">3. How We Use Your Information</h2>
           <p>
             We use your information solely to provide and improve the Trawlist social platform, enable profile customization, track your video watch activity and ratings, and generate personalized recommendations. We do not sell your personal data to third parties.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-ink">3. Data Retention and Account Deletion</h2>
+          <h2 className="text-lg font-semibold text-ink">4. Data Retention and Account Deletion</h2>
           <p>
             Your profile data and activity are stored securely. You can delete your account at any time directly through your account Settings, which permanently removes all your profile data, ratings, reviews, and activity from our servers.
           </p>
         </section>
 
         <section className="space-y-2">
-          <h2 className="text-lg font-semibold text-ink">4. Third-Party Services</h2>
+          <h2 className="text-lg font-semibold text-ink">5. Third-Party Services & Trademarks</h2>
           <p>
             We use Supabase for authentication and database management, and Google OAuth for user authentication. Your data is handled in accordance with their respective security and privacy practices.
+          </p>
+          <p className="text-xs text-muted pt-2 border-t border-border">
+            YouTube™ is a trademark of Google LLC. Trawlist is an independent site and extension, and is not affiliated with, endorsed by, or associated with Google LLC or YouTube.
           </p>
         </section>
 

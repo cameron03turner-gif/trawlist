@@ -1,77 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@600;700&display=swap');
+
 #scrubbed-widget {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-  font-family: Arial, sans-serif;
-}
-.scrubbed-card {
-  background: #171E2C;
-  border: 1px solid #2A3446;
-  border-radius: 12px;
-  padding: 12px 14px;
-  width: 220px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-}
-.scrubbed-title {
-  display: block;
-  color: #E8B34D;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.03em;
-  margin-bottom: 8px;
-}
-.scrubbed-msg {
-  display: block;
-  color: #8996AC;
-  font-size: 12px;
-  line-height: 1.4;
-}
-.scrubbed-scrubber {
+  z-index: 999999;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
   position: relative;
-  height: 10px;
-  background: #1F2837;
-  border: 1px solid #2A3446;
-  border-radius: 999px;
-  cursor: pointer;
-  margin-bottom: 8px;
 }
-.scrubbed-fill {
+
+/* Floating bottom-right mode fallback */
+#scrubbed-widget:not(.scrubbed-inline) {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}
+
+/* Native inline mode to the right of YouTube action buttons */
+#scrubbed-widget.scrubbed-inline {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  margin-right: 6px;
+  margin-top: 2px;
+  vertical-align: middle;
+  flex-shrink: 0;
+  position: relative;
+  height: 40px;
+}
+
+/* Sleek Expandable Pill Container */
+.scrubbed-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #0D1C20;
+  border: 1px solid rgba(32, 208, 192, 0.35);
+  height: 40px;
+  min-width: 40px;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 12px rgba(32, 208, 192, 0.15);
+  transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scrubbed-pill:hover {
+  border-color: rgba(32, 208, 192, 0.6);
+  box-shadow: 0 4px 14px rgba(32, 208, 192, 0.25);
+}
+
+/* Bulletproof 40x40 Circle when Collapsed */
+.scrubbed-pill.collapsed {
+  max-width: 40px;
+  padding: 0;
+}
+
+.scrubbed-pill:not(.collapsed) {
+  max-width: 350px;
+  padding-left: 1px;
+  padding-right: 6px;
+}
+
+/* Logo Button Trigger */
+.scrubbed-logo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.scrubbed-logo-btn:hover {
+  transform: scale(1.08);
+}
+
+.scrubbed-logo-img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 4px rgba(32, 208, 192, 0.5));
+  transform: translateY(0.75px);
+}
+
+/* Max-Width Content Animation for Pill Opening */
+.scrubbed-pill-content-wrapper {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  max-width: 380px;
+  opacity: 1;
+  transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.scrubbed-pill.collapsed .scrubbed-pill-content-wrapper {
+  max-width: 0;
+  opacity: 0;
+}
+
+.scrubbed-pill-content-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/* Secondary Actions (Divider + Like + Review) Smooth Extension */
+.scrubbed-actions-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 200px;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.scrubbed-actions-wrapper.hidden {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.scrubbed-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.scrubbed-star-wrap {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.scrubbed-star-bg {
+  width: 18px;
+  height: 18px;
+  color: #123238;
+  fill: rgba(18, 50, 56, 0.5);
+}
+
+.scrubbed-star-clip {
   position: absolute;
   top: 0;
-  bottom: 0;
   left: 0;
-  background: #E8B34D;
-  border-radius: 999px;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
 }
-.scrubbed-handle {
-  position: absolute;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #F4E3C1;
-  border: 2px solid #E8B34D;
-  transform: translateY(-50%);
+
+.scrubbed-star-fg {
+  width: 18px;
+  height: 18px;
+  color: #20D0C0;
+  fill: #20D0C0;
 }
-.scrubbed-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+
 .scrubbed-value {
   font-family: 'JetBrains Mono', monospace;
-  color: #E8B34D;
+  color: #20D0C0;
   font-weight: 700;
   font-size: 14px;
+  min-width: 24px;
+  text-align: right;
+  flex-shrink: 0;
 }
-.scrubbed-save {
-  background: #E8B34D;
-  color: #0F141F;
+
+.scrubbed-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(32, 208, 192, 0.25);
+  margin: 0 2px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* Action Icon Buttons inside Pill */
+.scrubbed-icon-btn {
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 4px;
+  border-radius: 50%;
+  color: #8CB5C0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.scrubbed-icon-btn:hover {
+  color: #FFFFFF;
+  background: rgba(32, 208, 192, 0.15);
+}
+
+.scrubbed-icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Like Button Active State */
+.scrubbed-like-btn.active {
+  color: #E4572E !important;
+}
+
+.scrubbed-like-btn.active svg {
+  fill: #E4572E !important;
+  stroke: #E4572E !important;
+  filter: drop-shadow(0 0 6px rgba(228, 87, 46, 0.5));
+}
+
+/* Review Button Active State */
+.scrubbed-review-btn.active {
+  color: #20D0C0 !important;
+}
+
+.scrubbed-review-btn.active svg {
+  fill: rgba(32, 208, 192, 0.2) !important;
+  stroke: #20D0C0 !important;
+}
+
+.scrubbed-status-indicator {
+  font-size: 12px;
+  color: #20D0C0;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Inline Review Popover Modal Card */
+.scrubbed-review-popover {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 320px;
+  background: #0B181C;
+  border: 1px solid rgba(32, 208, 192, 0.45);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 
+    0 16px 40px rgba(0, 0, 0, 0.8),
+    0 0 22px rgba(32, 208, 192, 0.3);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.scrubbed-review-popover.hidden {
+  display: none !important;
+}
+
+/* Subdued Recessed / Indented Textarea Style */
+.scrubbed-review-popover textarea {
+  width: 100%;
+  height: 96px;
+  background: rgba(4, 11, 14, 0.85);
+  border: 1px solid rgba(32, 208, 192, 0.15);
+  border-top-color: rgba(0, 0, 0, 0.6);
+  border-radius: 14px;
+  padding: 12px 14px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  box-shadow: 
+    inset 0 3px 8px rgba(0, 0, 0, 0.7),
+    inset 0 1px 3px rgba(0, 0, 0, 0.9);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scrubbed-review-popover textarea::placeholder {
+  color: #64748B;
+  font-size: 14px;
+}
+
+.scrubbed-review-popover textarea:focus {
+  border-color: rgba(32, 208, 192, 0.35);
+  box-shadow: 
+    inset 0 3px 8px rgba(0, 0, 0, 0.6),
+    0 0 6px rgba(32, 208, 192, 0.15);
+}
+
+.scrubbed-popover-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.scrubbed-btn-primary {
+  background: #20D0C0;
+  color: #04090A;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(32, 208, 192, 0.3);
+  transition: all 0.2s ease;
+}
+
+.scrubbed-btn-primary:hover {
+  background: #2ED8C8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(32, 208, 192, 0.4);
 }

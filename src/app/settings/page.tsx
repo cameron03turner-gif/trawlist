@@ -504,9 +504,11 @@ export default function SettingsPage() {
         </div>
 
         <div className="pt-6 border-t border-amber/30 space-y-2">
-          <h2 className="text-lg font-medium text-ink">Legal & Policies</h2>
-          <p className="text-sm text-muted mb-3">Review our Terms of Service and Privacy Policy.</p>
-          <div className="flex items-center gap-4 text-sm font-semibold">
+          <h2 className="text-lg font-medium text-ink">Support & Legal</h2>
+          <p className="text-sm text-muted mb-3">Report issues, track bug fixes, or review our Terms of Service and Privacy Policy.</p>
+          <div className="flex items-center gap-4 text-sm font-semibold flex-wrap">
+            <Link href="/bug-report" className="text-amber hover:underline flex items-center gap-1">Report a Bug / Feedback</Link>
+            <span className="text-muted">•</span>
             <Link href="/terms" className="text-amber hover:underline">Terms of Service</Link>
             <span className="text-muted">•</span>
             <Link href="/privacy" className="text-amber hover:underline">Privacy Policy</Link>

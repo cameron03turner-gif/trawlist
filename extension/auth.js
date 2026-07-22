@@ -1,38 +1,46 @@
 // Shared auth helpers for the Scrubbed extension.
-// Uses Supabase's email OTP (one-time code) flow, since magic-link
-// redirects don't have anywhere to land inside an extension.
-// Requires the Magic Link email template to include {{ .Token }} —
-// see the README for the one-time Supabase dashboard setting.
+// Uses Supabase email + password sign in flow matching the web app.
 
 async function getSession() {
-  const { scrubbed_session } = await chrome.storage.local.get('scrubbed_session')
-  return scrubbed_session || null
+  try {
+    if (typeof chrome === 'undefined' || !chrome.runtime?.id || !chrome.storage?.local) return null
+    const { scrubbed_session } = await chrome.storage.local.get('scrubbed_session')
+    return scrubbed_session || null
+  } catch (e) {
+    return null
+  }
 }
 
 async function saveSession(session) {
-  await chrome.storage.local.set({ scrubbed_session: session })
+  try {
+    if (typeof chrome !== 'undefined' && chrome.runtime?.id && chrome.storage?.local) {
+      await chrome.storage.local.set({ scrubbed_session: session })
+    }
+  } catch (e) {
+    // Ignored if context invalidated
+  }
 }
 
 async function clearSession() {
-  await chrome.storage.local.remove('scrubbed_session')
+  try {
+    if (typeof chrome !== 'undefined' && chrome.runtime?.id && chrome.storage?.local) {
+      await chrome.storage.local.remove('scrubbed_session')
+    }
+  } catch (e) {
+    // Ignored if context invalidated
+  }
 }
 
-async function requestCode(email) {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/otp`, {
+async function signInWithPassword(email, password) {
+  const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY },
-    body: JSON.stringify({ email, create_user: true }),
+    body: JSON.stringify({ email, password }),
   })
-  if (!res.ok) throw new Error('Could not send a code. Check the email and try again.')
-}
-
-async function verifyCode(email, token) {
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/verify`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY },
-    body: JSON.stringify({ email, token, type: 'email' }),
-  })
-  if (!res.ok) throw new Error('That code is invalid or expired.')
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error_description || err.msg || 'Invalid email or password.')
+  }
   const data = await res.json()
   const session = {
     access_token: data.access_token,
