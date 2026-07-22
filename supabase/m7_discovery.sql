@@ -19,7 +19,9 @@ returns table (video_id text, title text, channel text, thumbnail_url text, chan
   join videos v on v.id = r.video_id
   left join channels c on c.id = v.channel_id
   where f.follower_id = p_user_id
+    and r.rating is not null
   group by v.id, c.thumbnail_url
+  having count(r.rating) > 0
   order by rating_count desc, avg_rating desc nulls last
   limit p_limit;
 $$ language sql security definer;

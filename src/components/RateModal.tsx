@@ -182,7 +182,7 @@ export function RateModal() {
               </div>
               <div>
                 <h3 className="font-semibold text-amber-950 text-sm">Profile created!</h3>
-                <p className="text-sm">Welcome to Scrubbed. Rate your first video by pasting a link below.</p>
+                <p className="text-sm">Welcome to Trawlist. Rate your first video by pasting a link below.</p>
               </div>
             </div>
           )}

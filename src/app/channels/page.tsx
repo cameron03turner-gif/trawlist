@@ -17,7 +17,7 @@ export default async function ChannelsLeaderboardPage() {
     <div className="pb-16">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-ink mb-2">Top Channels</h1>
-        <p className="text-muted">The highest-rated YouTube creators on Scrubbed, ranked by their average video rating.</p>
+        <p className="text-muted">The highest-rated YouTube creators on Trawlist, ranked by their average video rating.</p>
         <p className="text-xs text-muted/70 mt-1">Requires a minimum of 2 rated videos to qualify.</p>
       </div>
 

@@ -7,7 +7,7 @@ import { Metadata } from 'next'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'Videos | Scrubbed',
+  title: 'Videos | Trawlist',
 }
 
 export default async function LeaderboardPage(props: {
@@ -88,6 +88,8 @@ export default async function LeaderboardPage(props: {
     let query = supabase
       .from('video_leaderboard')
       .select('*')
+      .gt('rating_count', 0)
+      .not('avg_rating', 'is', null)
       .gte('rating_count', minCount)
       .limit(50)
 

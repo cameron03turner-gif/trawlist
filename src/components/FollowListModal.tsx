@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { X, Users } from 'lucide-react'
 import Link from 'next/link'
 import { FollowButton } from './FollowButton'
+import { Avatar } from './Avatar'
 
 type Props = {
   profileId: string
@@ -82,13 +83,12 @@ export function FollowListModal({ profileId, username, type, onClose }: Props) {
               {users.map(u => (
                 <div key={u.id} className="flex items-center justify-between gap-3 p-2 hover:bg-surface-alt rounded-xl transition-colors group">
                   <Link href={`/u/${u.username}`} onClick={onClose} className="flex items-center gap-3 flex-1 min-w-0">
-                    {u.avatar_url ? (
-                      <img src={u.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0 border border-border/50" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center font-bold shrink-0 border border-border/50 text-ink">
-                        {u.display_name?.[0]?.toUpperCase() || u.username[0].toUpperCase()}
-                      </div>
-                    )}
+                    <Avatar
+                      url={u.avatar_url}
+                      username={u.username}
+                      displayName={u.display_name}
+                      className="w-10 h-10 border border-border/50 shrink-0 text-ink"
+                    />
                     <div className="min-w-0">
                       <div className="font-bold text-sm text-ink truncate group-hover:text-amber transition-colors">
                         {u.display_name || u.username}

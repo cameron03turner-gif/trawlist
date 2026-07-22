@@ -115,7 +115,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
         </div>
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <h3 className="text-sm font-bold text-amber tracking-widest uppercase mb-1">Scrubbed Wrapped</h3>
+            <h3 className="text-sm font-bold text-amber tracking-widest uppercase mb-1">Trawlist Wrapped</h3>
             <h2 className="text-4xl font-extrabold text-ink mb-6">Year in Review</h2>
             
             <div className="flex flex-wrap gap-8">
@@ -139,9 +139,9 @@ export default async function StatsPage(props: { params: Promise<{ username: str
           </div>
           <div className="shrink-0 mt-4 md:mt-0">
             <ShareButton 
-              title={`${name}'s Scrubbed Stats`} 
+              title={`${name}'s Trawlist Stats`} 
               text={`I rated ${ratedItems.length} videos with an average of ${overallAvgRating}. My top channel was ${topChannel}!`}
-              url={`https://scrubbed.app/u/${profile.username}`}
+              url={`https://trawlist.com/u/${profile.username}`}
             />
           </div>
         </div>

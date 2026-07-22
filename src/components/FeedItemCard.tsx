@@ -3,6 +3,7 @@ import { Star, MessageSquare, Plus, ListVideo, Eye } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { BaseVideoCardWrapper } from './BaseVideoCard'
 import { ListCard } from './ListCard'
+import { Avatar } from './Avatar'
 
 type Props = {
   item: any
@@ -29,13 +30,12 @@ export function FeedItemCard({ item }: Props) {
         <div className="p-4 flex items-center justify-between bg-surface/50">
           <div className="flex items-center space-x-3">
             <Link href={`/u/${user.username}`}>
-              <div className="w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-amber transition-all overflow-hidden">
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.display_name} className="w-full h-full object-cover" />
-                ) : (
-                  (user.display_name || user.username).charAt(0).toUpperCase()
-                )}
-              </div>
+              <Avatar 
+                url={user.avatar_url} 
+                username={user.username} 
+                displayName={user.display_name} 
+                className="w-10 h-10 hover:ring-2 hover:ring-amber transition-all text-lg" 
+              />
             </Link>
             <div>
               <Link href={`/u/${user.username}`} className="font-semibold text-ink hover:text-amber">
@@ -88,13 +88,12 @@ export function FeedItemCard({ item }: Props) {
         <div className="p-4 flex items-center justify-between bg-surface/50">
           <div className="flex items-center space-x-3">
             <Link href={`/u/${user.username}`}>
-              <div className="w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-lg font-bold hover:ring-2 hover:ring-amber transition-all overflow-hidden">
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.display_name} className="w-full h-full object-cover" />
-                ) : (
-                  (user.display_name || user.username).charAt(0).toUpperCase()
-                )}
-              </div>
+              <Avatar 
+                url={user.avatar_url} 
+                username={user.username} 
+                displayName={user.display_name} 
+                className="w-10 h-10 hover:ring-2 hover:ring-amber transition-all text-lg" 
+              />
             </Link>
             <div>
               <Link href={`/u/${user.username}`} className="font-semibold text-ink hover:text-amber">

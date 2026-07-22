@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'My Log | Scrubbed',
+  title: 'My Log | Trawlist',
 }
 
 export default function LogLayout({ children }: { children: React.ReactNode }) {

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { FollowButton } from '@/components/FollowButton'
 import { Users } from 'lucide-react'
+import { Avatar } from '@/components/Avatar'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,13 +52,12 @@ export default async function FollowersPage(props: { params: Promise<{ username:
             return (
               <div key={follower.id} className="bg-surface border border-border rounded-xl p-4 flex items-center justify-between gap-4">
                 <Link href={`/u/${follower.username}`} className="flex items-center gap-3 flex-1 min-w-0 group">
-                  {follower.avatar_url ? (
-                    <img src={follower.avatar_url} alt="" className="w-12 h-12 rounded-full object-cover shrink-0 border border-border/50" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-surface-alt flex items-center justify-center text-lg font-bold shrink-0 border border-border/50 text-ink">
-                      {follower.display_name?.[0]?.toUpperCase() || follower.username[0].toUpperCase()}
-                    </div>
-                  )}
+                  <Avatar
+                    url={follower.avatar_url}
+                    username={follower.username}
+                    displayName={follower.display_name}
+                    className="w-12 h-12 border border-border/50 shrink-0 text-ink text-lg"
+                  />
                   <div className="min-w-0">
                     <div className="font-bold text-ink truncate group-hover:text-amber transition-colors">
                       {follower.display_name || follower.username}

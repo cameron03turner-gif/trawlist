@@ -132,7 +132,7 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
         </button>
         <ShareButton 
           title={title}
-          text={`Check out ${title} on Scrubbed!`}
+          text={`Check out ${title} on Trawlist!`}
           url={`/videos/${videoId}`} 
           className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-muted hover:text-amber hover:bg-amber/10 rounded-xl transition"
         >

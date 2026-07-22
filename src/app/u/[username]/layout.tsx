@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ProfileTabs } from '@/components/ProfileTabs'
 import { FollowButton } from '@/components/FollowButton'
 import { FollowCounts } from '@/components/FollowCounts'
+import { Avatar } from '@/components/Avatar'
 
 export default async function ProfileLayout(props: {
   children: React.ReactNode
@@ -52,13 +53,12 @@ export default async function ProfileLayout(props: {
       {/* Profile Header */}
       <div className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-surface p-6 rounded-xl relative">
         <div className="w-24 h-24 flex-shrink-0">
-          {profile.avatar_url ? (
-            <img src={profile.avatar_url} alt="" className="w-full h-full rounded-full object-cover border-2 border-border" />
-          ) : (
-            <div className="w-full h-full rounded-full bg-surface-alt border-2 flex items-center justify-center text-3xl font-bold">
-              {profile.display_name?.[0]?.toUpperCase() || profile.username[0].toUpperCase()}
-            </div>
-          )}
+          <Avatar 
+            url={profile.avatar_url} 
+            username={profile.username} 
+            displayName={profile.display_name} 
+            className="w-full h-full border-2 border-border text-3xl" 
+          />
         </div>
         <div className="text-center md:text-left min-w-0 flex-1">
           <h1 className="text-2xl font-display font-bold leading-tight">

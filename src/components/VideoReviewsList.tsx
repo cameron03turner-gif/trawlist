@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MessageSquare } from 'lucide-react'
 import { Scrubber } from './Scrubber'
+import { Avatar } from './Avatar'
 
 type VideoReviewsListProps = {
   reviews: any[]
@@ -100,13 +101,12 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
                 )}
                 <div className="flex items-center gap-4 mb-3">
                   <Link href={`/u/${r.profile.username}`}>
-                    {r.profile.avatar_url ? (
-                      <img src={r.profile.avatar_url} className="w-10 h-10 rounded-full object-cover border border-border/50" alt="" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-sm font-bold border border-border/50 text-ink">
-                        {r.profile.display_name?.[0]?.toUpperCase() || r.profile.username[0].toUpperCase()}
-                      </div>
-                    )}
+                    <Avatar
+                      url={r.profile.avatar_url}
+                      username={r.profile.username}
+                      displayName={r.profile.display_name}
+                      className="w-10 h-10 border border-border/50 text-ink"
+                    />
                   </Link>
                   <div>
                     <Link href={`/u/${r.profile.username}`} className="text-base font-bold hover:text-amber transition-colors">

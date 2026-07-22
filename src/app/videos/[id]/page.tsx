@@ -25,8 +25,8 @@ export async function generateMetadata(props: Props) {
     .eq('id', params.id)
     .single()
 
-  if (!video) return { title: 'Video Not Found | Scrubbed' }
-  return { title: `${video.title} | Scrubbed` }
+  if (!video) return { title: 'Video Not Found | Trawlist' }
+  return { title: `${video.title} | Trawlist` }
 }
 
 export default async function VideoPage(props: Props) {

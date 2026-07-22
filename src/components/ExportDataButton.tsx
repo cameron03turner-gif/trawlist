@@ -47,7 +47,7 @@ export function ExportDataButton() {
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.setAttribute('href', url)
-      link.setAttribute('download', `scrubbed_export_${new Date().toISOString().split('T')[0]}.csv`)
+      link.setAttribute('download', `trawlist_export_${new Date().toISOString().split('T')[0]}.csv`)
       link.style.visibility = 'hidden'
       document.body.appendChild(link)
       link.click()

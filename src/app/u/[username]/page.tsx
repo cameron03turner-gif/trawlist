@@ -19,7 +19,7 @@ export async function generateMetadata(props: { params: Promise<{ username: stri
 
   const name = profile?.display_name || profile?.username || params.username
   return {
-    title: `${name}'s Profile | Scrubbed`,
+    title: `${name}'s Profile | Trawlist`,
   }
 }
 

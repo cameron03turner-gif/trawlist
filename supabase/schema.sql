@@ -58,6 +58,7 @@ select
 from videos v
 left join channels c on v.channel_id = c.id
 join ratings r on r.video_id = v.id
+where r.rating is not null
 group by v.id, c.thumbnail_url
 order by avg_rating desc;
 

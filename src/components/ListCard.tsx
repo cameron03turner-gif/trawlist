@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Lock, ListVideo, Heart } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { toggleListLike } from '@/app/actions/list-likes'
+import { Avatar } from './Avatar'
 
 type List = {
   id: string
@@ -159,15 +160,12 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                     href={`/u/${list.owner.username}`}
                     className="flex items-center gap-2 group/owner shrink-0"
                   >
-                    <div className="w-6 h-6 rounded-full bg-neutral-800 border border-neutral-700 overflow-hidden group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all">
-                      {list.owner.avatar_url ? (
-                        <img src={list.owner.avatar_url} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-xs font-bold text-neutral-500 bg-neutral-800">
-                          {(list.owner.display_name || list.owner.username).charAt(0).toUpperCase()}
-                        </div>
-                      )}
-                    </div>
+                    <Avatar 
+                      url={list.owner.avatar_url} 
+                      username={list.owner.username} 
+                      displayName={list.owner.display_name} 
+                      className="w-6 h-6 border border-neutral-700 group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all text-[10px]" 
+                    />
                     <span className="text-neutral-300 font-medium group-hover/owner:text-amber transition-colors truncate">
                       {list.owner.display_name || list.owner.username}
                     </span>

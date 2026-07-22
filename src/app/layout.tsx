@@ -40,7 +40,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Scrubbed — rate what you watch',
+  title: 'Trawlist — rate what you watch',
   description: 'Log and rate YouTube videos, and see what the community loved.',
   icons: {
     icon: '/logo.png',

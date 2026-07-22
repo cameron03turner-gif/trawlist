@@ -4,9 +4,10 @@ import Link from 'next/link'
 import { Bell, UserPlus, Heart, Inbox } from 'lucide-react'
 import { MarkAllReadButton } from '@/components/MarkAllReadButton'
 import { formatDistanceToNow } from 'date-fns'
+import { Metadata } from 'next'
 
-export const metadata = {
-  title: 'Notifications | Scrubbed'
+export const metadata: Metadata = {
+  title: 'Notifications | Trawlist',
 }
 
 export default async function NotificationsPage() {

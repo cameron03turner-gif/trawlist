@@ -22,7 +22,7 @@ export default async function HomePage() {
       // Just in case they somehow bypassed onboarding
       return (
         <div className="pt-12 px-4 max-w-6xl mx-auto">
-          <h1 className="text-2xl font-bold text-ink">Welcome to Scrubbed!</h1>
+          <h1 className="text-2xl font-bold text-ink">Welcome to Trawlist!</h1>
           <p className="text-muted mt-2">Please finish setting up your profile by going to your profile page.</p>
         </div>
       )
@@ -35,6 +35,10 @@ export default async function HomePage() {
     // Fetch Taste Based
     const { data: tasteVideos } = await supabase
       .rpc('get_taste_based_recommendations', { p_user_id: session.user.id, p_limit: 4 })
+
+    // Filter out watchlist-only videos (0 ratings / null average)
+    const validTasteVideos = (tasteVideos || []).filter((v: any) => v.avg_rating !== null && Number(v.rating_count || v.rec_score || 1) > 0)
+    const validNetworkVideos = (networkVideos || []).filter((v: any) => v.avg_rating !== null && Number(v.rating_count || 0) > 0)
 
     let userLogged: string[] = []
     const videoStats: Record<string, { count: number }> = {}
@@ -101,7 +105,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
             <h1 className="text-3xl font-bold text-ink mb-2">Welcome back, {profile.display_name || profile.username}</h1>
-            <p className="text-muted">Here's what's happening on Scrubbed.</p>
+            <p className="text-muted">Here's what's happening on Trawlist.</p>
           </div>
 
           <section className="mb-12">
@@ -112,7 +116,7 @@ export default async function HomePage() {
               </h2>
             </div>
             
-            {(!tasteVideos || tasteVideos.length === 0) ? (
+            {(!validTasteVideos || validTasteVideos.length === 0) ? (
               <div className="text-center py-12 bg-surface rounded-xl border border-border">
                 <Zap className="mx-auto text-muted mb-4" size={32} />
                 <h3 className="text-lg font-medium text-ink mb-2">Keep rating</h3>
@@ -120,7 +124,7 @@ export default async function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {tasteVideos.map((v: any) => (
+                {validTasteVideos.map((v: any) => (
                   <VideoGridCard 
                     key={v.video_id}
                     title={v.title}
@@ -149,7 +153,7 @@ export default async function HomePage() {
               </h2>
             </div>
             
-            {(!networkVideos || networkVideos.length === 0) ? (
+            {(!validNetworkVideos || validNetworkVideos.length === 0) ? (
               <div className="text-center py-12 bg-surface rounded-xl border border-border">
                 <Users className="mx-auto text-muted mb-4" size={32} />
                 <h3 className="text-lg font-medium text-ink mb-2">Build your network</h3>
@@ -163,7 +167,7 @@ export default async function HomePage() {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {networkVideos.map((v: any) => (
+                {validNetworkVideos.map((v: any) => (
                   <VideoGridCard 
                     key={v.video_id}
                     title={v.title}
@@ -192,6 +196,10 @@ export default async function HomePage() {
   const { data: topVideos } = await supabase
     .from('video_leaderboard')
     .select('*')
+    .gt('rating_count', 0)
+    .not('avg_rating', 'is', null)
+    .order('avg_rating', { ascending: false })
+    .order('rating_count', { ascending: false })
     .limit(4)
 
   return (
@@ -204,7 +212,7 @@ export default async function HomePage() {
             Log the YouTube <br/> videos you love.
           </h1>
           <p className="text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            Scrubbed is a social network for YouTube enthusiasts. Track what you watch, write reviews, curate lists, and discover amazing content with friends.
+            Trawlist is a social network for YouTube enthusiasts. Track what you watch, write reviews, curate lists, and discover amazing content with friends.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link href="/login" className="px-8 py-4 bg-amber text-amber-950 font-bold rounded-full hover:bg-amber/90 hover:scale-105 transition-all shadow-lg shadow-amber/20">
@@ -249,7 +257,7 @@ export default async function HomePage() {
         <div className="py-20 bg-surface border-t border-border">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-ink mb-4">Trending on Scrubbed</h2>
+              <h2 className="text-3xl font-bold text-ink mb-4">Trending on Trawlist</h2>
               <p className="text-muted">The highest rated videos in the community right now.</p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
