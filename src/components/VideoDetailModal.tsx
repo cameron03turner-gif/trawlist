@@ -16,85 +16,94 @@ type VideoDetailModalProps = {
 }
 
 export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
-  const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
-  const [currentUser, setCurrentUser] = useState<any>(null)
-  const supabase = createClient()
   const router = useRouter()
+  const supabase = createClient()
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState<any>(null)
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   useEffect(() => {
-    if (!videoId) {
-      setData(null)
-      return
-    }
-
     let mounted = true
-    setLoading(true)
-
+    setImgLoaded(false)
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser()
+      if (!videoId) {
+        setData(null)
+        setLoading(false)
+        return
+      }
 
-      // Fetch video info & aggregated stats
-      let { data: videoData } = await supabase
-        .from('video_leaderboard')
-        .select('*')
+      setLoading(true)
+      const { data: { user } } = await supabase.auth.getUser()
+      if (mounted) setCurrentUser(user)
+
+      // Fetch video
+      const { data: videoData, error: videoError } = await supabase
+        .from('videos')
+        .select('*, channels(thumbnail_url)')
         .eq('id', videoId)
         .single()
 
-      if (!videoData) {
-        const { data: fallbackVideo } = await supabase
-          .from('videos')
-          .select('*')
-          .eq('id', videoId)
-          .single()
-        
-        if (fallbackVideo) {
-          videoData = { ...fallbackVideo, avg_rating: null, rating_count: 0, review_count: 0 }
-        } else {
-          if (mounted) {
-            setData({ error: true })
-            setLoading(false)
-          }
-          return
+      if (videoError || !videoData) {
+        if (mounted) {
+          setData({ error: true })
+          setLoading(false)
         }
+        return
       }
 
+      if (videoData.channels) {
+        videoData.channel_thumbnail_url = videoData.channels.thumbnail_url
+      }
+
+      // Fetch lists count
       const { count: listsCount } = await supabase
-        .from('list_items')
+        .from('custom_list_items')
         .select('*', { count: 'exact', head: true })
         .eq('video_id', videoId)
 
-      const { data: allRatings } = await supabase
-        .from('ratings')
-        .select('id, user_id, rating, review, note, watch_status, liked, updated_at, profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_likes(user_id)')
-        .eq('video_id', videoId)
-        .order('updated_at', { ascending: false })
-
+      // Fetch following user IDs if logged in
       let followingIds: string[] = []
       if (user) {
-        const { data: follows } = await supabase.from('follows').select('following_id').eq('follower_id', user.id)
-        followingIds = follows?.map(f => f.following_id) || []
+        const { data: follows } = await supabase
+          .from('follows')
+          .select('following_id')
+          .eq('follower_id', user.id)
+        if (follows) {
+          followingIds = follows.map((f: any) => f.following_id)
+        }
       }
 
-      if (!mounted) return
-      setCurrentUser(user)
+      // Fetch current user's rating for this video
+      let hasRated = false
+      let myRatingData: any = null
+      if (user) {
+        const { data: myRating } = await supabase
+          .from('ratings')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('video_id', videoId)
+          .maybeSingle()
+        if (myRating) {
+          hasRated = true
+          myRatingData = myRating
+        }
+      }
 
-      let myRatingData = null
+      // Fetch all ratings for stats & reviews
+      const { data: allRatings } = await supabase
+        .from('ratings')
+        .select('*, profiles(username, display_name, avatar_url), review_likes(user_id)')
+        .eq('video_id', videoId)
+        .order('created_at', { ascending: false })
+
       const distribution: Record<string, number> = {}
       const reviews: any[] = []
       let likesCount = 0
-      let hasRated = false
 
       if (allRatings) {
         allRatings.forEach((r: any) => {
-          if (user && r.user_id === user.id) {
-            hasRated = true
-            myRatingData = {
-              ...r,
-              like_count: r.review_likes?.length || 0
-            }
-          }
-          if (r.rating !== null) {
+          if (r.rating != null) {
             const rStr = Number(r.rating).toFixed(1)
             distribution[rStr] = (distribution[rStr] || 0) + 1
           }
@@ -112,8 +121,10 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
         })
       }
 
-      setData({ video: videoData, distribution, reviews, likesCount, listsCount, followingIds, total: allRatings?.filter((r: any) => r.rating !== null).length || 0, hasRated, myRatingData })
-      setLoading(false)
+      if (mounted) {
+        setData({ video: videoData, distribution, reviews, likesCount, listsCount, followingIds, total: allRatings?.filter((r: any) => r.rating !== null).length || 0, hasRated, myRatingData })
+        setLoading(false)
+      }
     }
 
     load()
@@ -131,37 +142,62 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
   if (!videoId) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'var(--modal-backdrop-bg)', backdropFilter: 'blur(var(--modal-backdrop-blur))', WebkitBackdropFilter: 'blur(var(--modal-backdrop-blur))' }} onClick={onClose}>
-      <div className="aero-modal relative w-full max-w-4xl bg-surface border border-amber rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] flex flex-col max-h-[90vh] overflow-hidden" onClick={e => e.stopPropagation()}>
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg/80 rounded-full border border-amber/20 z-10 transition-colors"
-        >
-          <X size={16} />
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      {/* Fading Backdrop Overlay */}
+      <div 
+        className="absolute inset-0 animate-fade-in" 
+        style={{ 
+          backgroundColor: 'var(--modal-backdrop-bg)', 
+          backdropFilter: 'blur(var(--modal-backdrop-blur))', 
+          WebkitBackdropFilter: 'blur(var(--modal-backdrop-blur))' 
+        }} 
+      />
+      {loading ? (
+        <div className="relative z-10 flex flex-col items-center justify-center animate-pulse">
+          <div className="w-12 h-12 border-4 border-amber/20 border-t-amber rounded-full animate-spin" />
+        </div>
+      ) : (
+        /* Fading & Scaling Modal Container */
+        <div className="aero-modal relative w-full max-w-4xl bg-surface border border-amber rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] flex flex-col max-h-[90vh] overflow-hidden animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg/80 rounded-full z-10 transition-colors"
+          >
+            <X size={16} />
+          </button>
 
-        {loading ? (
-          <div className="p-12 flex justify-center">
-            <div className="w-8 h-8 border-4 border-muted border-t-amber rounded-full animate-spin" />
-          </div>
-        ) : !data || data.error ? (
-          <div className="p-12 flex justify-center flex-col items-center gap-4">
-            <p className="text-muted">Video not found.</p>
-          </div>
-        ) : (
-          <div className="overflow-y-auto">
-            {/* Top Thumbnail */}
-            <div className="w-full relative py-6 flex justify-center border-b border-border overflow-hidden bg-[#060E10]">
+          {!data || data.error ? (
+            <div className="p-12 flex justify-center flex-col items-center gap-4">
+              <p className="text-muted">Video not found.</p>
+            </div>
+          ) : (
+            <div className="overflow-y-auto">
+            {/* Top Thumbnail Header */}
+            <div className="w-full relative py-8 flex justify-center overflow-hidden bg-bg/40">
               <div 
-                className="absolute inset-0 bg-cover bg-bottom opacity-40 mix-blend-screen" 
-                style={{ backgroundImage: 'url(/water-pattern.jpg)' }} 
+                className="absolute inset-0 bg-cover bg-bottom opacity-60 mix-blend-screen" 
+                style={{ 
+                  backgroundImage: 'url(/water-pattern.jpg)',
+                  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 100%)'
+                }} 
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-surface" />
-              <img src={data.video.thumbnail_url?.replace(/hqdefault\.jpg|mqdefault\.jpg|sddefault\.jpg/g, 'maxresdefault.jpg')} alt="" className="w-full max-w-[640px] aspect-video object-cover rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] border border-white/5 relative z-10" />
+              {/* Top subtle shade */}
+              <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10" />
+              
+              <img 
+                src={data.video.thumbnail_url?.replace(/hqdefault\.jpg|mqdefault\.jpg|sddefault\.jpg/g, 'maxresdefault.jpg')} 
+                alt="" 
+                onLoad={() => setImgLoaded(true)}
+                className={`w-full max-w-[640px] aspect-video object-cover rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] relative z-10 transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0 bg-surface-alt/50'}`} 
+              />
+              
+              {/* Bottom Gradient Fade */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-bg/80 pointer-events-none z-10" />
             </div>
 
             {/* Stats Row */}
-            <div className="flex justify-center gap-12 text-sm font-semibold mb-6 border-b border-border/50 py-3 bg-surface-alt/50">
+            <div className="flex justify-center gap-12 text-sm font-semibold mb-6 py-3 bg-surface-alt/50">
               <div className="flex items-center gap-2" title={`${data.total || 0} Rated`}>
                 <Star size={20} className="text-amber" />
                 <span className="text-muted transition">{data.total || 0}</span>
@@ -203,7 +239,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                       className="flex items-center gap-2 group/channel min-w-0"
                     >
                       {data.video.channel_thumbnail_url && (
-                        <img src={data.video.channel_thumbnail_url} alt="" className="w-6 h-6 rounded-full object-cover border border-border/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
+                        <img src={data.video.channel_thumbnail_url} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" referrerPolicy="no-referrer" />
                       )}
                       <span className="text-base font-medium text-muted group-hover/channel:text-amber transition-colors line-clamp-1">
                         {data.video.channel}
@@ -236,7 +272,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                   </Suspense>
 
                   {/* Stats Box */}
-                  <div className="bg-surface border border-amber rounded-xl p-6 shadow-xl shadow-amber/5">
+                  <div className="bg-surface rounded-xl p-6 shadow-xl shadow-amber/5">
                     <div className="flex flex-col items-center mb-6">
                       <span className="font-mono font-black text-amber text-5xl mb-2">{data.video.avg_rating != null ? Number(data.video.avg_rating).toFixed(1) : '—'}</span>
                       <Scrubber value={data.video.avg_rating != null ? Number(data.video.avg_rating) : 0} interactive={false} height={18} />
@@ -251,6 +287,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }

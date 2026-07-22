@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { LogIn, UserPlus, X, Loader2, KeyRound } from 'lucide-react'
@@ -145,7 +146,7 @@ export default function LoginPage() {
         </div>
 
         {recoveryStatus === 'success' ? (
-          <div className="bg-surface p-6 rounded-2xl border border-border text-center space-y-2">
+          <div className="bg-surface p-6 rounded-2xl border border-amber text-center space-y-2">
             <p className="text-green-500 font-semibold text-base">Password updated successfully!</p>
             <p className="text-xs text-muted">Redirecting you to the home page…</p>
           </div>
@@ -159,7 +160,7 @@ export default function LoginPage() {
                   value={recoveryPassword}
                   onChange={(e) => setRecoveryPassword(e.target.value)}
                   placeholder="At least 6 characters"
-                  className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-border outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
+                  className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-amber outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
                 />
               </div>
               <div>
@@ -169,7 +170,7 @@ export default function LoginPage() {
                   value={recoveryConfirm}
                   onChange={(e) => setRecoveryConfirm(e.target.value)}
                   placeholder="Repeat new password"
-                  className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-border outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
+                  className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-amber outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
                 />
               </div>
             </div>
@@ -197,7 +198,7 @@ export default function LoginPage() {
   if (status === 'success') {
     return (
       <div className="text-sm text-center py-10 max-w-sm mx-auto space-y-4">
-        <div className="bg-surface p-6 rounded-2xl border border-border">
+        <div className="bg-surface p-6 rounded-2xl border border-amber">
           <h2 className="font-display text-xl font-bold mb-2">Check your email</h2>
           <p className="text-muted">
             We sent you a confirmation link to finish setting up your account.
@@ -252,7 +253,7 @@ export default function LoginPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-border outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
+            className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-amber outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
           />
           <div>
             <PasswordInput
@@ -260,7 +261,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-border outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
+              className="w-full rounded-xl px-4 py-3 text-sm bg-surface border border-amber outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
             />
             {mode === 'signin' && (
               <div className="mt-2 text-right">
@@ -291,10 +292,16 @@ export default function LoginPage() {
         )}
       </form>
 
+      <div className="pt-2 text-center text-xs text-muted flex items-center justify-center gap-3">
+        <Link href="/terms" className="hover:text-amber transition-colors">Terms of Service</Link>
+        <span>•</span>
+        <Link href="/privacy" className="hover:text-amber transition-colors">Privacy Policy</Link>
+      </div>
+
       {/* Forgot Password Modal Overlay */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-surface border border-border rounded-2xl p-6 w-full max-w-md relative shadow-xl space-y-4">
+          <div className="bg-surface border border-amber rounded-2xl p-6 w-full max-w-md relative shadow-xl space-y-4">
             <button 
               onClick={() => setShowForgotModal(false)}
               className="absolute top-4 right-4 text-muted hover:text-ink transition-colors"
@@ -320,7 +327,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowForgotModal(false)}
-                  className="w-full py-2.5 rounded-xl text-sm font-semibold bg-surface-alt border border-border text-ink hover:bg-surface transition-colors"
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold bg-surface-alt border border-amber text-ink hover:bg-surface transition-colors"
                 >
                   Close
                 </button>
@@ -335,7 +342,7 @@ export default function LoginPage() {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-xl px-4 py-3 text-sm bg-bg border border-border outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
+                    className="w-full rounded-xl px-4 py-3 text-sm bg-bg border border-amber outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-all"
                   />
                 </div>
 

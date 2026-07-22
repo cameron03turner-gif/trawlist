@@ -15,7 +15,7 @@ export function MarkAllReadButton() {
         setLoading(false)
       }}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-surface hover:bg-surface-alt border border-border rounded-md text-muted hover:text-ink transition disabled:opacity-50"
+      className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium bg-surface hover:bg-surface-alt border border-amber rounded-md text-muted hover:text-ink transition disabled:opacity-50"
     >
       <CheckCheck size={14} />
       Mark all read

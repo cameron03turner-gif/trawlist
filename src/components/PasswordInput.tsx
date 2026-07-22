@@ -11,7 +11,7 @@ export function PasswordInput(props: PasswordInputProps) {
       <input
         {...props}
         type={show ? 'text' : 'password'}
-        className={`w-full rounded-lg px-3 py-2 text-sm bg-bg border border-border outline-none focus:border-amber pr-10 ${props.className || ''}`}
+        className={`w-full rounded-lg px-3 py-2 text-sm bg-bg border border-amber outline-none focus:border-amber pr-10 ${props.className || ''}`}
       />
       <button
         type="button"

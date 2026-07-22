@@ -29,7 +29,7 @@ export function ListOptionsDropdown({ list, onEditItemsClick }: Props) {
       <div className="relative" ref={menuRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2.5 text-muted hover:text-ink bg-surface hover:border-border/80 rounded-lg transition-colors shadow-sm"
+          className="p-2.5 text-muted hover:text-ink bg-surface hover:border-amber/30 rounded-lg transition-colors shadow-sm"
           title="List Options"
         >
           <MoreHorizontal size={18} />

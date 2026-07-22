@@ -34,12 +34,12 @@ export function LeaderboardControls() {
   return (
     <div className="space-y-3 mb-6 bg-surface p-3 rounded-xl">
       <div className="relative">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-          <Search size={16} className="text-muted" />
+        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
+          <Search size={16} className="text-ink" />
         </div>
         <input
           type="text"
-          className="block w-full rounded-lg pl-10 pr-10 py-2.5 bg-bg border border-border outline-none focus:border-amber text-sm placeholder:text-muted transition"
+          className="block w-full rounded-lg pl-10 pr-10 py-2.5 bg-bg border border-amber outline-none focus:border-amber text-sm placeholder:text-muted transition"
           placeholder="Search by video title or channel name..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -51,7 +51,7 @@ export function LeaderboardControls() {
         )}
       </div>
       
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div className="aero-toggle mb-2 sm:mb-0">
           {[
             { id: 'avg', label: 'Top Rated' },
@@ -88,7 +88,7 @@ export function LeaderboardControls() {
         <div className="flex items-center gap-2 flex-1">
           <span className="text-xs text-muted font-medium uppercase tracking-wider shrink-0 ml-1">Min Ratings</span>
           <select 
-            className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors shrink-0"
+            className="bg-surface border border-amber rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors shrink-0"
             value={minCount}
             onChange={(e) => setMinCount(e.target.value)}
           >

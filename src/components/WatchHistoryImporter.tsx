@@ -94,7 +94,7 @@ export function WatchHistoryImporter() {
   }
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-6">
+    <div className="bg-surface border border-amber rounded-xl p-6">
       <h3 className="text-lg font-medium mb-2">Import YouTube Watch History</h3>
       <p className="text-sm text-muted mb-6">
         Bootstrap your profile instantly by importing your Google Takeout watch history. We will log the videos as "watched".
@@ -107,14 +107,14 @@ export function WatchHistoryImporter() {
           <li>Click <strong>"Deselect all"</strong>, then scroll down and select ONLY <strong>"YouTube and YouTube Music"</strong></li>
           <li>Click the <strong>"Multiple formats"</strong> button, and ensure the format for "history" is set to <strong>JSON</strong></li>
           <li>Click <strong>"Next step"</strong> and create the export</li>
-          <li>Extract the downloaded zip, navigate to <code className="bg-bg px-1.5 py-0.5 rounded text-ink border border-border text-xs font-mono">Takeout/YouTube and YouTube Music/history/</code> and upload <code className="bg-bg px-1.5 py-0.5 rounded text-ink border border-border text-xs font-mono">watch-history.json</code> below</li>
+          <li>Extract the downloaded zip, navigate to <code className="bg-bg px-1.5 py-0.5 rounded text-ink border border-amber text-xs font-mono">Takeout/YouTube and YouTube Music/history/</code> and upload <code className="bg-bg px-1.5 py-0.5 rounded text-ink border border-amber text-xs font-mono">watch-history.json</code> below</li>
         </ol>
       </div>
 
       {status === 'idle' || status === 'error' ? (
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-amber transition-colors bg-bg"
+          className="border-2 border-dashed border-amber/30 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer hover:border-amber transition-colors bg-bg"
         >
           <UploadCloud className="w-8 h-8 text-muted mb-3" />
           <p className="text-sm font-medium text-ink mb-1">Click to upload watch-history.json</p>
@@ -130,14 +130,14 @@ export function WatchHistoryImporter() {
       ) : null}
 
       {status === 'parsing' && (
-        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-border">
+        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-amber">
           <Loader2 className="w-8 h-8 animate-spin text-amber mb-3" />
           <p className="text-sm font-medium text-ink">Parsing JSON file...</p>
         </div>
       )}
 
       {status === 'ready' && (
-        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-border">
+        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-amber">
           <CheckCircle className="w-8 h-8 text-green-500 mb-3" />
           <p className="text-sm font-medium text-ink mb-1">Ready to import</p>
           <p className="text-xs text-muted mb-4">Found {videos.length.toLocaleString()} videos in your history.</p>
@@ -151,7 +151,7 @@ export function WatchHistoryImporter() {
       )}
 
       {status === 'importing' && (
-        <div className="flex flex-col p-8 bg-bg rounded-xl border border-border">
+        <div className="flex flex-col p-8 bg-bg rounded-xl border border-amber">
           <div className="flex justify-between text-sm font-medium text-ink mb-2">
             <span>Importing...</span>
             <span>{progress.toLocaleString()} / {videos.length.toLocaleString()}</span>
@@ -169,7 +169,7 @@ export function WatchHistoryImporter() {
       )}
 
       {status === 'done' && (
-        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-border">
+        <div className="flex flex-col items-center justify-center p-8 bg-bg rounded-xl border border-amber">
           <CheckCircle className="w-12 h-12 text-green-500 mb-3" />
           <p className="text-base font-bold text-ink mb-1">Import Complete!</p>
           <p className="text-sm text-muted text-center">

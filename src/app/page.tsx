@@ -109,7 +109,7 @@ export default async function HomePage() {
           </div>
 
           <section className="mb-12">
-            <div className="flex items-center justify-between mb-4 border-b border-border pb-2">
+            <div className="flex items-center justify-between mb-4 border-b border-amber/30 pb-2">
               <h2 className="text-xl font-bold text-ink flex items-center gap-2">
                 <Zap className="text-amber" size={20} />
                 You Might Like
@@ -117,7 +117,7 @@ export default async function HomePage() {
             </div>
             
             {(!validTasteVideos || validTasteVideos.length === 0) ? (
-              <div className="text-center py-12 bg-surface rounded-xl border border-border">
+              <div className="text-center py-12 bg-surface rounded-xl border border-amber">
                 <Zap className="mx-auto text-muted mb-4" size={32} />
                 <h3 className="text-lg font-medium text-ink mb-2">Keep rating</h3>
                 <p className="text-muted">Rate some more videos to get personalized recommendations!</p>
@@ -146,7 +146,7 @@ export default async function HomePage() {
           </section>
 
           <section className="mb-12">
-            <div className="flex items-center justify-between mb-4 border-b border-border pb-2">
+            <div className="flex items-center justify-between mb-4 border-b border-amber/30 pb-2">
               <h2 className="text-xl font-bold text-ink flex items-center gap-2">
                 <Users className="text-amber" size={20} />
                 Popular in Your Network
@@ -154,7 +154,7 @@ export default async function HomePage() {
             </div>
             
             {(!validNetworkVideos || validNetworkVideos.length === 0) ? (
-              <div className="text-center py-12 bg-surface rounded-xl border border-border">
+              <div className="text-center py-12 bg-surface rounded-xl border border-amber">
                 <Users className="mx-auto text-muted mb-4" size={32} />
                 <h3 className="text-lg font-medium text-ink mb-2">Build your network</h3>
                 <p className="text-muted mb-6">Follow some friends to see what they're watching!</p>
@@ -205,7 +205,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-surface py-20 lg:py-32 border-b border-border">
+      <div className="relative overflow-hidden bg-surface py-20 lg:py-32 border-b border-amber/30">
         <div className="absolute inset-0 bg-gradient-to-br from-amber/5 to-transparent pointer-events-none" />
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
           <h1 className="text-5xl lg:text-7xl font-extrabold text-ink tracking-tight mb-6">
@@ -221,7 +221,7 @@ export default async function HomePage() {
             <Link href="/login" className="px-8 py-4 bg-amber text-amber-950 font-bold rounded-full hover:bg-amber/90 hover:scale-105 transition-all shadow-lg shadow-amber/20">
               Create an Account
             </Link>
-            <Link href="/videos" className="px-8 py-4 bg-surface-alt text-ink font-semibold rounded-full border border-border hover:bg-surface hover:border-amber/50 transition-all">
+            <Link href="/videos" className="px-8 py-4 bg-surface-alt text-ink font-semibold rounded-full border border-amber hover:bg-surface hover:border-amber/50 transition-all">
               Explore Leaderboard
             </Link>
           </div>
@@ -257,7 +257,7 @@ export default async function HomePage() {
 
       {/* Top Videos Preview */}
       {topVideos && topVideos.length > 0 && (
-        <div className="py-20 bg-surface border-t border-border">
+        <div className="py-20 bg-surface border-t border-amber/30">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-ink mb-4">Trending on Trawlist</h2>

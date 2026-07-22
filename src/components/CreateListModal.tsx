@@ -46,8 +46,8 @@ export function CreateListModal({ onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-xl p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm animate-fade-in">
+      <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-xl p-6 animate-fade-in-zoom">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 text-muted hover:text-ink transition-colors"
@@ -72,7 +72,7 @@ export function CreateListModal({ onClose }: Props) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors"
+              className="w-full bg-bg border border-amber rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors"
               placeholder="e.g., Best Video Essays of 2023"
               required
             />
@@ -85,7 +85,7 @@ export function CreateListModal({ onClose }: Props) {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors resize-none h-24"
+              className="w-full bg-bg border border-amber rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors resize-none h-24"
               placeholder="What is this list about?"
             />
           </div>

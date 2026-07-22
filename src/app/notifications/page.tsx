@@ -43,7 +43,7 @@ export default async function NotificationsPage() {
       </div>
 
       {!notifications || notifications.length === 0 ? (
-        <div className="text-center py-16 px-4 border border-border rounded-xl bg-surface">
+        <div className="text-center py-16 px-4 border border-amber rounded-xl bg-surface">
           <Inbox size={32} className="mx-auto text-muted mb-4 opacity-50" />
           <h2 className="text-lg font-bold text-ink mb-1">All caught up!</h2>
           <p className="text-muted text-sm max-w-sm mx-auto">
@@ -84,7 +84,7 @@ export default async function NotificationsPage() {
                 key={n.id} 
                 href={linkUrl}
                 className={`block p-4 rounded-xl border transition group ${
-                  isUnread ? 'bg-surface border-amber/50 hover:bg-surface-alt' : 'bg-bg border-border hover:border-amber/30'
+                  isUnread ? 'bg-surface border-amber/50 hover:bg-surface-alt' : 'bg-bg border-amber/30 hover:border-amber/30'
                 }`}
               >
                 <div className="flex gap-4">

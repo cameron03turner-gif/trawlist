@@ -59,7 +59,7 @@ export function FeedItemCard({ item }: Props) {
         </div>
 
         {(rating !== null || review) && (
-          <div className="p-5 bg-bg/30 border-t border-border">
+          <div className="p-5 bg-bg/30 border-t border-amber/30">
             {rating !== null && (
               <div className="flex items-center mb-3">
                 <div className="flex items-center text-amber bg-amber/10 px-2 py-1 rounded">
@@ -71,7 +71,7 @@ export function FeedItemCard({ item }: Props) {
             )}
             
             {review && (
-              <div className="text-ink text-sm italic leading-relaxed border-l-2 border-border pl-4 mt-2">
+              <div className="text-ink text-sm italic leading-relaxed border-l-2 border-amber/30 pl-4 mt-2">
                 "{review}"
               </div>
             )}

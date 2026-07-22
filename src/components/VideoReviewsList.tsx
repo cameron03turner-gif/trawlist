@@ -2,11 +2,12 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MessageSquare, Heart, ChevronLeft, ChevronRight } from 'lucide-react'
+import { MessageSquare, Heart, ChevronLeft, ChevronRight, Reply } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Scrubber } from './Scrubber'
 import { Avatar } from './Avatar'
 import { toggleReviewLike } from '@/app/actions/review-likes'
+import { ReviewRepliesSection } from './ReviewRepliesSection'
 
 type VideoReviewsListProps = {
   reviews: any[]
@@ -20,6 +21,7 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
   const [isLiked, setIsLiked] = useState<boolean>(!!review.is_liked)
   const [likeCount, setLikeCount] = useState<number>(review.like_count || 0)
   const [isLiking, setIsLiking] = useState(false)
+  const [isReplying, setIsReplying] = useState(false)
 
   const handleToggleLike = async () => {
     if (!currentUserId || isLiking) return
@@ -46,15 +48,15 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
     : null
 
   return (
-    <div className="p-5 bg-surface border border-amber rounded-xl relative hover:scale-[1.01] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
-      <div className="flex items-start justify-between mb-3">
+    <div className="p-4 bg-surface border border-amber rounded-xl relative hover:scale-[1.01] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
+      <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
           <Link href={`/u/${review.profile?.username}`}>
             <Avatar
               url={review.profile?.avatar_url}
               username={review.profile?.username}
               displayName={review.profile?.display_name}
-              className="w-10 h-10 border border-border/50 text-ink hover:ring-2 hover:ring-amber transition-all"
+              className="w-10 h-10 text-ink hover:ring-2 hover:ring-amber transition-all"
             />
           </Link>
           <div>
@@ -84,25 +86,47 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
           </div>
         </div>
 
-        {/* Like Button */}
-        <button
-          onClick={handleToggleLike}
-          disabled={!currentUserId || isLiking}
-          title={currentUserId ? (isLiked ? 'Unlike review' : 'Like review') : 'Sign in to like reviews'}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all ${
-            isLiked
-              ? 'bg-rec/10 border-rec/30 text-rec'
-              : 'bg-surface-alt/50 border-border/50 text-muted hover:border-amber/40 hover:text-ink'
-          } ${!currentUserId ? 'opacity-60 cursor-not-allowed' : ''}`}
-        >
-          <Heart size={14} className={isLiked ? 'fill-rec text-rec' : ''} />
-          <span>{likeCount}</span>
-        </button>
+        {/* Action Buttons: Like & Reply */}
+        <div className="flex items-center gap-2">
+          {currentUserId && (
+            <button
+              onClick={() => setIsReplying(prev => !prev)}
+              title="Reply to review"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-alt/50 text-muted hover:text-amber transition-all"
+            >
+              <Reply size={14} />
+              <span>Reply</span>
+            </button>
+          )}
+
+          {/* Like Button */}
+          <button
+            onClick={handleToggleLike}
+            disabled={!currentUserId || isLiking}
+            title={currentUserId ? (isLiked ? 'Unlike review' : 'Like review') : 'Sign in to like reviews'}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              isLiked
+                ? 'bg-rec/10 text-rec'
+                : 'bg-surface-alt/50 text-muted hover:text-ink'
+            } ${!currentUserId ? 'opacity-60 cursor-not-allowed' : ''}`}
+          >
+            <Heart size={14} className={isLiked ? 'fill-rec text-rec' : ''} />
+            <span>{likeCount}</span>
+          </button>
+        </div>
       </div>
 
       <div className="text-base text-ink leading-relaxed whitespace-pre-wrap pl-13">
         {review.review}
       </div>
+
+      {/* YouTube Style Reply Chain Section */}
+      <ReviewRepliesSection
+        ratingId={review.id}
+        currentUserId={currentUserId}
+        isReplyingExternal={isReplying}
+        onCancelReplyingExternal={() => setIsReplying(false)}
+      />
     </div>
   )
 }
@@ -151,7 +175,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
   }
 
   return (
-    <div className="pt-8 mt-8 border-t border-border">
+    <div className="pt-8 mt-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-muted uppercase tracking-wider">Community Reviews</h3>
@@ -198,7 +222,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
       </div>
 
       {filteredReviews.length === 0 ? (
-        <div className="text-center py-12 bg-surface rounded-xl border border-amber">
+        <div className="text-center py-12 bg-surface rounded-xl">
           <MessageSquare className="mx-auto text-amber/60 mb-3" size={36} />
           <p className="text-base font-bold text-ink mb-1">
             {network === 'following' ? 'No reviews from people you follow' : 'No reviews yet'}
@@ -224,7 +248,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-4 mt-6 border-t border-border/40">
+            <div className="flex items-center justify-between pt-4 mt-6">
               <span className="text-xs text-muted font-medium">
                 Showing {startIndex + 1}–{Math.min(startIndex + pageSize, filteredReviews.length)} of {filteredReviews.length} reviews
               </span>
@@ -233,7 +257,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
                 <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="p-2 rounded-lg bg-surface border border-border/50 text-ink hover:border-amber hover:text-amber disabled:opacity-40 disabled:hover:border-border/50 disabled:hover:text-ink transition-colors"
+                  className="p-2 rounded-lg bg-surface text-ink hover:text-amber disabled:opacity-40 disabled:hover:text-ink transition-colors"
                   title="Previous page"
                 >
                   <ChevronLeft size={16} />
@@ -246,7 +270,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
                 <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="p-2 rounded-lg bg-surface border border-border/50 text-ink hover:border-amber hover:text-amber disabled:opacity-40 disabled:hover:border-border/50 disabled:hover:text-ink transition-colors"
+                  className="p-2 rounded-lg bg-surface text-ink hover:text-amber disabled:opacity-40 disabled:hover:text-ink transition-colors"
                   title="Next page"
                 >
                   <ChevronRight size={16} />

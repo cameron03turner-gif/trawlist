@@ -32,12 +32,12 @@ export function ListControls() {
   return (
     <div className="space-y-3 mb-6 bg-surface p-3 rounded-xl">
       <div className="relative">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-          <Search size={16} className="text-muted" />
+        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
+          <Search size={16} className="text-ink" />
         </div>
         <input
           type="text"
-          className="block w-full rounded-lg pl-10 pr-10 py-2.5 bg-bg border border-border outline-none focus:border-amber text-sm placeholder:text-muted transition"
+          className="block w-full rounded-lg pl-10 pr-10 py-2.5 bg-bg border border-amber outline-none focus:border-amber text-sm placeholder:text-muted transition"
           placeholder="Search for lists by title..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}

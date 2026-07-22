@@ -65,7 +65,7 @@ export function ExportDataButton() {
     <button
       onClick={handleExport}
       disabled={exporting}
-      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-border text-ink hover:bg-surface hover:border-amber/50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-amber text-ink hover:bg-surface hover:border-amber/50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
     >
       {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
       Export Ratings (CSV)

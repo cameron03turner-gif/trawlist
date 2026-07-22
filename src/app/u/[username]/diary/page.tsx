@@ -36,7 +36,7 @@ export default async function DiaryPage(props: { params: Promise<{ username: str
 
   if (!ratings || ratings.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-surface rounded-xl border border-border">
+      <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-surface rounded-xl border border-amber">
         <div className="w-16 h-16 rounded-full bg-bg flex items-center justify-center text-muted">
           <Calendar size={32} />
         </div>
@@ -73,7 +73,7 @@ export default async function DiaryPage(props: { params: Promise<{ username: str
 
       {Object.entries(grouped).map(([monthYear, entries]) => (
         <section key={monthYear} className="space-y-4">
-          <h2 className="text-lg font-display font-bold text-ink border-b border-border pb-2">{monthYear}</h2>
+          <h2 className="text-lg font-display font-bold text-ink border-b border-amber/30 pb-2">{monthYear}</h2>
           <div className="space-y-3">
             {entries.map((r, i) => {
               const v = r.videos || {}

@@ -86,7 +86,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
           animation: shuffle-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
       `}</style>
-      <div className="bg-surface border border-amber rounded-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col relative">
+      <div className="bg-surface rounded-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col relative">
         
         {/* Top Thumbnail Stack - Clickable */}
         <Link href={`/lists/${list.id}`} className="relative w-full pt-[84px] shrink-0 flex items-end justify-center block">
@@ -101,7 +101,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                 return (
                   <div 
                     key={item?.video?.thumbnail_url || originalIndex}
-                    className={`absolute inset-x-0 mx-auto border border-border/50 rounded-lg overflow-hidden group-hover:-translate-y-3 ${
+                    className={`absolute inset-x-0 mx-auto rounded-lg overflow-hidden group-hover:-translate-y-3 ${
                       !isBackCard ? 'shadow-[0_-16px_24px_-12px_rgba(0,0,0,0.95)]' : ''
                     } ${isAnimatingBack ? 'animate-shuffle-out' : ''}`}
                     style={{
@@ -130,7 +130,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
           )}
           
           {list.is_private && (
-            <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-sm p-1.5 rounded-full text-white border border-white/10">
+            <div className="absolute top-3 right-3 z-20 bg-black/60 backdrop-blur-sm p-1.5 rounded-full text-white">
               <Lock size={14} />
             </div>
           )}
@@ -151,7 +151,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
             </p>
           )}
 
-          <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-border/50 relative z-20">
+          <div className="mt-auto pt-4 flex flex-col gap-3 relative z-20">
             {/* Top row: Metadata */}
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-4">
@@ -164,7 +164,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                       url={list.owner.avatar_url} 
                       username={list.owner.username} 
                       displayName={list.owner.display_name} 
-                      className="w-6 h-6 border border-border group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all text-[10px]" 
+                      className="w-6 h-6 group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all text-[10px]" 
                     />
                     <span className="text-ink font-medium group-hover/owner:text-amber transition-colors truncate">
                       {list.owner.display_name || list.owner.username}
@@ -183,7 +183,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
             </div>
 
             {/* Bottom row: Actions */}
-            <div className="flex items-center justify-between border-t border-border/50 pt-3 mt-1">
+            <div className="flex items-center justify-between pt-3 mt-1">
               <button 
                 onClick={handleLikeToggle}
                 className={`flex items-center gap-1.5 text-sm transition-colors ${

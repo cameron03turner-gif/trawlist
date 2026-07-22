@@ -44,9 +44,9 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
   
   const thumbnailNode = (
     <div className={`relative bg-surface group/thumb shrink-0 overflow-hidden ${
-      isGrid ? 'aspect-video w-full border-b border-border' : 
-      layout === 'large-row' ? 'border border-border group-hover/card:border-amber transition-colors duration-300 aspect-video rounded-lg w-full sm:w-64' :
-      'border border-border group-hover/card:border-amber transition-colors duration-300 w-28 sm:w-36 aspect-video rounded-md'
+      isGrid ? 'aspect-video w-full border-b border-amber/30' : 
+      layout === 'large-row' ? 'border border-amber group-hover/card:border-amber transition-colors duration-300 aspect-video rounded-lg w-full sm:w-64' :
+      'border border-amber group-hover/card:border-amber transition-colors duration-300 w-28 sm:w-36 aspect-video rounded-md'
     }`}>
       {props.onClick ? (
         <button onClick={props.onClick} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden cursor-pointer outline-none text-left">
@@ -97,7 +97,7 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
         {props.channelId ? (
           <Link href={`/channel/${encodeURIComponent(props.channelId)}`} className="flex items-center gap-2 group/channel min-w-0">
             {props.channelThumbnail && (
-              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-border/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
+              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-amber/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
             )}
             <div className="text-muted truncate font-medium group-hover/channel:text-amber transition-colors text-sm">
               {props.channel}
@@ -106,7 +106,7 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
         ) : (
           <div className="flex items-center gap-2 min-w-0">
             {props.channelThumbnail && (
-              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-border/50 shrink-0" referrerPolicy="no-referrer" />
+              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-amber/50 shrink-0" referrerPolicy="no-referrer" />
             )}
             <div className="text-muted truncate font-medium text-sm">
               {props.channel}

@@ -149,7 +149,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Rating Distribution */}
-        <section className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
+        <section className="bg-surface rounded-xl p-6 border border-amber shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
           <div className="flex items-center gap-2 mb-8 text-ink">
             <BarChart size={20} className="text-amber" />
             <h3 className="text-lg font-bold">Rating Distribution</h3>
@@ -177,7 +177,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
 
         <div className="space-y-6 flex flex-col">
           {/* Top Channels */}
-          <section className="bg-surface rounded-xl p-6 border border-border shadow-sm flex-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
+          <section className="bg-surface rounded-xl p-6 border border-amber shadow-sm flex-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
             <div className="flex items-center gap-2 mb-6 text-ink">
               <Trophy size={20} className="text-amber" />
               <h3 className="text-lg font-bold">Most Watched Channels</h3>
@@ -201,7 +201,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
           </section>
 
           {/* Top Tags */}
-          <section className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
+          <section className="bg-surface rounded-xl p-6 border border-amber shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
             <div className="flex items-center gap-2 mb-6 text-ink">
               <Tag size={20} className="text-amber" />
               <h3 className="text-lg font-bold">Favourite Tags</h3>
@@ -212,7 +212,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
                 <p className="text-sm text-muted">No tags added yet.</p>
               ) : (
                 sortedTags.map(([tag, count]) => (
-                  <div key={tag} className="bg-bg border border-border px-3 py-1.5 rounded-lg flex items-center gap-2">
+                  <div key={tag} className="bg-bg border border-amber px-3 py-1.5 rounded-lg flex items-center gap-2">
                     <span className="text-sm font-medium text-ink">{tag}</span>
                     <span className="text-xs text-muted font-mono">{count}</span>
                   </div>
@@ -224,7 +224,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
       </div>
 
       {/* Calendar Heatmap */}
-      <section className="bg-surface rounded-xl p-6 border border-border shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
+      <section className="bg-surface rounded-xl p-6 border border-amber shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
         <div className="flex items-center gap-2 mb-6 text-ink">
           <Calendar size={20} className="text-amber" />
           <h3 className="text-lg font-bold">Activity (Last 12 Weeks)</h3>
@@ -242,7 +242,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
                       key={d.dateStr}
                       title={`${d.count} ratings on ${d.dateStr}`}
                       className={`w-4 h-4 rounded-sm transition-colors ${
-                        d.count === 0 ? 'bg-surface-alt border border-border/50' : 
+                        d.count === 0 ? 'bg-surface-alt border border-amber/50' : 
                         d.count === 1 ? 'bg-amber/30 border border-amber/10' :
                         d.count <= 3 ? 'bg-amber/60 border border-amber/20' :
                         'bg-amber border border-amber/30'

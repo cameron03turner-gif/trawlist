@@ -51,7 +51,7 @@ export function ListClientContent({ list, initialItems, isOwner, initialIsLiked 
 
   return (
     <>
-      <div className="mb-12 border-b border-border pb-8 flex flex-col md:flex-row md:items-start justify-between gap-6">
+      <div className="mb-12 border-b border-amber/30 pb-8 flex flex-col md:flex-row md:items-start justify-between gap-6">
         <div>
           <h1 className="text-4xl font-bold text-ink mb-4">{list.title}</h1>
           {list.description && (
@@ -59,11 +59,11 @@ export function ListClientContent({ list, initialItems, isOwner, initialIsLiked 
           )}
           
           <div className="flex items-center text-sm text-muted flex-wrap gap-y-2">
-            <span className="bg-surface-alt text-ink border border-border px-3 py-1 rounded-full font-medium">
+            <span className="bg-surface-alt text-ink border border-amber px-3 py-1 rounded-full font-medium">
               {list.is_ranked ? 'Ranked List' : 'List'}
             </span>
             {list.is_private && (
-              <span className="ml-3 bg-surface-alt border border-border text-muted px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
+              <span className="ml-3 bg-surface-alt border border-amber text-muted px-3 py-1 rounded-full font-medium flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 Private
               </span>
@@ -100,7 +100,7 @@ export function ListClientContent({ list, initialItems, isOwner, initialIsLiked 
         </div>
 
         {isOwner && (
-          <div className="shrink-0 flex flex-col gap-2 bg-surface p-3 rounded-xl border border-border/50 shadow-sm min-w-[200px]">
+          <div className="shrink-0 flex flex-col gap-2 bg-surface p-3 rounded-xl border border-amber/50 shadow-sm min-w-[200px]">
             <AddToListButton listId={list.id} />
             <button
               onClick={() => setShowSettings(true)}

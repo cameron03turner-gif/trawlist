@@ -13,7 +13,7 @@ export default function TermsPage() {
         <p className="text-sm text-muted">Last updated: July 22, 2026</p>
       </div>
 
-      <div className="space-y-6 text-ink/90 text-sm leading-relaxed border-t border-border pt-6">
+      <div className="space-y-6 text-ink/90 text-sm leading-relaxed border-t border-amber/30 pt-6">
         <section className="space-y-2">
           <h2 className="text-lg font-semibold text-ink">1. Agreement to Terms</h2>
           <p>
@@ -50,7 +50,7 @@ export default function TermsPage() {
         </section>
       </div>
 
-      <div className="pt-6 border-t border-border">
+      <div className="pt-6 border-t border-amber/30">
         <Link href="/" className="text-xs text-amber font-semibold hover:underline">
           &larr; Back to Trawlist Home
         </Link>

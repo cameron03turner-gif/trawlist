@@ -70,7 +70,7 @@ export function ActivityFeed({ initialType = 'community', userId }: Props) {
           <p>{error}</p>
         </div>
       ) : items.length === 0 ? (
-        <div className="text-center py-12 bg-surface border border-border rounded-xl">
+        <div className="text-center py-12 bg-surface border border-amber rounded-xl">
           <Users className="mx-auto text-muted mb-4" size={32} />
           <h3 className="text-xl font-semibold text-ink mb-2">
             {feedType === 'following' ? 'No following activity' : 'No activity yet'}
@@ -90,7 +90,7 @@ export function ActivityFeed({ initialType = 'community', userId }: Props) {
               </Link>
               <button
                 onClick={() => setFeedType('community')}
-                className="px-4 py-2 bg-surface-alt border border-border text-ink text-sm font-semibold rounded-lg hover:bg-surface transition-colors"
+                className="px-4 py-2 bg-surface-alt border border-amber text-ink text-sm font-semibold rounded-lg hover:bg-surface transition-colors"
               >
                 View Community Activity
               </button>

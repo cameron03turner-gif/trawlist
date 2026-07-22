@@ -63,7 +63,7 @@ export function FollowButton({ targetUserId, initialIsFollowing, className = '' 
     return (
       <button 
         disabled 
-        className={`px-4 py-2 rounded-full font-semibold text-sm transition-colors border border-border bg-surface-alt text-muted opacity-50 cursor-not-allowed ${className}`}
+        className={`px-4 py-2 rounded-full font-semibold text-sm transition-colors border border-amber bg-surface-alt text-muted opacity-50 cursor-not-allowed ${className}`}
       >
         Loading...
       </button>
@@ -75,7 +75,7 @@ export function FollowButton({ targetUserId, initialIsFollowing, className = '' 
       onClick={handleToggle}
       className={`px-4 py-2 rounded-full font-semibold text-sm transition-colors border ${
         isFollowing
-          ? 'bg-surface-alt border-border text-ink hover:border-rec/50 hover:text-rec'
+          ? 'bg-surface-alt border-amber/30 text-ink hover:border-rec/50 hover:text-rec'
           : 'bg-amber text-bg border-transparent hover:brightness-110 shadow-sm'
       } ${className}`}
     >

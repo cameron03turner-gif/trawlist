@@ -29,16 +29,16 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
   }
 
   return (
-    <div className="bg-surface border border-amber/30 rounded-xl p-4 shadow-lg relative !overflow-visible">
+    <div className="bg-surface rounded-xl p-4 shadow-lg relative !overflow-visible">
       <div className="absolute top-0 right-4 -translate-y-1/2">
-        <span className="inline-block text-[10px] font-black text-amber uppercase tracking-widest bg-[#091D24] px-3 py-1 rounded-full border border-amber/30 shadow-sm">
+        <span className="inline-block text-[10px] font-black text-amber uppercase tracking-widest bg-[#091D24] px-3 py-1 rounded-full shadow-sm">
           Your Log
         </span>
       </div>
       
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-bg/50 px-4 py-2 rounded-lg border border-border/50">
+          <div className="flex items-center gap-2 bg-bg/50 px-4 py-2 rounded-lg">
             <span className="font-mono font-bold text-amber text-xl leading-none">{myRatingData.rating ? Number(myRatingData.rating).toFixed(1) : '-.-'}</span>
             <Scrubber value={myRatingData.rating ? Number(myRatingData.rating) : 0} interactive={false} height={14} />
           </div>
@@ -71,11 +71,11 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
               <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Review</span>
               {myRatingData.like_count !== undefined && (
                 <div 
-                  className="flex items-center gap-1.5 text-xs text-rec font-semibold bg-rec/10 px-2 py-0.5 rounded border border-rec/20 shadow-sm" 
+                  className="flex items-center gap-1.5 text-xs text-rec font-semibold bg-rec/10 px-2 py-0.5 rounded shadow-sm" 
                   title={`${myRatingData.like_count || 0} ${myRatingData.like_count === 1 ? 'person liked' : 'people liked'} your review`}
                 >
                   <Heart size={12} className="fill-rec text-rec" />
-                  <span>{myRatingData.like_count || 0} {myRatingData.like_count === 1 ? 'like' : 'likes'}</span>
+                  <span>{myRatingData.like_count || 0}</span>
                 </div>
               )}
             </div>
@@ -99,7 +99,7 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-semibold text-muted uppercase tracking-wider flex items-center gap-2">
-                Private Note <span className="text-[9px] text-muted/60 normal-case tracking-normal bg-surface-alt px-1.5 py-0.5 rounded border border-border/50">Only you</span>
+                Private Note <span className="text-[9px] text-muted/60 normal-case tracking-normal bg-surface-alt px-1.5 py-0.5 rounded">Only you</span>
               </span>
               <button 
                 onClick={() => setShowNotes(!showNotes)}
@@ -109,7 +109,7 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
               </button>
             </div>
             {showNotes && (
-              <p className="text-sm text-ink/80 leading-relaxed whitespace-pre-wrap italic bg-surface-alt/50 p-3 rounded-lg border border-border/50 mt-2">
+              <p className="text-sm text-ink/80 leading-relaxed whitespace-pre-wrap italic bg-surface-alt/50 p-3 rounded-lg mt-2">
                 {myRatingData.note}
               </p>
             )}

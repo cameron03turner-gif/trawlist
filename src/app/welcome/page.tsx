@@ -105,7 +105,7 @@ export default function WelcomePage() {
               className={`w-full rounded-lg pl-8 pr-10 py-2.5 text-sm bg-bg border outline-none focus:border-amber transition-colors ${
                 usernameAvailable === false ? 'border-rec' : 
                 usernameAvailable === true ? 'border-green-500' : 
-                'border-border'
+                'border-amber/30'
               }`}
             />
             {checkingUsername && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">...</span>}
@@ -125,7 +125,7 @@ export default function WelcomePage() {
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             placeholder="e.g. Jane Doe"
-            className="w-full rounded-lg px-3 py-2.5 text-sm bg-bg border border-border outline-none focus:border-amber"
+            className="w-full rounded-lg px-3 py-2.5 text-sm bg-bg border border-amber outline-none focus:border-amber"
           />
           <p className="text-xs text-muted flex justify-end">{displayName.length}/50</p>
         </div>

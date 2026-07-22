@@ -58,11 +58,11 @@ export function FollowListModal({ profileId, username, type, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
       <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-xl flex flex-col max-h-[85vh]">
-        <div className="flex items-center justify-between p-4 border-b border-border">
+        <div className="flex items-center justify-between p-4 border-b border-amber/30">
           <h2 className="text-lg font-bold text-ink capitalize">{type}</h2>
           <button 
             onClick={onClose}
-            className="p-1.5 text-muted hover:text-ink bg-bg rounded-full border border-border transition-colors"
+            className="p-1.5 text-muted hover:text-ink bg-bg rounded-full border border-amber transition-colors"
           >
             <X size={16} />
           </button>
@@ -87,7 +87,7 @@ export function FollowListModal({ profileId, username, type, onClose }: Props) {
                       url={u.avatar_url}
                       username={u.username}
                       displayName={u.display_name}
-                      className="w-10 h-10 border border-border/50 shrink-0 text-ink"
+                      className="w-10 h-10 border border-amber/50 shrink-0 text-ink"
                     />
                     <div className="min-w-0">
                       <div className="font-bold text-sm text-ink truncate group-hover:text-amber transition-colors">

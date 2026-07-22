@@ -21,7 +21,7 @@ export default async function ChannelsLeaderboardPage() {
         <p className="text-xs text-muted/70 mt-1">Requires a minimum of 2 rated videos to qualify.</p>
       </div>
 
-      <div className="bg-surface border border-border rounded-xl overflow-hidden shadow-sm">
+      <div className="bg-surface border border-amber rounded-xl overflow-hidden shadow-sm">
         {channels && channels.length > 0 ? (
           <div className="divide-y divide-border/50">
             {channels.map((channel, index) => (
@@ -39,11 +39,11 @@ export default async function ChannelsLeaderboardPage() {
                     <img 
                       src={channel.thumbnail_url} 
                       alt={channel.name}
-                      className="w-12 h-12 rounded-full border border-border/50 object-cover shrink-0"
+                      className="w-12 h-12 rounded-full border border-amber/50 object-cover shrink-0"
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-surface-alt border border-border/50 flex items-center justify-center font-bold text-lg text-amber shrink-0">
+                    <div className="w-12 h-12 rounded-full bg-surface-alt border border-amber/50 flex items-center justify-center font-bold text-lg text-amber shrink-0">
                       {channel.name.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -65,7 +65,7 @@ export default async function ChannelsLeaderboardPage() {
 
                 <div className="mt-4 sm:mt-0 sm:ml-auto flex items-center gap-3 w-full sm:w-auto">
                   <div className="flex-1 sm:hidden h-px bg-border/50" />
-                  <div className="bg-amber/10 text-amber font-mono font-bold text-xl px-4 py-2 rounded-lg border border-amber/20 shadow-sm">
+                  <div className="bg-amber/10 text-amber font-mono font-bold text-xl px-4 py-2 rounded-lg shadow-sm">
                     {Number(channel.avg_rating).toFixed(2)}
                   </div>
                 </div>

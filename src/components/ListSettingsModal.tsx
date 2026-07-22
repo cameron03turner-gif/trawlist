@@ -78,7 +78,7 @@ export function ListSettingsModal({ list, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
       <div className="relative w-full max-w-lg bg-surface border border-amber rounded-2xl shadow-xl flex flex-col">
-        <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="p-4 border-b border-amber/30 flex items-center justify-between">
           <h2 className="text-lg font-display font-bold">List Settings</h2>
           <button 
             onClick={onClose}
@@ -104,7 +104,7 @@ export function ListSettingsModal({ list, onClose }: Props) {
               required
               value={title}
               onChange={e => setTitle(e.target.value)}
-              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-amber"
+              className="w-full bg-bg border border-amber rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-amber"
             />
           </div>
 
@@ -115,7 +115,7 @@ export function ListSettingsModal({ list, onClose }: Props) {
             <textarea
               value={description}
               onChange={e => setDescription(e.target.value)}
-              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-amber resize-none h-24"
+              className="w-full bg-bg border border-amber rounded-lg px-3 py-2 text-ink focus:outline-none focus:border-amber resize-none h-24"
             />
           </div>
 
@@ -157,7 +157,7 @@ export function ListSettingsModal({ list, onClose }: Props) {
             </label>
           </div>
 
-          <div className="pt-4 border-t border-border flex justify-between items-center gap-3">
+          <div className="pt-4 border-t border-amber/30 flex justify-between items-center gap-3">
             <button
               type="button"
               onClick={() => setShowConfirmDelete(true)}

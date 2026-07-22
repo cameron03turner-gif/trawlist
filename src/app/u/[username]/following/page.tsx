@@ -37,7 +37,7 @@ export default async function FollowingPage(props: { params: Promise<{ username:
       <h2 className="text-xl font-bold text-ink mb-6">Following</h2>
 
       {!follows || follows.length === 0 ? (
-        <div className="text-center py-20 bg-surface rounded-xl border border-border">
+        <div className="text-center py-20 bg-surface rounded-xl border border-amber">
           <Users className="mx-auto text-muted mb-4" size={32} />
           <h3 className="text-lg font-medium text-ink mb-2">Not following anyone</h3>
           <p className="text-muted">
@@ -50,13 +50,13 @@ export default async function FollowingPage(props: { params: Promise<{ username:
             const followingUser = f.following
             if (!followingUser) return null
             return (
-              <div key={followingUser.id} className="bg-surface border border-border rounded-xl p-4 flex items-center justify-between gap-4">
+              <div key={followingUser.id} className="bg-surface border border-amber rounded-xl p-4 flex items-center justify-between gap-4">
                 <Link href={`/u/${followingUser.username}`} className="flex items-center gap-3 flex-1 min-w-0 group">
                   <Avatar
                     url={followingUser.avatar_url}
                     username={followingUser.username}
                     displayName={followingUser.display_name}
-                    className="w-12 h-12 border border-border/50 shrink-0 text-ink text-lg"
+                    className="w-12 h-12 border border-amber/50 shrink-0 text-ink text-lg"
                   />
                   <div className="min-w-0">
                     <div className="font-bold text-ink truncate group-hover:text-amber transition-colors">

@@ -81,7 +81,7 @@ export function ListVideoRow(props: Props) {
       <textarea
         value={props.note || ''}
         onChange={(e) => props.onNoteChange?.(e.target.value)}
-        className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-amber resize-none h-20"
+        className="w-full bg-bg border border-amber rounded-lg px-3 py-2 text-sm text-ink focus:outline-none focus:border-amber resize-none h-20"
         placeholder="Add a note about this video..."
       />
     </div>

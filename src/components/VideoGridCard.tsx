@@ -63,7 +63,7 @@ export function VideoGridCard(props: Props) {
         e.stopPropagation();
         props.onDelete?.();
       }}
-      className="absolute top-2 right-2 p-1.5 bg-bg/80 hover:bg-red-500/90 text-muted hover:text-white backdrop-blur rounded-full opacity-0 group-hover/thumb:opacity-100 transition-all z-20 shadow-sm border border-border/50"
+      className="absolute top-2 right-2 p-1.5 bg-bg/80 hover:bg-red-500/90 text-muted hover:text-white backdrop-blur rounded-full opacity-0 group-hover/thumb:opacity-100 transition-all z-20 shadow-sm border border-amber/50"
       title="Remove"
     >
       <X size={14} />

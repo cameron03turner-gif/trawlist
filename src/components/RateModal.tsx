@@ -152,11 +152,22 @@ export function RateModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 overflow-y-auto" style={{ backgroundColor: 'var(--modal-backdrop-bg)', backdropFilter: 'blur(var(--modal-backdrop-blur))', WebkitBackdropFilter: 'blur(var(--modal-backdrop-blur))' }} onClick={handleClose}>
-      <div className="aero-modal relative w-full max-w-lg bg-surface border border-amber rounded-2xl shadow-xl flex flex-col my-auto" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 overflow-y-auto" onClick={handleClose}>
+      {/* Fading Backdrop Overlay */}
+      <div 
+        className="absolute inset-0 animate-fade-in" 
+        style={{ 
+          backgroundColor: 'var(--modal-backdrop-bg)', 
+          backdropFilter: 'blur(var(--modal-backdrop-blur))', 
+          WebkitBackdropFilter: 'blur(var(--modal-backdrop-blur))' 
+        }} 
+      />
+
+      {/* Fading & Scaling Modal Container */}
+      <div className="aero-modal relative w-full max-w-lg bg-surface border border-amber rounded-2xl shadow-xl flex flex-col my-auto animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
         <button 
           onClick={handleClose}
-          className="absolute top-4 right-4 p-2 text-muted hover:text-ink bg-bg rounded-full border border-border z-10 transition-colors"
+          className="absolute top-4 right-4 p-2 text-muted hover:text-ink bg-bg rounded-full border border-amber z-10 transition-colors"
         >
           <X size={16} />
         </button>
@@ -197,7 +208,7 @@ export function RateModal() {
                 onChange={(e) => setUrlInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleFind()}
                 placeholder="youtube.com/watch?v=..."
-                className="w-full bg-bg border border-border rounded-xl py-4 pl-11 pr-32 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber/50 transition-all shadow-inner"
+                className="w-full bg-bg border border-amber rounded-xl py-4 pl-11 pr-32 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber/50 transition-all shadow-inner"
               />
               <div className="absolute inset-y-2 right-2">
                 <button
@@ -219,7 +230,7 @@ export function RateModal() {
             <img
               src={preview.thumbnail}
               alt=""
-              className="w-[140px] h-[79px] object-cover rounded-lg border border-border flex-shrink-0"
+              className="w-[140px] h-[79px] object-cover rounded-lg border border-amber flex-shrink-0"
             />
             <div className="min-w-0">
               <div className="text-sm font-medium mb-1 leading-snug">{preview.title}</div>
@@ -239,7 +250,6 @@ export function RateModal() {
                     >
                       <Heart size={16} className={liked ? "fill-current text-rec" : ""} />
                     </button>
-                    {rating !== null && <button onClick={() => setRating(null)} className="text-xs text-muted hover:text-rec">Clear</button>}
                     <span className="font-mono text-lg font-bold text-amber">{rating !== null ? rating.toFixed(1) : '--'}</span>
                   </div>
                 </div>
@@ -249,7 +259,7 @@ export function RateModal() {
 
             <div className="flex gap-2">
               <select 
-                className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors flex-1"
+                className="bg-surface border border-amber rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors flex-1"
                 value={watchStatus}
                 onChange={e => setWatchStatus(e.target.value as any)}
               >
@@ -277,7 +287,7 @@ export function RateModal() {
                 </div>
                 <textarea 
                   value={review} onChange={e => setReview(e.target.value)}
-                  className="w-full bg-bg border border-border rounded-lg p-3 text-sm outline-none focus:border-amber min-h-[80px]"
+                  className="w-full bg-bg border border-amber rounded-lg p-3 text-sm outline-none focus:border-amber min-h-[80px]"
                   placeholder="What did you think of it?"
                 />
               </div>
@@ -291,7 +301,7 @@ export function RateModal() {
                 </div>
                 <textarea 
                   value={note} onChange={e => setNote(e.target.value)}
-                  className="w-full bg-bg border border-border rounded-lg p-3 text-sm outline-none focus:border-amber min-h-[80px]"
+                  className="w-full bg-bg border border-amber rounded-lg p-3 text-sm outline-none focus:border-amber min-h-[80px]"
                   placeholder="Personal thoughts, context, etc..."
                 />
               </div>

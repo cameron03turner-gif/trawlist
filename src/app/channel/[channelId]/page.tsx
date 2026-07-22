@@ -65,7 +65,7 @@ export default async function ChannelPage(props: { params: Promise<{ channelId: 
   return (
     <div className="pt-8 px-4 pb-16 max-w-6xl mx-auto">
       {/* Channel Header */}
-      <div className="bg-surface border border-border rounded-xl p-8 mb-8 flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
+      <div className="bg-surface border border-amber rounded-xl p-8 mb-8 flex flex-col md:flex-row items-center md:items-start gap-6 text-center md:text-left">
         {channel.thumbnail_url ? (
           <img 
             src={channel.thumbnail_url} 
@@ -84,19 +84,19 @@ export default async function ChannelPage(props: { params: Promise<{ channelId: 
           <p className="text-muted font-mono text-sm mb-6">{decodedId}</p>
           
           <div className="flex flex-wrap justify-center md:justify-start gap-4">
-            <div className="bg-surface-alt border border-border rounded-lg px-4 py-2 text-center min-w-[120px]">
+            <div className="bg-surface-alt border border-amber rounded-lg px-4 py-2 text-center min-w-[120px]">
               <div className="text-2xl font-bold text-amber">
                 {stats?.avg_rating ? Number(stats.avg_rating).toFixed(2) : '--'}
               </div>
               <div className="text-xs text-muted font-medium uppercase tracking-wider mt-1">Avg Rating</div>
             </div>
-            <div className="bg-surface-alt border border-border rounded-lg px-4 py-2 text-center min-w-[120px]">
+            <div className="bg-surface-alt border border-amber rounded-lg px-4 py-2 text-center min-w-[120px]">
               <div className="text-2xl font-bold text-ink">
                 {stats?.video_count || (videos ? videos.length : 0)}
               </div>
               <div className="text-xs text-muted font-medium uppercase tracking-wider mt-1">Videos Logged</div>
             </div>
-            <div className="bg-surface-alt border border-border rounded-lg px-4 py-2 text-center min-w-[120px]">
+            <div className="bg-surface-alt border border-amber rounded-lg px-4 py-2 text-center min-w-[120px]">
               <div className="text-2xl font-bold text-ink">
                 {stats?.total_ratings || '--'}
               </div>
@@ -132,7 +132,7 @@ export default async function ChannelPage(props: { params: Promise<{ channelId: 
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 bg-surface border border-border rounded-xl">
+          <div className="text-center py-16 bg-surface border border-amber rounded-xl">
             <p className="text-muted">No videos from this channel have been rated yet.</p>
           </div>
         )}

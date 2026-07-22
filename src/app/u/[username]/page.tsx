@@ -137,7 +137,7 @@ export default async function ProfilePage(props: { params: Promise<{ username: s
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-surface border border-border rounded-xl">
+              <div className="text-center py-12 bg-surface border border-amber rounded-xl">
                 <Film className="mx-auto text-muted mb-4" size={32} />
                 <h3 className="text-lg font-medium text-ink mb-2">No videos yet</h3>
                 <p className="text-muted mb-6">
@@ -195,7 +195,7 @@ export default async function ProfilePage(props: { params: Promise<{ username: s
                       <span className="text-xs font-mono text-muted w-4">{idx + 1}</span>
                       <span className="text-sm font-medium truncate">{channel}</span>
                     </div>
-                    <span className="text-xs text-muted shrink-0 bg-bg px-2 py-0.5 rounded-full border border-border">{count}</span>
+                    <span className="text-xs text-muted shrink-0 bg-bg px-2 py-0.5 rounded-full border border-amber">{count}</span>
                   </div>
                 ))}
               </div>

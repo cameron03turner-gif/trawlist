@@ -27,8 +27,8 @@ export function SearchInput() {
 
   return (
     <div className="relative mb-6">
-      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-        <Search size={16} className="text-muted" />
+      <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
+        <Search size={16} className="text-ink" />
       </div>
       <input
         type="text"

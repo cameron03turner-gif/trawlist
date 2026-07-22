@@ -184,7 +184,7 @@ export default async function VideoPage(props: Props) {
         ></iframe>
       </div>
 
-            <div className="flex justify-center gap-12 text-sm font-semibold mb-6 border-y border-border/50 py-3">
+            <div className="flex justify-center gap-12 text-sm font-semibold mb-6 border-y border-amber/30 py-3">
               <div className="flex items-center gap-2" title={`${totalRatings || 0} Rated`}>
                 <Star size={20} className="text-amber" />
                 <span className="text-muted group-hover:text-ink transition">{totalRatings || 0}</span>
@@ -212,7 +212,7 @@ export default async function VideoPage(props: Props) {
                 </div>
                 <Link href={`/channel/${encodeURIComponent(videoData.channel_id || videoData.channel)}`} className="flex items-center gap-2 group/channel">
                   {videoData.channel_thumbnail_url && (
-                    <img src={videoData.channel_thumbnail_url} alt="" className="w-6 h-6 rounded-full object-cover border border-border/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
+                    <img src={videoData.channel_thumbnail_url} alt="" className="w-6 h-6 rounded-full object-cover border border-amber/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
                   )}
                   <span className="text-base text-muted font-medium group-hover/channel:text-amber transition-colors">
                     {videoData.channel}
@@ -232,7 +232,7 @@ export default async function VideoPage(props: Props) {
           />
 
           {popularLists.length > 0 && (
-            <div className="pt-6 border-t border-border">
+            <div className="pt-6 border-t border-amber/30">
               <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-6">Popular Lists</h3>
               <div className="space-y-4">
                 {popularLists.map((list: any) => (
@@ -286,7 +286,7 @@ export default async function VideoPage(props: Props) {
       </div>
 
       {moreFromChannel && moreFromChannel.length > 0 && (
-        <div className="mt-16 pt-12 border-t border-border">
+        <div className="mt-16 pt-12 border-t border-amber/30">
           <h2 className="text-xl font-bold mb-6">More from {videoData.channel}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {moreFromChannel.map(v => (

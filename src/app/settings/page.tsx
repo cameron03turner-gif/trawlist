@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -311,7 +312,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="flex items-center gap-2 w-32">
-                <label className="flex-1 px-2.5 py-1.5 bg-surface-alt hover:bg-surface border border-border hover:border-amber rounded-lg text-xs font-semibold text-ink cursor-pointer transition-all flex items-center justify-center gap-1.5 min-w-0">
+                <label className="flex-1 px-2.5 py-1.5 bg-surface-alt hover:bg-surface border border-amber hover:border-amber rounded-lg text-xs font-semibold text-ink cursor-pointer transition-all flex items-center justify-center gap-1.5 min-w-0">
                   <Upload size={14} className="text-amber shrink-0" />
                   <span className="truncate">Upload</span>
                   <input
@@ -359,7 +360,7 @@ export default function SettingsPage() {
                     className={`w-full rounded-lg pl-8 pr-10 py-2 text-sm bg-bg border outline-none focus:border-amber transition-colors ${
                       usernameAvailable === false ? 'border-rec' : 
                       usernameAvailable === true ? 'border-green-500' : 
-                      'border-border'
+                      'border-amber/30'
                     }`}
                   />
                   {checkingUsername && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted text-xs">...</span>}
@@ -376,7 +377,7 @@ export default function SettingsPage() {
                   maxLength={50}
                   value={form.display_name}
                   onChange={(e) => setForm({ ...form, display_name: e.target.value })}
-                  className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-border outline-none focus:border-amber"
+                  className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-amber outline-none focus:border-amber"
                 />
               </div>
             </div>
@@ -389,7 +390,7 @@ export default function SettingsPage() {
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
               rows={3}
               placeholder="A short bio about your tastes..."
-              className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-border outline-none focus:border-amber resize-none"
+              className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-amber outline-none focus:border-amber resize-none"
             />
           </div>
 
@@ -413,14 +414,14 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-ink mb-1">Email</label>
-              <div className="text-sm text-muted bg-bg border border-border rounded-lg px-3 py-2 cursor-not-allowed">
+              <div className="text-sm text-muted bg-bg border border-amber rounded-lg px-3 py-2 cursor-not-allowed">
                 {email}
               </div>
             </div>
             <div>
               <button 
                 onClick={handleSignOut}
-                className="px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-border text-ink hover:bg-surface transition-colors"
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-amber text-ink hover:bg-surface transition-colors"
               >
                 Sign out
               </button>
@@ -428,12 +429,12 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="pt-6 border-t border-border">
+        <div className="pt-6 border-t border-amber/30">
           <h2 className="text-lg font-medium mb-1">Update Password</h2>
           <p className="text-sm text-muted mb-4">Set a new password for your account.</p>
           
           {resetEmailSent ? (
-            <div className="p-4 bg-surface-alt border border-border rounded-lg text-sm max-w-sm">
+            <div className="p-4 bg-surface-alt border border-amber rounded-lg text-sm max-w-sm">
               We&apos;ve sent a password reset link to <span className="font-semibold text-amber">{email}</span>. Please check your inbox to securely set your password.
             </div>
           ) : (
@@ -484,7 +485,7 @@ export default function SettingsPage() {
               <button 
                 type="submit"
                 disabled={updatingPassword}
-                className="px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-border text-ink hover:bg-surface transition-colors disabled:opacity-60"
+                className="px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-amber text-ink hover:bg-surface transition-colors disabled:opacity-60"
               >
                 {updatingPassword ? 'Updating…' : 'Update password'}
               </button>
@@ -492,17 +493,27 @@ export default function SettingsPage() {
           )}
         </div>
 
-        <div className="pt-6 border-t border-border">
+        <div className="pt-6 border-t border-amber/30">
           <h2 className="text-lg font-medium mb-1">Data Ownership</h2>
           <p className="text-sm text-muted mb-4">Export a copy of all your ratings, reviews, and watch statuses.</p>
           <ExportDataButton />
         </div>
 
-        <div className="pt-6 border-t border-border">
+        <div className="pt-6 border-t border-amber/30">
           <WatchHistoryImporter />
         </div>
 
-        <div className="pt-6 border-t border-border">
+        <div className="pt-6 border-t border-amber/30 space-y-2">
+          <h2 className="text-lg font-medium text-ink">Legal & Policies</h2>
+          <p className="text-sm text-muted mb-3">Review our Terms of Service and Privacy Policy.</p>
+          <div className="flex items-center gap-4 text-sm font-semibold">
+            <Link href="/terms" className="text-amber hover:underline">Terms of Service</Link>
+            <span className="text-muted">•</span>
+            <Link href="/privacy" className="text-amber hover:underline">Privacy Policy</Link>
+          </div>
+        </div>
+
+        <div className="pt-6 border-t border-amber/30">
           <h2 className="text-lg font-medium text-rec mb-1">Delete Account</h2>
           <p className="text-sm text-muted mb-4">Deleting your account is permanent and cannot be undone.</p>
           <button 
@@ -516,7 +527,7 @@ export default function SettingsPage() {
 
       {showDeleteConfirm && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
-          <div className="bg-surface border border-border rounded-xl p-6 w-full max-w-md relative shadow-xl">
+          <div className="bg-surface border border-amber rounded-xl p-6 w-full max-w-md relative shadow-xl">
             <button 
               onClick={() => { setShowDeleteConfirm(false); setDeleteMessage(''); }}
               className="absolute top-4 right-4 text-muted hover:text-ink"

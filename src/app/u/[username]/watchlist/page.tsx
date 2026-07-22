@@ -116,7 +116,7 @@ export default function WatchlistPage(props: { params: Promise<{ username: strin
         
         {rows && rows.length > 0 && (
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink z-10" size={16} />
             <input 
               className="w-full bg-surface rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:border-amber"
               placeholder="Search watchlist..."
@@ -128,7 +128,7 @@ export default function WatchlistPage(props: { params: Promise<{ username: strin
       </div>
       
       {!rows || rows.length === 0 ? (
-        <div className="text-center py-12 bg-surface border border-border rounded-xl">
+        <div className="text-center py-12 bg-surface border border-amber rounded-xl">
           <Clock className="mx-auto text-muted mb-4" size={32} />
           <h3 className="text-lg font-medium text-ink mb-2">Watchlist is empty</h3>
           <p className="text-muted mb-6">
