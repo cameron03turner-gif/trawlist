@@ -1,3 +1,4 @@
+import { ListVideo } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { ListCard } from '@/components/ListCard'
 import { CreateListButton } from '@/components/CreateListButton'
@@ -88,9 +89,11 @@ export default async function ListsPage(props: { searchParams: Promise<{ [key: s
 
       <div className="max-w-6xl mx-auto">
         {(!lists || lists.length === 0) ? (
-          <div className="text-center py-20 bg-neutral-900/50 rounded-xl border border-neutral-800">
-            <h3 className="text-xl font-semibold text-white mb-2">No lists yet</h3>
-            <p className="text-neutral-400">Be the first to create a list!</p>
+          <div className="text-center py-16 px-4 bg-surface rounded-xl border border-amber shadow-sm">
+            <ListVideo className="mx-auto text-muted mb-3" size={32} />
+            <h3 className="text-lg font-bold text-ink mb-1">No lists yet</h3>
+            <p className="text-muted text-sm mb-4">Be the first to create a list!</p>
+            {user && <CreateListButton />}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

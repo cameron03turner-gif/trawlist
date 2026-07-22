@@ -101,7 +101,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                 return (
                   <div 
                     key={item?.video?.thumbnail_url || originalIndex}
-                    className={`absolute inset-x-0 mx-auto border border-neutral-700/50 rounded-lg overflow-hidden group-hover:-translate-y-3 ${
+                    className={`absolute inset-x-0 mx-auto border border-border/50 rounded-lg overflow-hidden group-hover:-translate-y-3 ${
                       !isBackCard ? 'shadow-[0_-16px_24px_-12px_rgba(0,0,0,0.95)]' : ''
                     } ${isAnimatingBack ? 'animate-shuffle-out' : ''}`}
                     style={{
@@ -115,7 +115,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                     {item?.video?.thumbnail_url ? (
                       <img src={item.video.thumbnail_url} className="w-full h-full object-cover" alt="" />
                     ) : (
-                      <div className="w-full h-full bg-neutral-900 flex items-center justify-center text-neutral-600">
+                      <div className="w-full h-full bg-surface flex items-center justify-center text-muted">
                         <ListVideo size={32} />
                       </div>
                     )}
@@ -124,7 +124,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
               })}
             </div>
           ) : (
-            <div className="flex items-center justify-center w-full h-full text-neutral-700 group-hover:text-neutral-500 transition-colors group-hover:scale-110 duration-300 min-h-[120px]">
+            <div className="flex items-center justify-center w-full h-full text-muted group-hover:text-amber transition-colors group-hover:scale-110 duration-300 min-h-[120px]">
               <ListVideo size={48} />
             </div>
           )}
@@ -138,7 +138,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
 
         <div className="px-4 pb-4 pt-2.5 flex-1 flex flex-col relative">
           <div className="min-w-0 mb-1.5">
-            <h3 className="text-lg font-bold text-neutral-100 group-hover:text-amber transition-colors leading-tight line-clamp-2">
+            <h3 className="text-lg font-bold text-ink group-hover:text-amber transition-colors leading-tight line-clamp-2">
               <Link href={`/lists/${list.id}`}>
                 {list.title}
               </Link>
@@ -146,12 +146,12 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
           </div>
           
           {list.description && (
-            <p className="text-sm text-neutral-400 line-clamp-3 mb-4">
+            <p className="text-sm text-muted line-clamp-3 mb-4">
               {list.description}
             </p>
           )}
 
-          <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-neutral-800/50 relative z-20">
+          <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-border/50 relative z-20">
             {/* Top row: Metadata */}
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-4">
@@ -164,32 +164,32 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                       url={list.owner.avatar_url} 
                       username={list.owner.username} 
                       displayName={list.owner.display_name} 
-                      className="w-6 h-6 border border-neutral-700 group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all text-[10px]" 
+                      className="w-6 h-6 border border-border group-hover/owner:ring-2 group-hover/owner:ring-amber transition-all text-[10px]" 
                     />
-                    <span className="text-neutral-300 font-medium group-hover/owner:text-amber transition-colors truncate">
+                    <span className="text-ink font-medium group-hover/owner:text-amber transition-colors truncate">
                       {list.owner.display_name || list.owner.username}
                     </span>
                   </Link>
                 )}
                 
-                <span className="text-neutral-500 flex items-center gap-1.5 shrink-0">
+                <span className="text-muted flex items-center gap-1.5 shrink-0">
                   {itemCount} videos
                 </span>
               </div>
               
-              <div className="flex items-center text-neutral-500 shrink-0 text-sm">
+              <div className="flex items-center text-muted shrink-0 text-sm">
                 <span>{list.is_ranked ? 'Ranked' : 'Unranked'}</span>
               </div>
             </div>
 
             {/* Bottom row: Actions */}
-            <div className="flex items-center justify-between border-t border-neutral-800/50 pt-3 mt-1">
+            <div className="flex items-center justify-between border-t border-border/50 pt-3 mt-1">
               <button 
                 onClick={handleLikeToggle}
                 className={`flex items-center gap-1.5 text-sm transition-colors ${
                   isLiked 
                     ? 'text-rec hover:brightness-110' 
-                    : 'text-neutral-500 hover:text-rec'
+                    : 'text-muted hover:text-rec'
                 }`}
                 aria-label={isLiked ? "Unlike list" : "Like list"}
               >

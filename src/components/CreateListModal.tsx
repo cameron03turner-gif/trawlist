@@ -46,46 +46,46 @@ export function CreateListModal({ onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
+      <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-xl p-6">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-neutral-400 hover:text-white"
+          className="absolute right-4 top-4 text-muted hover:text-ink transition-colors"
         >
           <X size={20} />
         </button>
 
-        <h2 className="text-xl font-bold text-white mb-6">Create a List</h2>
+        <h2 className="text-xl font-bold text-ink mb-6">Create a List</h2>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
+          <div className="mb-4 p-3 bg-rec/10 border border-rec/20 rounded-lg text-rec text-sm">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               List Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-md px-3 py-2 text-white focus:outline-none focus:border-neutral-600"
+              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors"
               placeholder="e.g., Best Video Essays of 2023"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-300 mb-1">
+            <label className="block text-sm font-medium text-ink mb-1">
               Description (optional)
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-md px-3 py-2 text-white focus:outline-none focus:border-neutral-600 resize-none h-24"
+              className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-sm text-ink outline-none focus:border-amber transition-colors resize-none h-24"
               placeholder="What is this list about?"
             />
           </div>
@@ -96,9 +96,9 @@ export function CreateListModal({ onClose }: Props) {
               id="isRanked"
               checked={isRanked}
               onChange={(e) => setIsRanked(e.target.checked)}
-              className="rounded border-neutral-700 text-blue-500 focus:ring-blue-500 bg-neutral-900"
+              className="accent-amber"
             />
-            <label htmlFor="isRanked" className="text-sm text-neutral-300">
+            <label htmlFor="isRanked" className="text-sm text-ink cursor-pointer">
               Ranked list (numbered items)
             </label>
           </div>
@@ -109,9 +109,9 @@ export function CreateListModal({ onClose }: Props) {
               id="isPrivate"
               checked={isPrivate}
               onChange={(e) => setIsPrivate(e.target.checked)}
-              className="rounded border-neutral-700 text-blue-500 focus:ring-blue-500 bg-neutral-900"
+              className="accent-amber"
             />
-            <label htmlFor="isPrivate" className="text-sm text-neutral-300">
+            <label htmlFor="isPrivate" className="text-sm text-ink cursor-pointer">
               Make list private
             </label>
           </div>
@@ -119,7 +119,7 @@ export function CreateListModal({ onClose }: Props) {
           <button
             type="submit"
             disabled={isSubmitting || !title.trim()}
-            className="w-full flex items-center justify-center bg-white text-black font-medium py-2 px-4 rounded-md hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center bg-amber text-bg font-semibold py-2.5 px-4 rounded-lg hover:brightness-110 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {isSubmitting ? <Loader2 size={18} className="animate-spin" /> : 'Create List'}
           </button>

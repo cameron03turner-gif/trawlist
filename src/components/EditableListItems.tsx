@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { ListVideoRow } from './ListVideoRow'
-import { Save, X, ChevronUp, ChevronDown } from 'lucide-react'
+import { Save, X, ChevronUp, ChevronDown, ListVideo } from 'lucide-react'
 
 type Item = {
   position: number
@@ -187,8 +187,10 @@ export function EditableListItems({ initialItems, listId, isRanked, isEditing, o
 
   if (!isEditing && (!items || items.length === 0)) {
     return (
-      <div className="text-center py-20 bg-neutral-900/30 rounded-xl border border-neutral-800/50 mb-20">
-        <p className="text-neutral-500 text-lg">This list is currently empty.</p>
+      <div className="text-center py-16 px-4 bg-surface rounded-xl border border-amber shadow-sm mb-20">
+        <ListVideo className="mx-auto text-muted mb-3" size={32} />
+        <h3 className="text-lg font-bold text-ink mb-1">This list is currently empty</h3>
+        <p className="text-muted text-sm">Add videos to this list to curate your collection.</p>
       </div>
     )
   }

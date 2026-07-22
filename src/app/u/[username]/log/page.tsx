@@ -151,7 +151,7 @@ export default function LogPage(props: { params: Promise<{ username: string }> }
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="bg-surface rounded-lg text-sm px-3 py-2 outline-none focus:border-amber cursor-pointer shrink-0"
+              className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors shrink-0"
             >
               <option value="recent">Recently Logged</option>
               <option value="rating">Highest Rated</option>

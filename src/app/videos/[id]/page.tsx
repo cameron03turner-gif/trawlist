@@ -47,12 +47,11 @@ export default async function VideoPage(props: Props) {
     notFound()
   }
 
-  // Fetch all ratings for distribution
+  // Fetch all ratings for distribution & reviews
   const { data: allRatings } = await supabase
     .from('ratings')
-    .select('user_id, rating, review, profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_likes(user_id)')
+    .select('id, user_id, rating, review, updated_at, profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_likes(user_id)')
     .eq('video_id', videoId)
-    .not('rating', 'is', null)
     .order('updated_at', { ascending: false })
 
   const distribution: Record<string, number> = {}
@@ -60,10 +59,17 @@ export default async function VideoPage(props: Props) {
 
   if (allRatings) {
     allRatings.forEach(r => {
-      const rStr = Number(r.rating).toFixed(1)
-      distribution[rStr] = (distribution[rStr] || 0) + 1
+      if (r.rating !== null) {
+        const rStr = Number(r.rating).toFixed(1)
+        distribution[rStr] = (distribution[rStr] || 0) + 1
+      }
       if (r.review) {
-        reviews.push({ ...r, profile: r.profiles, like_count: r.review_likes?.length || 0 })
+        reviews.push({
+          ...r,
+          profile: r.profiles,
+          like_count: r.review_likes?.length || 0,
+          is_liked: user ? r.review_likes?.some((l: any) => l.user_id === user.id) : false
+        })
       }
     })
   }

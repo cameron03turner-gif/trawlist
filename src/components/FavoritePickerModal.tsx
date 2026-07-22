@@ -87,7 +87,7 @@ export function FavoritePickerModal({
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="bg-bg border border-border rounded-lg text-sm px-3 py-2 outline-none focus:border-amber cursor-pointer"
+            className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors"
           >
             <option value="recent">Recently Logged</option>
             <option value="rating">Highest Rated</option>

@@ -88,7 +88,7 @@ export function LeaderboardControls() {
         <div className="flex items-center gap-2 flex-1">
           <span className="text-xs text-muted font-medium uppercase tracking-wider shrink-0 ml-1">Min Ratings</span>
           <select 
-            className="bg-bg border border-border rounded-lg text-sm px-3 py-2 outline-none focus:border-amber cursor-pointer"
+            className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors shrink-0"
             value={minCount}
             onChange={(e) => setMinCount(e.target.value)}
           >

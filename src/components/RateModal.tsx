@@ -249,7 +249,7 @@ export function RateModal() {
 
             <div className="flex gap-2">
               <select 
-                className="bg-bg border border-border rounded-lg text-sm px-3 py-2 outline-none focus:border-amber flex-1 cursor-pointer"
+                className="bg-surface border border-border rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors flex-1"
                 value={watchStatus}
                 onChange={e => setWatchStatus(e.target.value as any)}
               >
