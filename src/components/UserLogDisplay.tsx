@@ -67,7 +67,18 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
       <div className="space-y-4">
         {myRatingData.review && (
           <div className="space-y-1">
-            <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Review</span>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Review</span>
+              {myRatingData.like_count !== undefined && (
+                <div 
+                  className="flex items-center gap-1.5 text-xs text-rec font-semibold bg-rec/10 px-2 py-0.5 rounded border border-rec/20 shadow-sm" 
+                  title={`${myRatingData.like_count || 0} ${myRatingData.like_count === 1 ? 'person liked' : 'people liked'} your review`}
+                >
+                  <Heart size={12} className="fill-rec text-rec" />
+                  <span>{myRatingData.like_count || 0} {myRatingData.like_count === 1 ? 'like' : 'likes'}</span>
+                </div>
+              )}
+            </div>
             <div>
               <p className={`text-sm text-ink leading-relaxed whitespace-pre-wrap ${expanded ? '' : 'line-clamp-3'}`}>
                 {myRatingData.review}

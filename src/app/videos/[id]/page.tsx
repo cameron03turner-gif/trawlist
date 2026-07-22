@@ -85,13 +85,16 @@ export default async function VideoPage(props: Props) {
   if (user) {
     const { data: userRating } = await supabase
       .from('ratings')
-      .select('watch_status, liked, rating, review, note, updated_at')
+      .select('watch_status, liked, rating, review, note, updated_at, review_likes(user_id)')
       .eq('video_id', videoId)
       .eq('user_id', user.id)
       .maybeSingle()
     
     if (userRating) {
-      myRatingData = userRating
+      myRatingData = {
+        ...userRating,
+        like_count: userRating.review_likes?.length || 0
+      }
       if (userRating.watch_status === 'want_to_watch') {
         isOnWatchlist = true
       }
