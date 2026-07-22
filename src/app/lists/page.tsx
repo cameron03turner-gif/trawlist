@@ -1,8 +1,9 @@
-import { ListVideo } from 'lucide-react'
+import { ListVideo, LogIn } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { ListCard } from '@/components/ListCard'
 import { CreateListButton } from '@/components/CreateListButton'
 import { ListControls } from '@/components/ListControls'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
@@ -78,10 +79,14 @@ export default async function ListsPage(props: { searchParams: Promise<{ [key: s
           <h1 className="text-3xl font-bold text-ink mb-2">Community Lists</h1>
           <p className="text-muted">Discover themed collections of videos created by the community.</p>
         </div>
-        {user && (
+        {user ? (
           <div>
             <CreateListButton />
           </div>
+        ) : (
+          <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-bg rounded-xl font-bold text-xs uppercase tracking-wider hover:brightness-110 transition shadow-sm">
+            <LogIn size={15} /> Sign in to Create List
+          </Link>
         )}
       </div>
 
@@ -93,7 +98,13 @@ export default async function ListsPage(props: { searchParams: Promise<{ [key: s
             <ListVideo className="mx-auto text-muted mb-3" size={32} />
             <h3 className="text-lg font-bold text-ink mb-1">No lists yet</h3>
             <p className="text-muted text-sm mb-4">Be the first to create a list!</p>
-            {user && <CreateListButton />}
+            {user ? (
+              <CreateListButton />
+            ) : (
+              <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-bg rounded-xl font-bold text-xs uppercase tracking-wider hover:brightness-110 transition shadow-sm">
+                <LogIn size={15} /> Sign in to Create List
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Plus } from 'lucide-react'
+import { X, Plus, LogIn } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 type Props = {
   videoUrl: string
@@ -16,12 +17,14 @@ export function SaveToListModal({ videoUrl, onClose }: Props) {
   
   const [lists, setLists] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [isSignedOut, setIsSignedOut] = useState(false)
   const [savingToListId, setSavingToListId] = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) {
+        setIsSignedOut(true)
         setLoading(false)
         return
       }
@@ -76,6 +79,19 @@ export function SaveToListModal({ videoUrl, onClose }: Props) {
         {loading ? (
           <div className="py-12 flex justify-center">
             <div className="w-8 h-8 border-4 border-muted border-t-amber rounded-full animate-spin" />
+          </div>
+        ) : isSignedOut ? (
+          <div className="text-center py-8">
+            <LogIn className="mx-auto text-amber mb-3" size={32} />
+            <h3 className="text-lg font-bold text-ink mb-1">Sign in required</h3>
+            <p className="text-muted text-sm mb-6">Please sign in to add videos to custom playlists.</p>
+            <Link 
+              href="/login"
+              onClick={onClose}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber text-bg font-bold rounded-xl hover:brightness-110 transition text-sm shadow-md"
+            >
+              <LogIn size={16} /> Sign in now
+            </Link>
           </div>
         ) : lists.length === 0 ? (
           <div className="text-center py-8">

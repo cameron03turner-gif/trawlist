@@ -56,9 +56,9 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
         videoData.channel_thumbnail_url = videoData.channels.thumbnail_url
       }
 
-      // Fetch lists count
+      // Fetch lists count from list_items
       const { count: listsCount } = await supabase
-        .from('custom_list_items')
+        .from('list_items')
         .select('*', { count: 'exact', head: true })
         .eq('video_id', videoId)
 
@@ -91,11 +91,40 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
       }
 
       // Fetch all ratings for stats & reviews
-      const { data: allRatings } = await supabase
+      let allRatings: any[] | null = null
+      const { data: primaryRatings, error: ratingsError } = await supabase
         .from('ratings')
-        .select('*, profiles(username, display_name, avatar_url), review_likes(user_id)')
+        .select('*, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url)')
         .eq('video_id', videoId)
         .order('created_at', { ascending: false })
+
+      if (ratingsError) {
+        const { data: altRatings } = await supabase
+          .from('ratings')
+          .select('*, profile:user_id(username, display_name, avatar_url)')
+          .eq('video_id', videoId)
+          .order('created_at', { ascending: false })
+        allRatings = altRatings
+      } else {
+        allRatings = primaryRatings
+      }
+
+      // Fetch review likes count safely
+      let reviewLikesMap: Record<string, number> = {}
+      let userLikedReviews: Set<string> = new Set()
+      
+      const { data: likesData } = await supabase
+        .from('review_likes')
+        .select('review_id, user_id')
+
+      if (likesData) {
+        likesData.forEach((l: any) => {
+          reviewLikesMap[l.review_id] = (reviewLikesMap[l.review_id] || 0) + 1
+          if (user && l.user_id === user.id) {
+            userLikedReviews.add(l.review_id)
+          }
+        })
+      }
 
       const distribution: Record<string, number> = {}
       const reviews: any[] = []
@@ -110,9 +139,9 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
           if (r.review) {
             reviews.push({
               ...r,
-              profile: r.profiles,
-              like_count: r.review_likes?.length || 0,
-              is_liked: user ? r.review_likes?.some((l: any) => l.user_id === user.id) : false
+              profile: r.profile || r.profiles,
+              like_count: reviewLikesMap[r.id] || 0,
+              is_liked: userLikedReviews.has(r.id)
             })
           }
           if (r.liked) {
@@ -186,9 +215,19 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
               <div className="absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-black/40 to-transparent pointer-events-none z-10" />
               
               <img 
-                src={data.video.thumbnail_url?.replace(/hqdefault\.jpg|mqdefault\.jpg|sddefault\.jpg/g, 'maxresdefault.jpg')} 
+                src={data.video.thumbnail_url?.replace(/hqdefault\.jpg|mqdefault\.jpg|sddefault\.jpg/g, 'maxresdefault.jpg') || data.video.thumbnail_url} 
                 alt="" 
-                onLoad={() => setImgLoaded(true)}
+                onLoad={(e) => {
+                  if (e.currentTarget.naturalWidth === 120 && e.currentTarget.src.includes('maxresdefault.jpg')) {
+                    e.currentTarget.src = data.video.thumbnail_url || `https://i.ytimg.com/vi/${data.video.id}/hqdefault.jpg`
+                    return
+                  }
+                  setImgLoaded(true)
+                }}
+                onError={(e) => {
+                  e.currentTarget.src = data.video.thumbnail_url || `https://i.ytimg.com/vi/${data.video.id}/hqdefault.jpg`
+                  setImgLoaded(true)
+                }}
                 className={`w-full max-w-[640px] aspect-video object-cover rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.6)] relative z-10 transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0 bg-surface-alt/50'}`} 
               />
               
@@ -268,6 +307,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                     title={data.video.title} 
                     initialIsOnWatchlist={data.myRatingData?.watch_status === 'want_to_watch'} 
                     initialIsLogged={!!data.myRatingData && (!!data.myRatingData.rating || !!data.myRatingData.review || !!data.myRatingData.note || data.myRatingData.watch_status === 'watched')} 
+                    isLoggedIn={!!currentUser}
                   />
                   </Suspense>
 

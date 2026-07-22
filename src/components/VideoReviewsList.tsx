@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MessageSquare, Heart, ChevronLeft, ChevronRight, Reply } from 'lucide-react'
+import { MessageSquare, Heart, ChevronLeft, ChevronRight, Reply, LogIn } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Scrubber } from './Scrubber'
 import { Avatar } from './Avatar'
@@ -232,13 +232,23 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
               ? 'None of the creators or users you follow have reviewed this video yet.'
               : 'Be the first to share your thoughts and rate this video for the community.'}
           </p>
-          <Link 
-            href={`?logUrl=${encodeURIComponent(videoUrl)}`}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber text-bg hover:brightness-110 transition text-sm font-bold shadow-lg shadow-amber/10"
-          >
-            <MessageSquare size={16} />
-            Be the first to review
-          </Link>
+          {currentUserId ? (
+            <Link 
+              href={`?logUrl=${encodeURIComponent(videoUrl)}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber text-bg hover:brightness-110 transition text-sm font-bold shadow-lg shadow-amber/10"
+            >
+              <MessageSquare size={16} />
+              Be the first to review
+            </Link>
+          ) : (
+            <Link 
+              href="/login"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber text-bg hover:brightness-110 transition text-sm font-bold shadow-lg shadow-amber/10"
+            >
+              <LogIn size={16} />
+              Sign in to review
+            </Link>
+          )}
         </div>
       ) : (
         <div className="space-y-4">

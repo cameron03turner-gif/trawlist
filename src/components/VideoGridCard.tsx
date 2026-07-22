@@ -30,6 +30,7 @@ type Props = {
   liked?: boolean
   onLikeToggle?: () => void
   isLogged?: boolean
+  isLoggedIn?: boolean
 }
 
 export function VideoGridCard(props: Props) {
@@ -121,7 +122,7 @@ export function VideoGridCard(props: Props) {
       </div>
       <div className="flex items-center justify-between mt-1.5">
         <div className="relative z-10">
-          {!props.isLogged && !props.editUrl && !props.markWatchedUrl && (
+          {props.isLoggedIn && !props.isLogged && !props.editUrl && !props.markWatchedUrl && (
             <Link
               href={`${pathname}?${new URLSearchParams({
                 ...Object.fromEntries(searchParams.entries()),

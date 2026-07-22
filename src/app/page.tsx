@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { VideoGridCard } from '@/components/VideoGridCard'
-import { Film, Users, Zap, Search } from 'lucide-react'
+import { LandingTrendingTabs } from '@/components/LandingTrendingTabs'
+import { Film, Users, Zap, Search, ArrowRight, Sparkles, Star, ShieldCheck } from 'lucide-react'
 
 export const revalidate = 0
 
@@ -19,7 +20,6 @@ export default async function HomePage() {
 
     // Needs a username to proceed
     if (!profile?.username) {
-      // Just in case they somehow bypassed onboarding
       return (
         <div className="pt-12 px-4 max-w-6xl mx-auto">
           <h1 className="text-2xl font-bold text-ink">Welcome to Trawlist!</h1>
@@ -192,7 +192,7 @@ export default async function HomePage() {
     )
   }
 
-  // For Signed-Out Users (Landing Page)
+  // For Signed-Out Users (Interactive High-Polish Landing Page)
   const { data: topVideos } = await supabase
     .from('video_leaderboard')
     .select('*')
@@ -202,85 +202,171 @@ export default async function HomePage() {
     .order('rating_count', { ascending: false })
     .limit(4)
 
+  const { data: popularLists } = await supabase
+    .from('custom_lists')
+    .select(`
+      id,
+      title,
+      description,
+      is_private,
+      is_ranked,
+      created_at,
+      owner:profiles!custom_lists_owner_id_fkey(username, display_name, avatar_url),
+      items:list_items(
+        position,
+        video:videos(thumbnail_url)
+      ),
+      items_count:list_items(count)
+    `)
+    .eq('is_private', false)
+    .limit(3)
+
+  const { data: recentReviews } = await supabase
+    .from('ratings')
+    .select(`
+      id,
+      video_id,
+      rating,
+      review,
+      created_at,
+      profiles:user_id(username, display_name, avatar_url)
+    `)
+    .not('review', 'is', null)
+    .neq('review', '')
+    .order('created_at', { ascending: false })
+    .limit(4)
+
   return (
-    <div>
+    <div className="overflow-hidden bg-transparent">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-surface py-20 lg:py-32 border-b border-amber/30">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber/5 to-transparent pointer-events-none" />
+      <div className="relative py-10 lg:py-14 border-b border-amber/30">
+        {/* Ambient Gradient Blur Backgrounds */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-gradient-to-r from-amber/10 via-cyan-500/10 to-purple-500/10 blur-3xl pointer-events-none -z-10 rounded-full" />
+        
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-5xl lg:text-7xl font-extrabold text-ink tracking-tight mb-6">
-            Trawlist
-            <span className="block text-2xl lg:text-4xl font-semibold text-muted mt-3">
-              Log, rate, and discover YouTube videos you love.
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface border border-amber/40 text-amber text-xs font-bold mb-4 shadow-md shadow-amber/5">
+            <Sparkles size={14} className="animate-pulse" />
+            <span>A Social Network for YouTube & Video Enthusiasts</span>
+          </div>
+
+          <h1 className="font-display font-bold text-5xl lg:text-7xl tracking-tight text-ink mb-4 leading-[1.1]">
+            TRAWLIST
+            <span className="block text-xl lg:text-3xl font-semibold text-muted mt-2 font-body">
+              Log, rate, and discover videos you love.
             </span>
           </h1>
-          <p className="text-lg text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            Trawlist is a social network for YouTube enthusiasts. Track what you watch, write reviews, curate custom video lists, and share recommendations with friends.
+
+          <p className="text-sm lg:text-base text-muted max-w-xl mx-auto mb-6 leading-relaxed">
+            Track what you watch, write reviews, curate custom video playlists, and share recommendations with a community of video lovers.
           </p>
-          <div className="flex items-center justify-center gap-4">
-            <Link href="/login" className="px-8 py-4 bg-amber text-amber-950 font-bold rounded-full hover:bg-amber/90 hover:scale-105 transition-all shadow-lg shadow-amber/20">
-              Create an Account
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-2">
+            <Link
+              href="/login"
+              className="w-full sm:w-auto px-7 py-3 bg-amber text-bg font-black rounded-full hover:brightness-110 hover:scale-105 transition-all shadow-xl shadow-amber/20 flex items-center justify-center gap-2 text-xs uppercase tracking-wider"
+            >
+              Get Started Free <ArrowRight size={16} />
             </Link>
-            <Link href="/videos" className="px-8 py-4 bg-surface-alt text-ink font-semibold rounded-full border border-amber hover:bg-surface hover:border-amber/50 transition-all">
-              Explore Leaderboard
+
+            <Link
+              href="/videos"
+              className="w-full sm:w-auto px-7 py-3 bg-surface-alt text-ink font-bold rounded-full border border-amber hover:bg-surface hover:border-amber transition-all text-xs"
+            >
+              Explore Community Leaderboard
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Value Props */}
-      <div className="py-20 bg-bg">
-        <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
-          <div className="p-6">
-            <div className="w-16 h-16 mx-auto bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-6 border border-amber/20 shadow-xl shadow-amber/5">
-              <Film size={32} />
-            </div>
-            <h3 className="text-xl font-bold text-ink mb-3">Track Your Watching</h3>
-            <p className="text-muted leading-relaxed">Keep a diary of every essay, documentary, and sketch you watch. Rate them and write your thoughts.</p>
+      {/* Value Props / Features Grid */}
+      <div className="py-10 bg-transparent relative">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl lg:text-3xl font-bold font-display text-ink mb-2">Built for Modern Video Curators</h2>
+            <p className="text-muted max-w-xl mx-auto text-xs">Everything you need to organize your viewing history and discover remarkable content.</p>
           </div>
-          <div className="p-6">
-            <div className="w-16 h-16 mx-auto bg-pink-500/10 text-pink-500 rounded-2xl flex items-center justify-center mb-6 border border-pink-500/20 shadow-xl shadow-pink-500/5">
-              <Users size={32} />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
+                  <Film size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-ink mb-2">Track Your Watching</h3>
+                <p className="text-muted text-xs leading-relaxed">
+                  Keep a precise diary of every video essay, documentary, and breakdown you watch. Rate with precision using our 5-star scrubber and record your personal reviews.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-border/50 text-xs font-semibold text-amber flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+                <Star size={14} className="fill-amber shrink-0" /> 0.5 to 5 star ratings
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-ink mb-3">Follow Friends</h3>
-            <p className="text-muted leading-relaxed">See what your network is watching in a chronological feed. Curate lists and share them with the world.</p>
-          </div>
-          <div className="p-6">
-            <div className="w-16 h-16 mx-auto bg-blue-500/10 text-blue-500 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/20 shadow-xl shadow-blue-500/5">
-              <Search size={32} />
+
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
+                  <Users size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-ink mb-2">Follow Friends</h3>
+                <p className="text-muted text-xs leading-relaxed">
+                  Connect with friends and trusted critics. See their recent activity in a distraction-free chronological feed and compare your ratings on shared favorites.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-border/50 text-xs font-semibold text-amber flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+                <ShieldCheck size={14} className="shrink-0" /> Chronological friend feed
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-ink mb-3">Discover Gold</h3>
-            <p className="text-muted leading-relaxed">Escape the algorithm. Find high-quality videos through community curation and taste-based recommendations.</p>
+
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+              <div>
+                <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
+                  <Search size={24} />
+                </div>
+                <h3 className="text-lg font-bold text-ink mb-2">Discover Gold</h3>
+                <p className="text-muted text-xs leading-relaxed">
+                  Bypass generic algorithm traps. Uncover hidden gems through community-ranked leaderboards, taste-based recommendations, and user-curated playlists.
+                </p>
+              </div>
+              <div className="pt-4 mt-4 border-t border-border/50 text-xs font-semibold text-amber flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
+                <Sparkles size={14} className="shrink-0" /> Community curated lists
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Top Videos Preview */}
-      {topVideos && topVideos.length > 0 && (
-        <div className="py-20 bg-surface border-t border-amber/30">
-          <div className="max-w-6xl mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-ink mb-4">Trending on Trawlist</h2>
-              <p className="text-muted">The highest rated videos in the community right now.</p>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {topVideos.map(v => (
-                <VideoGridCard 
-                  key={v.id}
-                  title={v.title}
-                  channel={v.channel}
-                  channelId={v.channel_id}
-                  channelThumbnail={v.channel_thumbnail_url}
-                  thumbnail={v.thumbnail_url}
-                  url={v.url}
-                  detailUrl={`/videos/${v.id}`}
-                  rating={Number(v.avg_rating)}
-                />
-              ))}
+      {/* Community Highlights Hub */}
+      <LandingTrendingTabs
+        topVideos={topVideos || []}
+        popularLists={popularLists || []}
+        recentReviews={recentReviews || []}
+      />
+
+      {/* Bottom Conversion Banner */}
+      <div className="py-10 bg-transparent relative">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <div className="bg-surface border border-amber rounded-3xl p-8 sm:p-10 shadow-2xl shadow-amber/10 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-amber/10 rounded-full blur-3xl pointer-events-none" />
+            
+            <h2 className="text-2xl sm:text-3xl font-black text-ink font-display mb-3">
+              Ready to Upgrade Your YouTube Experience?
+            </h2>
+            <p className="text-muted max-w-xl mx-auto text-xs sm:text-sm mb-6 leading-relaxed">
+              Join Trawlist today to start logging your watched videos, curating custom lists, and discovering recommendations from real enthusiasts.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/login"
+                className="w-full sm:w-auto px-7 py-3.5 bg-amber text-bg font-black rounded-full hover:brightness-110 hover:scale-105 transition-all shadow-xl shadow-amber/20 text-xs uppercase tracking-wider"
+              >
+                Create Your Account Now
+              </Link>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }

@@ -1,14 +1,12 @@
 'use client'
 
-import { Youtube, Clock, Plus, Share, ListPlus, X } from 'lucide-react'
+import { Youtube, Clock, Plus, Share, ListPlus, X, LogIn, Check } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ShareButton } from './ShareButton'
 import { SaveToListModal } from './SaveToListModal'
 import { toggleWatchlist, removeLog } from '@/app/actions/ratings'
-import { Check } from 'lucide-react'
-import { useEffect } from 'react'
 
 type Props = {
   videoId: string
@@ -16,9 +14,10 @@ type Props = {
   title: string
   initialIsOnWatchlist?: boolean
   initialIsLogged?: boolean
+  isLoggedIn?: boolean
 }
 
-export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlist = false, initialIsLogged = false }: Props) {
+export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlist = false, initialIsLogged = false, isLoggedIn = false }: Props) {
   const [isOnWatchlist, setIsOnWatchlist] = useState(initialIsOnWatchlist)
   const [isLogged, setIsLogged] = useState(initialIsLogged)
   const [isPending, setIsPending] = useState(false)
@@ -71,24 +70,33 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
     <>
     <div className="bg-surface rounded-2xl border border-amber p-5 shadow-xl flex flex-col gap-5">
       {/* Primary Action */}
-      {isLogged ? (
-        <button 
-          onClick={handleRemoveLog}
-          disabled={isRemovingLog}
-          className="group w-full bg-amber text-bg py-3.5 rounded-full font-bold text-center hover:brightness-110 transition shadow-lg shadow-amber/20 flex items-center justify-center gap-2"
-        >
-          <Check size={20} className="group-hover:hidden" />
-          <X size={20} className="hidden group-hover:block" />
-          <span className="block group-hover:hidden">Already logged</span>
-          <span className="hidden group-hover:block">Remove from log</span>
-        </button>
+      {isLoggedIn ? (
+        isLogged ? (
+          <button 
+            onClick={handleRemoveLog}
+            disabled={isRemovingLog}
+            className="group w-full bg-amber text-bg py-3.5 rounded-full font-bold text-center hover:brightness-110 transition shadow-lg shadow-amber/20 flex items-center justify-center gap-2"
+          >
+            <Check size={20} className="group-hover:hidden" />
+            <X size={20} className="hidden group-hover:block" />
+            <span className="block group-hover:hidden">Already logged</span>
+            <span className="hidden group-hover:block">Remove from log</span>
+          </button>
+        ) : (
+          <button 
+            onClick={handleOpenLogModal}
+            className="w-full bg-amber text-bg py-3.5 rounded-full font-bold text-center hover:brightness-110 transition shadow-lg shadow-amber/20 flex items-center justify-center gap-2"
+          >
+            <Plus size={20} /> Log or Review
+          </button>
+        )
       ) : (
-        <button 
-          onClick={handleOpenLogModal}
+        <Link
+          href="/login"
           className="w-full bg-amber text-bg py-3.5 rounded-full font-bold text-center hover:brightness-110 transition shadow-lg shadow-amber/20 flex items-center justify-center gap-2"
         >
-          <Plus size={20} /> Log or Review
-        </button>
+          <LogIn size={20} /> Sign in to Log/Review
+        </Link>
       )}
 
       {/* Secondary Actions */}
@@ -101,7 +109,7 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
         >
           <Youtube size={16} className="group-hover:text-amber transition" /> Watch on YouTube
         </a>
-        {!isLogged && (
+        {isLoggedIn && !isLogged && (
           <button 
             onClick={handleToggleWatchlist}
             disabled={isPending}
@@ -124,12 +132,21 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
             )}
           </button>
         )}
-        <button 
-          onClick={() => setShowSaveModal(true)}
-          className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-muted hover:text-amber hover:bg-amber/10 rounded-xl transition"
-        >
-          <ListPlus size={16} /> Add to lists...
-        </button>
+        {isLoggedIn ? (
+          <button 
+            onClick={() => setShowSaveModal(true)}
+            className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-muted hover:text-amber hover:bg-amber/10 rounded-xl transition"
+          >
+            <ListPlus size={16} /> Add to lists...
+          </button>
+        ) : (
+          <Link 
+            href="/login"
+            className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-muted hover:text-amber hover:bg-amber/10 rounded-xl transition"
+          >
+            <LogIn size={16} /> Sign in to add to lists...
+          </Link>
+        )}
         <ShareButton 
           title={title}
           text={`Check out ${title} on Trawlist!`}

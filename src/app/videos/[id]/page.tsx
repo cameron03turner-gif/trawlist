@@ -48,11 +48,39 @@ export default async function VideoPage(props: Props) {
   }
 
   // Fetch all ratings for distribution & reviews
-  const { data: allRatings } = await supabase
+  let allRatings: any[] | null = null
+  const { data: primaryRatings, error: ratingsError } = await supabase
     .from('ratings')
-    .select('id, user_id, rating, review, updated_at, profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_likes(user_id)')
+    .select('id, user_id, rating, review, updated_at, liked, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url)')
     .eq('video_id', videoId)
     .order('updated_at', { ascending: false })
+
+  if (ratingsError) {
+    const { data: altRatings } = await supabase
+      .from('ratings')
+      .select('id, user_id, rating, review, updated_at, liked, profile:user_id(username, display_name, avatar_url)')
+      .eq('video_id', videoId)
+      .order('updated_at', { ascending: false })
+    allRatings = altRatings
+  } else {
+    allRatings = primaryRatings
+  }
+
+  let reviewLikesMap: Record<string, number> = {}
+  let userLikedReviews: Set<string> = new Set()
+  
+  const { data: likesData } = await supabase
+    .from('review_likes')
+    .select('review_id, user_id')
+
+  if (likesData) {
+    likesData.forEach((l: any) => {
+      reviewLikesMap[l.review_id] = (reviewLikesMap[l.review_id] || 0) + 1
+      if (user && l.user_id === user.id) {
+        userLikedReviews.add(l.review_id)
+      }
+    })
+  }
 
   const distribution: Record<string, number> = {}
   const reviews: any[] = []
@@ -66,9 +94,9 @@ export default async function VideoPage(props: Props) {
       if (r.review) {
         reviews.push({
           ...r,
-          profile: r.profiles,
-          like_count: r.review_likes?.length || 0,
-          is_liked: user ? r.review_likes?.some((l: any) => l.user_id === user.id) : false
+          profile: r.profile || r.profiles,
+          like_count: reviewLikesMap[r.id] || 0,
+          is_liked: userLikedReviews.has(r.id)
         })
       }
     })
@@ -244,7 +272,7 @@ export default async function VideoPage(props: Props) {
         </div>
 
         <div className="space-y-4">
-          <VideoActionPanel videoId={videoId} videoUrl={videoData.url} title={videoData.title} initialIsOnWatchlist={isOnWatchlist} initialIsLogged={isLogged} />
+          <VideoActionPanel videoId={videoId} videoUrl={videoData.url} title={videoData.title} initialIsOnWatchlist={isOnWatchlist} initialIsLogged={isLogged} isLoggedIn={!!user} />
           {/* Stats Box */}
           <div className="bg-surface border border-amber rounded-xl p-6 shadow-xl shadow-amber/5">
             <div className="flex flex-col items-center mb-6">

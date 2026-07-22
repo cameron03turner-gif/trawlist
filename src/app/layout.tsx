@@ -40,10 +40,43 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Trawlist — rate what you watch',
-  description: 'Log and rate YouTube videos, and see what the community loved.',
+  metadataBase: new URL('https://www.trawlist.com'),
+  title: {
+    default: 'Trawlist — Log, rate, and discover YouTube videos',
+    template: '%s | Trawlist',
+  },
+  description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
   icons: {
-    icon: '/logo.png',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    shortcut: ['/favicon.ico'],
+    apple: [
+      { url: '/logo.png' },
+    ],
+  },
+  openGraph: {
+    title: 'Trawlist — Log, rate, and discover YouTube videos',
+    description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
+    url: 'https://www.trawlist.com',
+    siteName: 'Trawlist',
+    images: [
+      {
+        url: '/logo.png',
+        width: 512,
+        height: 512,
+        alt: 'Trawlist Logo',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Trawlist — Log, rate, and discover YouTube videos',
+    description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
+    images: ['/logo.png'],
   },
 }
 

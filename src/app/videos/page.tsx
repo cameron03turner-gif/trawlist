@@ -201,7 +201,7 @@ export default async function LeaderboardPage(props: {
           )}
         </div>
       ) : (
-        <LeaderboardList data={data} userLikes={userLikes} userLogged={userLogged} />
+        <LeaderboardList data={data} userLikes={userLikes} userLogged={userLogged} isLoggedIn={!!session} />
       )}
     </div>
   )
