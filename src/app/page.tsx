@@ -209,10 +209,13 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-amber/5 to-transparent pointer-events-none" />
         <div className="max-w-6xl mx-auto px-4 relative z-10 text-center">
           <h1 className="text-5xl lg:text-7xl font-extrabold text-ink tracking-tight mb-6">
-            Log the YouTube <br/> videos you love.
+            Trawlist
+            <span className="block text-2xl lg:text-4xl font-semibold text-muted mt-3">
+              Log, rate, and discover YouTube videos you love.
+            </span>
           </h1>
-          <p className="text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
-            Trawlist is a social network for YouTube enthusiasts. Track what you watch, write reviews, curate lists, and discover amazing content with friends.
+          <p className="text-lg text-muted max-w-2xl mx-auto mb-10 leading-relaxed">
+            Trawlist is a social network for YouTube enthusiasts. Track what you watch, write reviews, curate custom video lists, and share recommendations with friends.
           </p>
           <div className="flex items-center justify-center gap-4">
             <Link href="/login" className="px-8 py-4 bg-amber text-amber-950 font-bold rounded-full hover:bg-amber/90 hover:scale-105 transition-all shadow-lg shadow-amber/20">
