@@ -7,7 +7,7 @@ import { Scrubber } from '@/components/Scrubber'
 import { extractVideoId } from '@/lib/youtube'
 import { createClient } from '@/lib/supabase/client'
 
-type Preview = { videoId: string; title: string; author: string; thumbnail: string; url: string }
+type Preview = { videoId: string; title: string; author: string; thumbnail: string; url: string; channelThumbnail?: string }
 
 export function RateModal() {
   const router = useRouter()
@@ -61,12 +61,20 @@ export function RateModal() {
       )
       if (!res.ok) throw new Error()
       const data = await res.json()
+
+      const { data: dbVideo } = await supabase
+        .from('videos')
+        .select('channel_thumbnail_url')
+        .eq('id', id)
+        .maybeSingle()
+
       setPreview({
         videoId: id,
         title: data.title,
         author: data.author_name,
         thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
         url: `https://www.youtube.com/watch?v=${id}`,
+        channelThumbnail: dbVideo?.channel_thumbnail_url || undefined,
       })
       
       const { data: { session } } = await supabase.auth.getSession()
@@ -164,10 +172,11 @@ export function RateModal() {
       />
 
       {/* Fading & Scaling Modal Container */}
-      <div className="aero-modal relative w-full max-w-lg bg-surface border border-amber rounded-2xl shadow-xl flex flex-col my-auto animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
+      <div className="aero-modal relative w-full max-w-lg bg-surface border border-amber/30 rounded-2xl shadow-xl flex flex-col my-auto animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
         <button 
           onClick={handleClose}
-          className="absolute top-4 right-4 p-2 text-muted hover:text-ink bg-bg rounded-full border border-amber z-10 transition-colors"
+          className="absolute top-4 right-4 p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg/80 rounded-full z-10 transition-colors"
+          title="Close"
         >
           <X size={16} />
         </button>
@@ -200,15 +209,12 @@ export function RateModal() {
 
           {!preview && (
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <LinkIcon size={18} className="text-muted" />
-              </div>
               <input
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleFind()}
                 placeholder="youtube.com/watch?v=..."
-                className="w-full bg-bg border border-amber rounded-xl py-4 pl-11 pr-32 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber/50 transition-all shadow-inner"
+                className="w-full bg-bg border border-amber rounded-xl py-4 px-4 pr-32 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-amber focus:ring-1 focus:ring-amber/50 transition-all shadow-inner"
               />
               <div className="absolute inset-y-2 right-2">
                 <button
@@ -226,15 +232,29 @@ export function RateModal() {
 
       {preview && (
         <div className="rounded-xl p-4 space-y-4 bg-surface">
-          <div className="flex gap-3">
+          <div className="flex gap-3.5 items-center">
             <img
               src={preview.thumbnail}
               alt=""
               className="w-[140px] h-[79px] object-cover rounded-lg border border-amber flex-shrink-0"
             />
-            <div className="min-w-0">
-              <div className="text-sm font-medium mb-1 leading-snug">{preview.title}</div>
-              <div className="text-xs text-muted">{preview.author}</div>
+            <div className="min-w-0 flex flex-col justify-center">
+              <div className="text-base font-bold mb-1.5 leading-snug text-ink">{preview.title}</div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-muted">
+                {preview.channelThumbnail ? (
+                  <img 
+                    src={preview.channelThumbnail} 
+                    alt="" 
+                    className="w-6 h-6 rounded-full object-cover shrink-0 shadow-sm" 
+                    referrerPolicy="no-referrer" 
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-amber/20 border border-amber/40 flex items-center justify-center text-amber text-xs font-bold shrink-0">
+                    {preview.author?.[0]?.toUpperCase() || 'C'}
+                  </div>
+                )}
+                <span className="line-clamp-1">{preview.author}</span>
+              </div>
             </div>
           </div>
           <div className="space-y-4">
@@ -283,7 +303,13 @@ export function RateModal() {
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-semibold text-muted uppercase tracking-wider">Public Review</label>
-                  <button onClick={() => { setShowReview(false); setReview(''); }} className="text-xs text-muted hover:text-rec flex items-center gap-1"><X size={12}/> Remove</button>
+                  <button 
+                    onClick={() => { setShowReview(false); setReview(''); }} 
+                    className="text-xs text-muted hover:text-rec flex items-center gap-1 px-1.5 py-0.5 rounded-md hover:bg-rec/10 transition-colors font-medium"
+                    title="Remove review"
+                  >
+                    <X size={14} /> Remove
+                  </button>
                 </div>
                 <textarea 
                   value={review} onChange={e => setReview(e.target.value)}
@@ -297,7 +323,13 @@ export function RateModal() {
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <label className="text-xs font-semibold text-muted uppercase tracking-wider flex items-center gap-1"><Lock size={12}/> Private Note</label>
-                  <button onClick={() => { setShowNote(false); setNote(''); }} className="text-xs text-muted hover:text-rec flex items-center gap-1"><X size={12}/> Remove</button>
+                  <button 
+                    onClick={() => { setShowNote(false); setNote(''); }} 
+                    className="text-xs text-muted hover:text-rec flex items-center gap-1 px-1.5 py-0.5 rounded-md hover:bg-rec/10 transition-colors font-medium"
+                    title="Remove note"
+                  >
+                    <X size={14} /> Remove
+                  </button>
                 </div>
                 <textarea 
                   value={note} onChange={e => setNote(e.target.value)}

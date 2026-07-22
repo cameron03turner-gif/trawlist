@@ -129,11 +129,16 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
       const distribution: Record<string, number> = {}
       const reviews: any[] = []
       let likesCount = 0
+      let ratingSum = 0
+      let totalStarRatings = 0
 
       if (allRatings) {
         allRatings.forEach((r: any) => {
-          if (r.rating != null) {
-            const rStr = Number(r.rating).toFixed(1)
+          if (r.rating != null && !isNaN(Number(r.rating))) {
+            const numR = Number(r.rating)
+            ratingSum += numR
+            totalStarRatings++
+            const rStr = numR.toFixed(1)
             distribution[rStr] = (distribution[rStr] || 0) + 1
           }
           if (r.review) {
@@ -150,8 +155,21 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
         })
       }
 
+      const calculatedAvg = totalStarRatings > 0 ? (ratingSum / totalStarRatings) : null
+      const computedAvgRating = calculatedAvg !== null ? calculatedAvg : (videoData?.avg_rating != null ? Number(videoData.avg_rating) : null)
+
       if (mounted) {
-        setData({ video: videoData, distribution, reviews, likesCount, listsCount, followingIds, total: allRatings?.filter((r: any) => r.rating !== null).length || 0, hasRated, myRatingData })
+        setData({ 
+          video: { ...videoData, computedAvgRating }, 
+          distribution, 
+          reviews, 
+          likesCount, 
+          listsCount, 
+          followingIds, 
+          total: totalStarRatings, 
+          hasRated, 
+          myRatingData 
+        })
         setLoading(false)
       }
     }
@@ -187,7 +205,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
         </div>
       ) : (
         /* Fading & Scaling Modal Container */
-        <div className="aero-modal relative w-full max-w-4xl bg-surface border border-amber rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] flex flex-col max-h-[90vh] overflow-hidden animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
+        <div className="aero-modal relative w-full max-w-4xl bg-surface border border-amber/30 rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] flex flex-col max-h-[90vh] overflow-hidden animate-fade-in-zoom z-10" onClick={e => e.stopPropagation()}>
           <button 
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg/80 rounded-full z-10 transition-colors"
@@ -254,7 +272,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
             <div className="p-6 pt-0">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Left Column */}
-                <div className="md:col-span-2 space-y-6">
+                <div className="md:col-span-2 space-y-4">
                   <div>
                     <div className="relative mb-2">
                       <a href={`/videos/${videoId}`} className="block pr-12 group/title">
@@ -275,12 +293,21 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                           router.push(`/channel/${encodeURIComponent(data.video.channel_id || data.video.channel)}`);
                         }, 50);
                       }}
-                      className="flex items-center gap-2 group/channel min-w-0"
+                      className="flex items-center gap-2.5 group/channel min-w-0 mt-2"
                     >
-                      {data.video.channel_thumbnail_url && (
-                        <img src={data.video.channel_thumbnail_url} alt="" className="w-6 h-6 rounded-full object-cover shrink-0" referrerPolicy="no-referrer" />
+                      {data.video.channel_thumbnail_url ? (
+                        <img 
+                          src={data.video.channel_thumbnail_url} 
+                          alt="" 
+                          className="w-8 h-8 rounded-full object-cover shrink-0 shadow-sm" 
+                          referrerPolicy="no-referrer" 
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-amber/20 border border-amber/40 flex items-center justify-center text-amber text-sm font-bold shrink-0">
+                          {data.video.channel?.[0]?.toUpperCase() || 'C'}
+                        </div>
                       )}
-                      <span className="text-base font-medium text-muted group-hover/channel:text-amber transition-colors line-clamp-1">
+                      <span className="text-lg font-semibold text-muted group-hover/channel:text-amber transition-colors line-clamp-1">
                         {data.video.channel}
                       </span>
                     </a>
@@ -314,10 +341,12 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                   {/* Stats Box */}
                   <div className="bg-surface rounded-xl p-6 shadow-xl shadow-amber/5">
                     <div className="flex flex-col items-center mb-6">
-                      <span className="font-mono font-black text-amber text-5xl mb-2">{data.video.avg_rating != null ? Number(data.video.avg_rating).toFixed(1) : '—'}</span>
-                      <Scrubber value={data.video.avg_rating != null ? Number(data.video.avg_rating) : 0} interactive={false} height={18} />
+                      <span className="font-mono font-black text-amber text-5xl mb-2">
+                        {data.video.computedAvgRating != null ? Number(data.video.computedAvgRating).toFixed(1) : '—'}
+                      </span>
+                      <Scrubber value={data.video.computedAvgRating != null ? Number(data.video.computedAvgRating) : 0} interactive={false} height={18} />
                       <div className="text-xs text-muted uppercase tracking-widest font-bold mt-4">
-                        {data.total} Ratings
+                        {data.total} {data.total === 1 ? 'Rating' : 'Ratings'}
                       </div>
                     </div>
                   </div>

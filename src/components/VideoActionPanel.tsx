@@ -41,11 +41,12 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
   }
   
   const handleToggleWatchlist = async () => {
-    setIsOnWatchlist(!isOnWatchlist) // Optimistic
+    const nextState = !isOnWatchlist
+    setIsOnWatchlist(nextState) // Optimistic
     setIsPending(true)
     const res = await toggleWatchlist(videoUrl)
     if (res.error) {
-      setIsOnWatchlist(isOnWatchlist) // Revert on error
+      setIsOnWatchlist(!nextState) // Revert on error
     } else {
       setIsOnWatchlist(res.isOnWatchlist || false)
     }

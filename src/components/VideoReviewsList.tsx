@@ -175,7 +175,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
   }
 
   return (
-    <div className="pt-8 mt-8">
+    <div className="pt-3 mt-2">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-muted uppercase tracking-wider">Community Reviews</h3>

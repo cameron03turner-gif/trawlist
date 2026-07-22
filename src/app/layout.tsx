@@ -104,6 +104,9 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>
       <head>
         <ThemeScript />
+        <link rel="icon" href="/logo.png" type="image/png" sizes="any" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body className="bg-bg text-ink font-body min-h-screen flex flex-col justify-between" suppressHydrationWarning>
         <ThemeProvider>

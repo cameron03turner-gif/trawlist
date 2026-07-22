@@ -68,7 +68,7 @@ export function SaveToListModal({ videoUrl, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] p-6 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-md bg-surface border border-amber/30 rounded-2xl shadow-[0_0_40px_rgba(251,191,36,0.1)] p-6 flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold">Save to List</h2>
           <button onClick={onClose} className="p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg border border-amber/20 rounded-full transition-colors">

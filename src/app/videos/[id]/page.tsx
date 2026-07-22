@@ -84,11 +84,16 @@ export default async function VideoPage(props: Props) {
 
   const distribution: Record<string, number> = {}
   const reviews: any[] = []
+  let ratingSum = 0
+  let totalStarRatings = 0
 
   if (allRatings) {
-    allRatings.forEach(r => {
-      if (r.rating !== null) {
-        const rStr = Number(r.rating).toFixed(1)
+    allRatings.forEach((r: any) => {
+      if (r.rating != null && !isNaN(Number(r.rating))) {
+        const numR = Number(r.rating)
+        ratingSum += numR
+        totalStarRatings++
+        const rStr = numR.toFixed(1)
         distribution[rStr] = (distribution[rStr] || 0) + 1
       }
       if (r.review) {
@@ -102,7 +107,9 @@ export default async function VideoPage(props: Props) {
     })
   }
 
-  const totalRatings = allRatings?.length || 0
+  const calculatedAvg = totalStarRatings > 0 ? (ratingSum / totalStarRatings) : null
+  const avgRating = calculatedAvg !== null ? calculatedAvg : (videoData?.avg_rating != null ? Number(videoData.avg_rating) : null)
+  const totalRatings = totalStarRatings
 
   let isOnWatchlist = false
   let isLiked = false
@@ -276,10 +283,12 @@ export default async function VideoPage(props: Props) {
           {/* Stats Box */}
           <div className="bg-surface border border-amber rounded-xl p-6 shadow-xl shadow-amber/5">
             <div className="flex flex-col items-center mb-6">
-              <span className="font-mono font-black text-amber text-5xl mb-2">{Number(videoData.avg_rating).toFixed(1)}</span>
-              <Scrubber value={Number(videoData.avg_rating)} interactive={false} height={18} />
+              <span className="font-mono font-black text-amber text-5xl mb-2">
+                {avgRating != null ? avgRating.toFixed(1) : '—'}
+              </span>
+              <Scrubber value={avgRating != null ? avgRating : 0} interactive={false} height={18} />
               <div className="text-xs text-muted uppercase tracking-widest font-bold mt-4">
-                {totalRatings} Ratings
+                {totalRatings} {totalRatings === 1 ? 'Rating' : 'Ratings'}
               </div>
             </div>
 

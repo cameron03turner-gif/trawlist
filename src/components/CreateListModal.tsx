@@ -47,12 +47,13 @@ export function CreateListModal({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md bg-surface border border-amber rounded-2xl shadow-xl p-6 animate-fade-in-zoom">
+      <div className="relative w-full max-w-md bg-surface border border-amber/30 rounded-2xl shadow-xl p-6 animate-fade-in-zoom">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-muted hover:text-ink transition-colors"
+          className="p-2 text-muted hover:text-amber hover:bg-surface-alt bg-bg/80 rounded-full transition-colors shrink-0"
+          title="Close"
         >
-          <X size={20} />
+          <X size={16} />
         </button>
 
         <h2 className="text-xl font-bold text-ink mb-6">Create a List</h2>

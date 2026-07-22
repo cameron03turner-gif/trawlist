@@ -56,8 +56,12 @@ export async function toggleWatchlist(videoUrl: string) {
   const newStatus = currentRating?.watch_status === 'want_to_watch' ? null : 'want_to_watch'
 
   if (currentRating) {
-    await supabase.from('ratings').update({ watch_status: newStatus }).eq('id', currentRating.id)
-  } else {
+    if (newStatus === null && !currentRating.rating && !currentRating.review && !currentRating.note && !currentRating.liked) {
+      await supabase.from('ratings').delete().eq('id', currentRating.id)
+    } else {
+      await supabase.from('ratings').update({ watch_status: newStatus, updated_at: new Date().toISOString() }).eq('id', currentRating.id)
+    }
+  } else if (newStatus !== null) {
     await supabase.from('ratings').insert({
       user_id: user.id,
       video_id: videoId,
@@ -66,7 +70,7 @@ export async function toggleWatchlist(videoUrl: string) {
     })
   }
 
-  revalidatePath('/videos/[id]', 'page')
+  revalidatePath('/', 'layout')
   return { ok: true, isOnWatchlist: newStatus === 'want_to_watch' }
 }
 

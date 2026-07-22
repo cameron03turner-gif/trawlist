@@ -108,7 +108,7 @@ export function GlobalSearchModal({ isOpen, onClose, initialCategory = 'all' }: 
       onClick={onClose}
     >
       <div 
-        className="aero-modal relative w-full max-w-2xl bg-surface border border-amber rounded-2xl shadow-[0_0_40px_rgba(32,208,192,0.1)] flex flex-col max-h-[85vh] overflow-hidden" 
+        className="aero-modal relative w-full max-w-2xl bg-surface border border-amber/30 rounded-2xl shadow-[0_0_40px_rgba(32,208,192,0.1)] flex flex-col max-h-[85vh] overflow-hidden" 
         onClick={(e) => e.stopPropagation()}
       >
         
