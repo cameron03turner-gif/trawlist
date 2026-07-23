@@ -13,30 +13,35 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   weight: ['500', '700'],
   variable: '--next-font-display',
+  display: 'swap',
 })
 
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--next-font-body',
+  display: 'swap',
 })
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
   variable: '--next-font-mono',
+  display: 'swap',
 })
 
 const nunito = Nunito({
   subsets: ['latin'],
   weight: ['400', '600', '700', '900'],
   variable: '--next-font-nunito',
+  display: 'swap',
 })
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--next-font-jakarta',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
