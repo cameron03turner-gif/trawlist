@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Scrubber } from './Scrubber'
-import { Heart, Clock, Edit2 } from 'lucide-react'
+import Link from 'next/link'
+import { Heart, Clock, Edit2, ExternalLink, Circle } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
@@ -12,11 +13,16 @@ type Props = {
 }
 
 function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
+  const [isMounted, setIsMounted] = useState(false)
   const [showNotes, setShowNotes] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   if (!myRatingData || (!myRatingData.rating && !myRatingData.review && !myRatingData.note)) {
     return null
@@ -51,8 +57,17 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
         </div>
         
         <div className="flex items-center gap-4">
-          <span className="text-xs font-medium text-muted uppercase tracking-wider">
-            {myRatingData.updated_at ? new Date(myRatingData.updated_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+          {myRatingData.id && (
+            <Link
+              href={`/reviews/${myRatingData.id}`}
+              title="View Full Review Page"
+              className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0"
+            >
+              <Circle size={14} />
+            </Link>
+          )}
+          <span className="text-xs font-medium text-muted uppercase tracking-wider" suppressHydrationWarning>
+            {isMounted && myRatingData.updated_at ? new Date(myRatingData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
           </span>
           <button 
             onClick={handleEdit}

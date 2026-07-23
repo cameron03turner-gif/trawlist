@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Star, MessageSquare, Plus, ListVideo, Eye, Flag } from 'lucide-react'
+import { Star, MessageSquare, Plus, ListVideo, Eye, Flag, ExternalLink, Circle } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { BaseVideoCardWrapper } from './BaseVideoCard'
 import { ListCard } from './ListCard'
@@ -14,9 +14,21 @@ type Props = {
 }
 
 export function FeedItemCard({ item }: Props) {
+  const [isMounted, setIsMounted] = useState(false)
   const { type, user, data, timestamp } = item
-  const timeAgo = formatDistanceToNow(new Date(timestamp), { addSuffix: true })
+  const timeAgo = (isMounted && timestamp) ? (() => {
+    try {
+      const d = new Date(timestamp)
+      return isNaN(d.getTime()) ? '' : formatDistanceToNow(d, { addSuffix: true })
+    } catch {
+      return ''
+    }
+  })() : ''
   const [isReportOpen, setIsReportOpen] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   if (type === 'rating') {
     const { rating, review, watch_status, video } = data || {}
@@ -77,15 +89,25 @@ export function FeedItemCard({ item }: Props) {
 
         {(rating !== null || review) && (
           <div className="p-5 bg-bg/30 border-t border-amber/30">
-            {rating !== null && (
-              <div className="flex items-center mb-3">
+            <div className="flex items-center justify-between mb-3">
+              {rating !== null ? (
                 <div className="flex items-center text-amber bg-amber/10 px-2 py-1 rounded">
                   <Star fill="currentColor" size={16} className="mr-1.5" />
                   <span className="font-bold">{rating}</span>
                   <span className="text-muted ml-1">/ 5</span>
                 </div>
-              </div>
-            )}
+              ) : <div />}
+              
+              {data?.id && (
+                <Link
+                  href={`/reviews/${data.id}`}
+                  title="View Full Review Page"
+                  className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0"
+                >
+                  <Circle size={14} />
+                </Link>
+              )}
+            </div>
             
             {review && (
               <div className="text-ink text-sm italic leading-relaxed border-l-2 border-amber/30 pl-4 mt-2">

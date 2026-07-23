@@ -1,4 +1,5 @@
-import { MessageSquare, Lock, Eye } from 'lucide-react'
+import { MessageSquare, Lock, Eye, ExternalLink, Circle } from 'lucide-react'
+import Link from 'next/link'
 import { Scrubber } from './Scrubber'
 
 import { BaseVideoCardWrapper } from './BaseVideoCard'
@@ -15,6 +16,7 @@ type BaseProps = {
   onDelete?: () => void
   editUrl?: string
   review?: string | null
+  reviewId?: string | null
   note?: string | null
   watchStatus?: string | null
   onClick?: () => void
@@ -68,9 +70,22 @@ export function VideoRow(props: Props) {
   const bottomContentSlot = (props.review || props.note) ? (
     <div className="space-y-2">
       {props.review && (
-        <div className="text-sm text-ink leading-relaxed whitespace-pre-wrap">
-          <MessageSquare size={12} className="inline mr-1.5 text-muted -mt-0.5" />
-          {props.review}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-ink leading-relaxed whitespace-pre-wrap">
+              <MessageSquare size={12} className="inline mr-1.5 text-muted -mt-0.5" />
+              {props.review}
+            </div>
+            {props.reviewId && (
+              <Link
+                href={`/reviews/${props.reviewId}`}
+                title="View Full Review Page"
+                className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0 ml-2 relative z-10 pointer-events-auto"
+              >
+                <Circle size={14} />
+              </Link>
+            )}
+          </div>
         </div>
       )}
       {props.note && (

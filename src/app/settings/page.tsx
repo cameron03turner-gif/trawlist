@@ -4,11 +4,12 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, X, Upload, Trash2 } from 'lucide-react'
+import { Loader2, X, Upload, Trash2, Download, ExternalLink } from 'lucide-react'
 import { ExportDataButton } from '@/components/ExportDataButton'
 import { WatchHistoryImporter } from '@/components/WatchHistoryImporter'
 import { PasswordInput } from '@/components/PasswordInput'
 import { PrivacySettingsSection } from '@/components/PrivacySettingsSection'
+import { CHROME_STORE_URL } from '@/lib/constants'
 
 type Profile = { id: string; username: string; display_name: string | null; bio: string | null; avatar_url: string | null }
 
@@ -508,11 +509,38 @@ export default function SettingsPage() {
           <WatchHistoryImporter />
         </div>
 
+        <div className="pt-6 border-t border-amber/30 space-y-3">
+          <h2 className="text-lg font-medium text-ink flex items-center gap-2">
+            Chrome Extension
+          </h2>
+          <p className="text-sm text-muted">Rate and review YouTube videos directly while watching on YouTube.</p>
+          <div className="flex items-center gap-3 flex-wrap pt-1">
+            <a
+              href={CHROME_STORE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 rounded-lg text-sm font-semibold bg-amber text-bg hover:brightness-110 transition-colors shadow-sm inline-flex items-center gap-2"
+            >
+              <Download size={15} />
+              <span>Get Chrome Extension</span>
+              <ExternalLink size={13} />
+            </a>
+            <Link
+              href="/extension"
+              className="px-4 py-2 rounded-lg text-sm font-semibold bg-surface-alt border border-amber/30 text-ink hover:bg-surface hover:text-amber transition-colors"
+            >
+              View Extension Details
+            </Link>
+          </div>
+        </div>
+
         <div className="pt-6 border-t border-amber/30 space-y-2">
           <h2 className="text-lg font-medium text-ink">Support & Legal</h2>
           <p className="text-sm text-muted mb-3">Report issues, track bug fixes, or review our Community Guidelines, Terms of Service, and Privacy Policy.</p>
           <div className="flex items-center gap-4 text-sm font-semibold flex-wrap">
             <Link href="/bug-report" className="text-amber hover:underline flex items-center gap-1">Report a Bug / Feedback</Link>
+            <span className="text-muted">•</span>
+            <Link href="/extension" className="text-amber hover:underline">Chrome Extension</Link>
             <span className="text-muted">•</span>
             <Link href="/guidelines" className="text-amber hover:underline">Community Guidelines</Link>
             <span className="text-muted">•</span>

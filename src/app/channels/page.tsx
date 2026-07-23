@@ -2,7 +2,27 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { Trophy, Film, Star } from 'lucide-react'
 
+import { Metadata } from 'next'
+
 export const revalidate = 0
+
+export const metadata: Metadata = {
+  title: 'Top Creators & Channels | Trawlist',
+  description: 'Discover the highest-rated YouTube channels and creators ranked by community video ratings.',
+  openGraph: {
+    title: 'Top Creators & Channels | Trawlist',
+    description: 'Discover the highest-rated YouTube channels and creators ranked by community video ratings.',
+    url: 'https://www.trawlist.com/channels',
+    siteName: 'Trawlist',
+    images: [{ url: '/og-banner.jpg', width: 1200, height: 630, alt: 'Top YouTube Creators on Trawlist' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Top Creators & Channels | Trawlist',
+    description: 'Discover the highest-rated YouTube channels and creators ranked by community video ratings.',
+    images: ['/og-banner.jpg'],
+  },
+}
 
 export default async function ChannelsLeaderboardPage() {
   const supabase = await createClient()

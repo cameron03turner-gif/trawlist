@@ -5,7 +5,27 @@ import { CreateListButton } from '@/components/CreateListButton'
 import { ListControls } from '@/components/ListControls'
 import Link from 'next/link'
 
+import { Metadata } from 'next'
+
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Curated Video Playlists & Lists | Trawlist',
+  description: 'Browse themed video playlists, essays collections, and watchlists curated by the Trawlist community.',
+  openGraph: {
+    title: 'Curated Video Playlists & Lists | Trawlist',
+    description: 'Browse themed video playlists, essays collections, and watchlists curated by the Trawlist community.',
+    url: 'https://www.trawlist.com/lists',
+    siteName: 'Trawlist',
+    images: [{ url: '/og-banner.jpg', width: 1200, height: 630, alt: 'Curated Lists on Trawlist' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Curated Video Playlists & Lists | Trawlist',
+    description: 'Browse themed video playlists, essays collections, and watchlists curated by the Trawlist community.',
+    images: ['/og-banner.jpg'],
+  },
+}
 
 export default async function ListsPage(props: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const searchParams = await props.searchParams;

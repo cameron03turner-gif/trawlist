@@ -29,7 +29,7 @@ export default async function DiaryPage(props: { params: Promise<{ username: str
   // 3. Fetch Ratings
   const { data: rawRatings } = await supabase
     .from('ratings')
-    .select('rating, review, note, watch_status, liked, updated_at, videos(id, title, channel, thumbnail_url, url, channels(thumbnail_url))')
+    .select('id, rating, review, note, watch_status, liked, updated_at, videos(id, title, channel, thumbnail_url, url, channels(thumbnail_url))')
     .eq('user_id', prof.id)
     .order('updated_at', { ascending: false })
 
@@ -91,6 +91,7 @@ export default async function DiaryPage(props: { params: Promise<{ username: str
                   detailUrl={`/videos/${v.id}`}
                   rating={r.rating ? Number(r.rating) : null}
                   review={r.review}
+                  reviewId={r.id}
                   note={isOwnProfile ? r.note : null}
                   watchStatus={r.watch_status}
                   editUrl={isOwnProfile ? `?logUrl=${encodeURIComponent(v.url)}` : undefined}

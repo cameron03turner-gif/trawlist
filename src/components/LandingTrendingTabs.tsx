@@ -163,7 +163,7 @@ export function LandingTrendingTabs({ topVideos, popularLists, recentReviews }: 
             href="/videos"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold bg-surface-alt border border-amber text-ink hover:bg-amber hover:text-bg hover:scale-105 transition-all shadow-md"
           >
-            Explore Full Leaderboard <ArrowRight size={16} />
+            Explore Community Ratings <ArrowRight size={16} />
           </Link>
         </div>
       </div>

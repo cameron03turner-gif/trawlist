@@ -28,10 +28,15 @@ export function ReviewRepliesSection({
   isReplyingExternal,
   onCancelReplyingExternal,
 }: Props) {
+  const [isMounted, setIsMounted] = useState(false)
   const [replies, setReplies] = useState<ReviewReply[]>([])
   const [loading, setLoading] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
   const [fetched, setFetched] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   // Local reply input state
   const [showComposer, setShowComposer] = useState(false)
@@ -250,7 +255,7 @@ export function ReviewRepliesSection({
 
           {replies.map((r) => {
             const isOwner = currentUserId && r.user_id === currentUserId
-            const formattedTime = r.created_at
+            const formattedTime = (isMounted && r.created_at)
               ? formatDistanceToNow(new Date(r.created_at), { addSuffix: true })
               : ''
 

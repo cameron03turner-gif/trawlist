@@ -2,13 +2,67 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { VideoGridCard } from '@/components/VideoGridCard'
 
+import { Metadata } from 'next'
+
 export const revalidate = 0
 
 type Props = {
   params: Promise<{ channelId: string }>
 }
 
-export default async function ChannelPage(props: { params: Promise<{ channelId: string }> }) {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params
+  const decodedId = decodeURIComponent(params.channelId)
+  const supabase = await createClient()
+
+  const { data: channel } = await supabase
+    .from('channels')
+    .select('title, thumbnail_url')
+    .eq('id', decodedId)
+    .single()
+
+  if (!channel) return { title: 'Channel Not Found | Trawlist' }
+
+  const { data: stats } = await supabase
+    .from('channel_leaderboard')
+    .select('video_count, total_ratings, avg_rating')
+    .eq('id', decodedId)
+    .maybeSingle()
+
+  const title = `${channel.title} | Trawlist`
+  const description = stats?.avg_rating 
+    ? `${channel.title} has an average rating of ${Number(stats.avg_rating).toFixed(1)}★ across ${stats.video_count || 0} videos on Trawlist.`
+    : `Explore community video ratings and reviews for ${channel.title} on Trawlist.`
+  const imageUrl = channel.thumbnail_url || '/og-banner.jpg'
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://www.trawlist.com/channel/${params.channelId}`,
+      siteName: 'Trawlist',
+      images: [
+        {
+          url: imageUrl,
+          width: 500,
+          height: 500,
+          alt: channel.title,
+        },
+      ],
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
+  }
+}
+
+export default async function ChannelPage(props: Props) {
   const params = await props.params
   
   

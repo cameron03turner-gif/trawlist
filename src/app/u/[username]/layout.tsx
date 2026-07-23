@@ -8,6 +8,54 @@ import { FollowCounts } from '@/components/FollowCounts'
 import { Avatar } from '@/components/Avatar'
 import { ProfileReportButton } from '@/components/ProfileReportButton'
 
+import { Metadata } from 'next'
+
+export async function generateMetadata(props: {
+  params: Promise<{ username: string }>
+}): Promise<Metadata> {
+  const params = await props.params
+  const supabase = await createClient()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('username, display_name, bio, avatar_url')
+    .eq('username', params.username.toLowerCase())
+    .single()
+
+  if (!profile) return { title: 'User Not Found | Trawlist' }
+
+  const name = profile.display_name || `@${profile.username}`
+  const title = `${name} (@${profile.username})`
+  const description = profile.bio || `Check out ${name}'s video diary, ratings, and reviews on Trawlist.`
+  const imageUrl = profile.avatar_url || '/og-banner.jpg'
+
+  return {
+    title: `${name} | Trawlist`,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://www.trawlist.com/u/${profile.username}`,
+      siteName: 'Trawlist',
+      images: [
+        {
+          url: imageUrl,
+          width: 500,
+          height: 500,
+          alt: `${name}'s Profile`,
+        },
+      ],
+      type: 'profile',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+    },
+  }
+}
+
 export default async function ProfileLayout(props: {
   children: React.ReactNode
   params: Promise<{ username: string }>

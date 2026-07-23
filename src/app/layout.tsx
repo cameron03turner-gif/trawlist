@@ -69,20 +69,20 @@ export const metadata: Metadata = {
     siteName: 'Trawlist',
     images: [
       {
-        url: '/logo.png',
-        width: 512,
-        height: 512,
-        alt: 'Trawlist Logo',
+        url: '/og-banner.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Trawlist — Social network for video enthusiasts',
       },
     ],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Trawlist — Log, rate, and discover YouTube videos',
     description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
-    images: ['/logo.png'],
+    images: ['/og-banner.jpg'],
   },
 }
 
@@ -126,6 +126,10 @@ export default async function RootLayout({
           </OnboardingGuard>
           <footer className="w-full max-w-4xl mx-auto px-4 py-8 border-t border-amber/10 text-center text-xs text-muted flex items-center justify-center gap-4 flex-wrap relative z-10">
             <span>© {new Date().getFullYear()} Trawlist</span>
+            <span>•</span>
+            <Link href="/extension" className="hover:text-amber font-medium transition-colors flex items-center gap-1">
+              <span>Chrome Extension</span>
+            </Link>
             <span>•</span>
             <Link href="/guidelines" className="hover:text-amber transition-colors">Community Guidelines</Link>
             <span>•</span>

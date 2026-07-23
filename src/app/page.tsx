@@ -2,7 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { VideoGridCard } from '@/components/VideoGridCard'
 import { LandingTrendingTabs } from '@/components/LandingTrendingTabs'
-import { Film, Users, Zap, Search, ArrowRight, Sparkles, Star, ShieldCheck } from 'lucide-react'
+import { ChromeExtensionBanner } from '@/components/ChromeExtensionBanner'
+import { Film, Users, Zap, Search, ArrowRight, Sparkles, Star, ShieldCheck, Download, ExternalLink, Tv } from 'lucide-react'
+import { CHROME_STORE_URL } from '@/lib/constants'
 
 export const revalidate = 0
 
@@ -162,7 +164,7 @@ export default async function HomePage() {
                   href="/videos"
                   className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-amber text-bg hover:brightness-110 transition"
                 >
-                  Explore Leaderboard
+                  Explore Community Ratings
                 </Link>
               </div>
             ) : (
@@ -186,6 +188,11 @@ export default async function HomePage() {
                 ))}
               </div>
             )}
+          </section>
+
+          {/* Chrome Extension Promo for Signed-In Users */}
+          <section className="mb-8">
+            <ChromeExtensionBanner variant="dashboard" />
           </section>
         </div>
       </div>
@@ -273,7 +280,7 @@ export default async function HomePage() {
               href="/videos"
               className="w-full sm:w-auto px-7 py-3 bg-surface-alt text-ink font-bold rounded-full border border-amber hover:bg-surface hover:border-amber transition-all text-xs"
             >
-              Explore Community Leaderboard
+              Explore Community Ratings
             </Link>
           </div>
         </div>
@@ -288,7 +295,7 @@ export default async function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 hover:z-10 transition-all duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
                   <Film size={24} />
@@ -303,7 +310,7 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 hover:z-10 transition-all duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
                   <Users size={24} />
@@ -318,14 +325,14 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 flex flex-col justify-between">
+            <div className="bg-surface border border-amber rounded-2xl p-6 hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 hover:z-10 transition-all duration-300 flex flex-col justify-between">
               <div>
                 <div className="w-12 h-12 bg-amber/10 text-amber rounded-2xl flex items-center justify-center mb-4 border border-amber/30 shadow-lg shadow-amber/5">
                   <Search size={24} />
                 </div>
                 <h3 className="text-lg font-bold text-ink mb-2">Discover Gold</h3>
                 <p className="text-muted text-xs leading-relaxed">
-                  Bypass generic algorithm traps. Uncover hidden gems through community-ranked leaderboards, taste-based recommendations, and user-curated playlists.
+                  Bypass generic algorithm traps. Uncover hidden gems through community ratings, taste-based recommendations, and user-curated playlists.
                 </p>
               </div>
               <div className="pt-4 mt-4 border-t border-border/50 text-xs font-semibold text-amber flex items-center gap-1.5 whitespace-nowrap overflow-hidden">
@@ -333,6 +340,9 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Featured Chrome Extension Showcase Banner */}
+          <ChromeExtensionBanner variant="landing" />
         </div>
       </div>
 

@@ -7,7 +7,21 @@ import { Metadata } from 'next'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'Videos | Trawlist',
+  title: 'Community Video Ratings | Trawlist',
+  description: 'Explore top-rated YouTube video essays, documentaries, and breakdowns curated and scored by the Trawlist community.',
+  openGraph: {
+    title: 'Community Video Ratings | Trawlist',
+    description: 'Explore top-rated YouTube video essays, documentaries, and breakdowns curated and scored by the Trawlist community.',
+    url: 'https://www.trawlist.com/videos',
+    siteName: 'Trawlist',
+    images: [{ url: '/og-banner.jpg', width: 1200, height: 630, alt: 'Community Video Ratings on Trawlist' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Community Video Ratings | Trawlist',
+    description: 'Explore top-rated YouTube video essays, documentaries, and breakdowns curated and scored by the Trawlist community.',
+    images: ['/og-banner.jpg'],
+  },
 }
 
 export default async function LeaderboardPage(props: {

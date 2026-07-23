@@ -16,6 +16,19 @@ import {
 export const metadata = {
   title: 'Community Guidelines | Trawlist',
   description: 'Standards of conduct, review etiquette, and moderation policies for the Trawlist community.',
+  openGraph: {
+    title: 'Community Guidelines | Trawlist',
+    description: 'Standards of conduct, review etiquette, and moderation policies for the Trawlist community.',
+    url: 'https://www.trawlist.com/guidelines',
+    siteName: 'Trawlist',
+    images: [{ url: '/og-banner.jpg', width: 1200, height: 630, alt: 'Trawlist Community Guidelines' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Community Guidelines | Trawlist',
+    description: 'Standards of conduct, review etiquette, and moderation policies for the Trawlist community.',
+    images: ['/og-banner.jpg'],
+  },
 }
 
 export default function GuidelinesPage() {

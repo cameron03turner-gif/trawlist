@@ -86,7 +86,7 @@ export function ActivityFeed({ initialType = 'community', userId }: Props) {
                 href="/videos"
                 className="px-4 py-2 bg-amber text-bg text-sm font-bold rounded-lg hover:brightness-110 transition-all"
               >
-                Explore Leaderboard
+                Explore Community Ratings
               </Link>
               <button
                 onClick={() => setFeedType('community')}

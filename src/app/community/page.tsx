@@ -2,7 +2,27 @@ import { ActivityFeed } from '@/components/ActivityFeed'
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 
+import { Metadata } from 'next'
+
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Community Activity Feed | Trawlist',
+  description: 'See what your friends and video enthusiasts across the Trawlist community are watching, rating, and reviewing.',
+  openGraph: {
+    title: 'Community Activity Feed | Trawlist',
+    description: 'See what your friends and video enthusiasts across the Trawlist community are watching, rating, and reviewing.',
+    url: 'https://www.trawlist.com/community',
+    siteName: 'Trawlist',
+    images: [{ url: '/og-banner.jpg', width: 1200, height: 630, alt: 'Trawlist Community Feed' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Community Activity Feed | Trawlist',
+    description: 'See what your friends and video enthusiasts across the Trawlist community are watching, rating, and reviewing.',
+    images: ['/og-banner.jpg'],
+  },
+}
 
 export default async function CommunityPage() {
   const supabase = await createClient()
