@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { extractVideoId } from '@/lib/youtube'
 
 export type BaseVideoCardProps = {
   layout?: 'grid' | 'row' | 'large-row'
@@ -41,6 +42,9 @@ export type BaseVideoCardProps = {
 export function BaseVideoCard(props: BaseVideoCardProps) {
   const { layout = 'grid' } = props
   const isGrid = layout === 'grid'
+
+  const extractedId = extractVideoId(props.url)
+  const effectiveDetailUrl = props.detailUrl || (extractedId ? `/videos/${extractedId}` : undefined)
   
   const thumbnailNode = (
     <div className={`relative bg-surface group/thumb shrink-0 overflow-hidden ${
@@ -52,8 +56,8 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
         <button onClick={props.onClick} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden cursor-pointer outline-none text-left">
           <img src={props.thumbnail} alt="" className="w-full h-full object-cover transition duration-300 group-hover/thumb:scale-105" />
         </button>
-      ) : props.detailUrl ? (
-        <Link href={props.detailUrl} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden">
+      ) : effectiveDetailUrl ? (
+        <Link href={effectiveDetailUrl} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden">
           <img src={props.thumbnail} alt="" className="w-full h-full object-cover transition duration-300 group-hover/thumb:scale-105" />
         </Link>
       ) : (
@@ -78,8 +82,8 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
             {props.title}
           </div>
         </button>
-      ) : props.detailUrl ? (
-        <Link href={props.detailUrl} className="block group/title relative z-10">
+      ) : effectiveDetailUrl ? (
+        <Link href={effectiveDetailUrl} className="block group/title relative z-10">
           <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={props.title}>
             {props.title}
           </div>
@@ -96,8 +100,12 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
       <div className={`flex items-center gap-2 mt-2 relative z-10`}>
         {props.channelId ? (
           <Link href={`/channel/${encodeURIComponent(props.channelId)}`} className="flex items-center gap-2 group/channel min-w-0">
-            {props.channelThumbnail && (
-              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-amber/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
+            {props.channelThumbnail ? (
+              <img src={props.channelThumbnail} alt="" className="w-6 h-6 rounded-full object-cover border border-amber/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-6 h-6 rounded-full bg-amber/20 border border-amber/40 flex items-center justify-center text-amber text-[10px] font-bold shrink-0 group-hover/channel:border-amber transition-colors">
+                {props.channel?.[0]?.toUpperCase() || 'C'}
+              </div>
             )}
             <div className="text-muted truncate font-medium group-hover/channel:text-amber transition-colors text-sm">
               {props.channel}
@@ -105,8 +113,12 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
           </Link>
         ) : (
           <div className="flex items-center gap-2 min-w-0">
-            {props.channelThumbnail && (
-              <img src={props.channelThumbnail} alt="" className="w-7 h-7 rounded-full object-cover border border-amber/50 shrink-0" referrerPolicy="no-referrer" />
+            {props.channelThumbnail ? (
+              <img src={props.channelThumbnail} alt="" className="w-6 h-6 rounded-full object-cover border border-amber/50 shrink-0" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-6 h-6 rounded-full bg-amber/20 border border-amber/40 flex items-center justify-center text-amber text-[10px] font-bold shrink-0">
+                {props.channel?.[0]?.toUpperCase() || 'C'}
+              </div>
             )}
             <div className="text-muted truncate font-medium text-sm">
               {props.channel}
@@ -146,9 +158,9 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
             className="absolute inset-0 z-0 rounded-lg w-full h-full cursor-pointer focus:outline-none"
             aria-label={`View details for ${props.title}`}
           />
-        ) : props.detailUrl ? (
+        ) : effectiveDetailUrl ? (
           <Link
-            href={props.detailUrl}
+            href={effectiveDetailUrl}
             className="absolute inset-0 z-0 rounded-lg"
             aria-label={`View details for ${props.title}`}
           />

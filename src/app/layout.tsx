@@ -116,8 +116,10 @@ export default async function RootLayout({
             <main className="max-w-4xl mx-auto px-4 py-6 relative z-10 w-full flex-1">{children}</main>
             {modal}
           </OnboardingGuard>
-          <footer className="w-full max-w-4xl mx-auto px-4 py-8 border-t border-amber/10 text-center text-xs text-muted flex items-center justify-center gap-4 relative z-10">
+          <footer className="w-full max-w-4xl mx-auto px-4 py-8 border-t border-amber/10 text-center text-xs text-muted flex items-center justify-center gap-4 flex-wrap relative z-10">
             <span>© {new Date().getFullYear()} Trawlist</span>
+            <span>•</span>
+            <Link href="/guidelines" className="hover:text-amber transition-colors">Community Guidelines</Link>
             <span>•</span>
             <Link href="/terms" className="hover:text-amber transition-colors">Terms of Service</Link>
             <span>•</span>

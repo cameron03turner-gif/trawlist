@@ -1,9 +1,13 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import { Star, MessageSquare, Plus, ListVideo, Eye } from 'lucide-react'
+import { Star, MessageSquare, Plus, ListVideo, Eye, Flag } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { BaseVideoCardWrapper } from './BaseVideoCard'
 import { ListCard } from './ListCard'
 import { Avatar } from './Avatar'
+import { ReportModal } from './ReportModal'
 
 type Props = {
   item: any
@@ -12,17 +16,20 @@ type Props = {
 export function FeedItemCard({ item }: Props) {
   const { type, user, data, timestamp } = item
   const timeAgo = formatDistanceToNow(new Date(timestamp), { addSuffix: true })
+  const [isReportOpen, setIsReportOpen] = useState(false)
 
   if (type === 'rating') {
-    const { rating, review, watch_status, video } = data
-    
+    const { rating, review, watch_status, video } = data || {}
+    if (!user || !video) return null
+    if (rating === null && (!review || !review.trim()) && !watch_status) return null
+
     let actionText = 'rated a video'
     if (rating === null) {
       if (watch_status === 'want_to_watch') actionText = 'wants to watch'
       else if (watch_status === 'watching') actionText = 'is watching'
       else if (watch_status === 'dropped') actionText = 'dropped'
-    } else if (review) {
-      actionText = 'reviewed a video'
+      else if (watch_status === 'watched') actionText = 'watched a video'
+      else if (review) actionText = 'reviewed a video'
     }
 
     return (
@@ -44,7 +51,16 @@ export function FeedItemCard({ item }: Props) {
               <span className="text-muted ml-1.5 text-sm">{actionText}</span>
             </div>
           </div>
-          <span className="text-xs text-muted">{timeAgo}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted">{timeAgo}</span>
+            <button
+              onClick={() => setIsReportOpen(true)}
+              title="Report content"
+              className="text-muted hover:text-amber transition-colors p-1"
+            >
+              <Flag size={14} />
+            </button>
+          </div>
         </div>
 
         <div className="p-4">
@@ -54,7 +70,8 @@ export function FeedItemCard({ item }: Props) {
             channel={video.channel}
             channelThumbnail={video.channel_thumbnail_url}
             thumbnail={video.thumbnail_url}
-            url={`/?v=${video.id}`}
+            url={video.url || `https://www.youtube.com/watch?v=${video.id}`}
+            detailUrl={`/videos/${video.id}`}
           />
         </div>
 
@@ -77,11 +94,20 @@ export function FeedItemCard({ item }: Props) {
             )}
           </div>
         )}
+
+        <ReportModal
+          isOpen={isReportOpen}
+          onClose={() => setIsReportOpen(false)}
+          targetType="review"
+          targetId={data.id || user.username}
+          targetTitle={`Review by @${user.username}`}
+        />
       </div>
     )
   }
 
   if (type === 'list_created') {
+    if (!user || !data || !data.id || data.is_private) return null
     const { title, description, is_ranked, id, is_private, items, items_count } = data
     return (
       <div className="bg-surface border border-amber rounded-xl overflow-hidden shadow-lg hover:shadow-xl hover:shadow-amber/10 transition-all duration-300 hover:scale-[1.02] hover:brightness-110">

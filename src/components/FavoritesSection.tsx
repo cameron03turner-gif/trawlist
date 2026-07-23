@@ -35,7 +35,7 @@ export function FavoritesSection({
                   e.stopPropagation()
                   setEditingPosition(position)
                 }}
-                className="absolute top-2 right-2 p-1.5 bg-bg/90 backdrop-blur text-muted hover:text-amber hover:bg-bg rounded-md opacity-0 group-hover/card:opacity-100 transition shadow-sm z-10"
+                className="absolute top-2 right-2 p-1.5 bg-black/85 text-amber border border-amber/60 hover:bg-amber hover:text-bg rounded-md backdrop-blur-md transition-all shadow-lg opacity-0 group-hover/card:opacity-100 group-hover/thumb:opacity-100 z-20"
                 title={video ? "Change favourite" : "Add favourite"}
               >
                 {video ? <Edit2 size={14} /> : <Plus size={14} />}

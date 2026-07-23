@@ -59,12 +59,16 @@ export default async function ProfilePage(props: { params: Promise<{ username: s
   }
 
   // 3. Fetch Recent Public Ratings
-  const { data: ratingsData } = await supabase
+  const { data: rawRatingsData } = await supabase
     .from('ratings')
     .select('*, videos(*, channels(thumbnail_url))')
     .eq('user_id', profile.id)
     .order('updated_at', { ascending: false })
     .limit(20)
+
+  const ratingsData = (rawRatingsData || []).filter((r: any) => 
+    r.rating != null || (r.review && r.review.trim() !== '') || (r.note && r.note.trim() !== '') || r.watch_status === 'watched'
+  )
 
   // 4. Fetch All Ratings for Stats
   const { data: allRatings } = await supabase

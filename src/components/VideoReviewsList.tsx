@@ -2,12 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { MessageSquare, Heart, ChevronLeft, ChevronRight, Reply, LogIn } from 'lucide-react'
+import { MessageSquare, Heart, ChevronLeft, ChevronRight, Reply, LogIn, Flag } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Scrubber } from './Scrubber'
 import { Avatar } from './Avatar'
 import { toggleReviewLike } from '@/app/actions/review-likes'
 import { ReviewRepliesSection } from './ReviewRepliesSection'
+import { ReportModal } from './ReportModal'
 
 type VideoReviewsListProps = {
   reviews: any[]
@@ -22,6 +23,7 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
   const [likeCount, setLikeCount] = useState<number>(review.like_count || 0)
   const [isLiking, setIsLiking] = useState(false)
   const [isReplying, setIsReplying] = useState(false)
+  const [isReportOpen, setIsReportOpen] = useState(false)
 
   const handleToggleLike = async () => {
     if (!currentUserId || isLiking) return
@@ -48,6 +50,7 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
     : null
 
   return (
+    <>
     <div className="p-4 bg-surface border border-amber rounded-xl relative hover:scale-[1.01] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-3">
@@ -86,8 +89,8 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
           </div>
         </div>
 
-        {/* Action Buttons: Like & Reply */}
-        <div className="flex items-center gap-2">
+        {/* Action Buttons: Reply, Like, Flag */}
+        <div className="flex items-center gap-1.5">
           {currentUserId && (
             <button
               onClick={() => setIsReplying(prev => !prev)}
@@ -113,6 +116,17 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
             <Heart size={14} className={isLiked ? 'fill-rec text-rec' : ''} />
             <span>{likeCount}</span>
           </button>
+
+          {/* Flag Button */}
+          {!isMine && (
+            <button
+              onClick={() => setIsReportOpen(true)}
+              title="Report review"
+              className="p-2 rounded-lg text-xs font-semibold bg-surface-alt/50 text-muted hover:text-amber transition-all"
+            >
+              <Flag size={14} />
+            </button>
+          )}
         </div>
       </div>
 
@@ -128,6 +142,16 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
         onCancelReplyingExternal={() => setIsReplying(false)}
       />
     </div>
+
+    {/* Report Modal */}
+    <ReportModal
+      isOpen={isReportOpen}
+      onClose={() => setIsReportOpen(false)}
+      targetType="review"
+      targetId={review.id}
+      targetTitle={`Review by @${review.profile?.username || 'user'}`}
+    />
+    </>
   )
 }
 

@@ -60,7 +60,10 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
     setIsRemovingLog(true)
     const res = await removeLog(videoUrl)
     if (res.error) {
+      console.error('Error removing log:', res.error)
       setIsLogged(true) // Revert on error
+    } else {
+      router.refresh()
     }
     setIsRemovingLog(false)
   }

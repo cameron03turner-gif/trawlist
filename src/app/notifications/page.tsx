@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Bell, UserPlus, Heart, Inbox } from 'lucide-react'
+import { Bell, UserPlus, UserCheck, Heart, Inbox } from 'lucide-react'
 import { MarkAllReadButton } from '@/components/MarkAllReadButton'
+import { FollowRequestItem } from '@/components/FollowRequestItem'
 import { formatDistanceToNow } from 'date-fns'
 import { Metadata } from 'next'
 
@@ -59,9 +60,22 @@ export default async function NotificationsPage() {
             let icon = <Bell size={18} className="text-muted" />
             let content = <span>Unknown notification</span>
             let linkUrl = '#'
+            const isFollowRequest = n.type === 'follow_request'
 
-            if (n.type === 'new_follower' && actor) {
-              icon = <UserPlus size={18} className="text-blue-500" />
+            if (n.type === 'follow_request' && actor) {
+              icon = <UserPlus size={18} className="text-amber" />
+              linkUrl = `/u/${actor.username}`
+              content = <FollowRequestItem notificationId={n.id} actor={actor} />
+            } else if (n.type === 'follow_request_accepted' && actor) {
+              icon = <UserCheck size={18} className="text-emerald-400" />
+              linkUrl = `/u/${actor.username}`
+              content = (
+                <span>
+                  <span className="font-semibold text-ink">{actor.display_name || actor.username}</span> accepted your follow request.
+                </span>
+              )
+            } else if (n.type === 'new_follower' && actor) {
+              icon = <UserPlus size={18} className="text-blue-400" />
               linkUrl = `/u/${actor.username}`
               content = (
                 <span>
@@ -69,7 +83,7 @@ export default async function NotificationsPage() {
                 </span>
               )
             } else if (n.type === 'list_liked' && actor && n.entity_id) {
-              icon = <Heart size={18} className="text-red-500 fill-red-500/20" />
+              icon = <Heart size={18} className="text-rec fill-rec/20" />
               const list = listsMap[n.entity_id]
               linkUrl = list ? `/lists/${list.id}/${list.slug}` : `/u/${actor.username}`
               content = (

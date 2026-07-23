@@ -27,12 +27,15 @@ export default async function DiaryPage(props: { params: Promise<{ username: str
   const isOwnProfile = session?.user?.id === prof.id
 
   // 3. Fetch Ratings
-  const { data: ratings } = await supabase
+  const { data: rawRatings } = await supabase
     .from('ratings')
     .select('rating, review, note, watch_status, liked, updated_at, videos(id, title, channel, thumbnail_url, url, channels(thumbnail_url))')
     .eq('user_id', prof.id)
-    .or('watch_status.is.null,watch_status.neq.want_to_watch')
     .order('updated_at', { ascending: false })
+
+  const ratings = (rawRatings || []).filter((r: any) => 
+    r.rating != null || (r.review && r.review.trim() !== '') || (r.note && r.note.trim() !== '') || r.watch_status === 'watched'
+  )
 
   if (!ratings || ratings.length === 0) {
     return (

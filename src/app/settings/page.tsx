@@ -8,6 +8,7 @@ import { Loader2, X, Upload, Trash2 } from 'lucide-react'
 import { ExportDataButton } from '@/components/ExportDataButton'
 import { WatchHistoryImporter } from '@/components/WatchHistoryImporter'
 import { PasswordInput } from '@/components/PasswordInput'
+import { PrivacySettingsSection } from '@/components/PrivacySettingsSection'
 
 type Profile = { id: string; username: string; display_name: string | null; bio: string | null; avatar_url: string | null }
 
@@ -293,50 +294,60 @@ export default function SettingsPage() {
       <div className="bg-surface rounded-xl p-6">
         <h2 className="text-lg font-medium mb-4">Edit Profile</h2>
         <form onSubmit={handleSaveProfile} className="space-y-4">
-          <div className="flex flex-col sm:flex-row items-start gap-6 pt-2">
-            {/* Left: Avatar & Upload controls */}
-            <div className="flex flex-col items-center sm:items-start gap-3 shrink-0">
-              <div className="relative w-32 h-32 !rounded-full overflow-hidden bg-bg border-2 border-amber/40 shadow-md shrink-0" style={{ borderRadius: '9999px' }}>
-                {(avatarPreview || form.avatar_url) ? (
-                  <img
-                    src={avatarPreview || form.avatar_url}
-                    alt="Avatar Preview"
-                    className="w-full h-full object-cover !rounded-full"
-                    style={{ borderRadius: '9999px' }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted font-bold text-4xl !rounded-full" style={{ borderRadius: '9999px' }}>
-                    {form.username ? form.username.charAt(0).toUpperCase() : '?'}
-                  </div>
-                )}
+          <div className="flex flex-col sm:flex-row items-stretch gap-6 pt-2">
+            {/* Left: Avatar, Upload controls & Save button */}
+            <div className="flex flex-col items-center sm:items-start justify-between gap-4 shrink-0 sm:w-36">
+              <div className="flex flex-col items-center sm:items-start gap-3 w-full">
+                <div className="relative w-32 h-32 !rounded-full overflow-hidden bg-bg border-2 border-amber/40 shadow-md shrink-0" style={{ borderRadius: '9999px' }}>
+                  {(avatarPreview || form.avatar_url) ? (
+                    <img
+                      src={avatarPreview || form.avatar_url}
+                      alt="Avatar Preview"
+                      className="w-full h-full object-cover !rounded-full"
+                      style={{ borderRadius: '9999px' }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted font-bold text-4xl !rounded-full" style={{ borderRadius: '9999px' }}>
+                      {form.username ? form.username.charAt(0).toUpperCase() : '?'}
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-2 w-32">
+                  <label className="flex-1 px-2.5 py-1.5 bg-surface-alt hover:bg-surface border border-amber hover:border-amber rounded-lg text-xs font-semibold text-ink cursor-pointer transition-all flex items-center justify-center gap-1.5 min-w-0">
+                    <Upload size={14} className="text-amber shrink-0" />
+                    <span className="truncate">Upload</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                  {(avatarPreview || form.avatar_url) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAvatarFile(null)
+                        setAvatarPreview(null)
+                        setForm({ ...form, avatar_url: '' })
+                      }}
+                      className="p-1.5 text-muted hover:text-rec bg-bg rounded-lg border border-transparent hover:border-rec/30 hover:bg-rec/10 transition-colors shrink-0 shadow-sm"
+                      title="Remove picture"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
-              
-              <div className="flex items-center gap-2 w-32">
-                <label className="flex-1 px-2.5 py-1.5 bg-surface-alt hover:bg-surface border border-amber hover:border-amber rounded-lg text-xs font-semibold text-ink cursor-pointer transition-all flex items-center justify-center gap-1.5 min-w-0">
-                  <Upload size={14} className="text-amber shrink-0" />
-                  <span className="truncate">Upload</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                </label>
-                {(avatarPreview || form.avatar_url) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAvatarFile(null)
-                      setAvatarPreview(null)
-                      setForm({ ...form, avatar_url: '' })
-                    }}
-                    className="p-1.5 text-muted hover:text-rec bg-bg rounded-lg border border-transparent hover:border-rec/30 hover:bg-rec/10 transition-colors shrink-0 shadow-sm"
-                    title="Remove picture"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                )}
-              </div>
+
+              <button
+                type="submit"
+                disabled={saving || (usernameAvailable === false && form.username !== profile?.username)}
+                className="w-32 py-2 rounded-lg text-sm font-semibold bg-amber text-bg disabled:opacity-60 hover:brightness-110 transition-all shadow-sm"
+              >
+                {saving ? 'Saving…' : 'Save Profile'}
+              </button>
             </div>
 
             {/* Right: Username & Display Name stacked vertically */}
@@ -380,30 +391,22 @@ export default function SettingsPage() {
                   className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-amber outline-none focus:border-amber"
                 />
               </div>
-            </div>
-          </div>
 
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-ink">Bio</label>
-            <textarea
-              value={form.bio}
-              onChange={(e) => setForm({ ...form, bio: e.target.value })}
-              rows={3}
-              placeholder="A short bio about your tastes..."
-              className="w-full rounded-lg px-3 py-2 text-sm bg-bg border border-amber outline-none focus:border-amber resize-none"
-            />
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-ink">Bio</label>
+                <textarea
+                  value={form.bio}
+                  onChange={(e) => setForm({ ...form, bio: e.target.value })}
+                  rows={4}
+                  placeholder="A short bio about your tastes..."
+                  className="w-full rounded-lg px-3 py-2.5 text-sm bg-bg border border-amber outline-none focus:border-amber resize-none"
+                />
+              </div>
+            </div>
           </div>
 
           {error && <div className="text-sm text-rec">{error}</div>}
           {success && <div className="text-sm text-green-500">{success}</div>}
-
-          <button
-            type="submit"
-            disabled={saving || (usernameAvailable === false && form.username !== profile?.username)}
-            className="px-4 py-2 rounded-lg text-sm font-semibold bg-amber text-bg disabled:opacity-60"
-          >
-            {saving ? 'Saving…' : 'Save Profile'}
-          </button>
         </form>
       </div>
 
@@ -493,6 +496,8 @@ export default function SettingsPage() {
           )}
         </div>
 
+        <PrivacySettingsSection />
+
         <div className="pt-6 border-t border-amber/30">
           <h2 className="text-lg font-medium mb-1">Data Ownership</h2>
           <p className="text-sm text-muted mb-4">Export a copy of all your ratings, reviews, and watch statuses.</p>
@@ -505,9 +510,11 @@ export default function SettingsPage() {
 
         <div className="pt-6 border-t border-amber/30 space-y-2">
           <h2 className="text-lg font-medium text-ink">Support & Legal</h2>
-          <p className="text-sm text-muted mb-3">Report issues, track bug fixes, or review our Terms of Service and Privacy Policy.</p>
+          <p className="text-sm text-muted mb-3">Report issues, track bug fixes, or review our Community Guidelines, Terms of Service, and Privacy Policy.</p>
           <div className="flex items-center gap-4 text-sm font-semibold flex-wrap">
             <Link href="/bug-report" className="text-amber hover:underline flex items-center gap-1">Report a Bug / Feedback</Link>
+            <span className="text-muted">•</span>
+            <Link href="/guidelines" className="text-amber hover:underline">Community Guidelines</Link>
             <span className="text-muted">•</span>
             <Link href="/terms" className="text-amber hover:underline">Terms of Service</Link>
             <span className="text-muted">•</span>

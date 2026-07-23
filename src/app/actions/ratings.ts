@@ -107,5 +107,6 @@ export async function removeLog(videoUrl: string) {
   }
 
   revalidatePath('/videos/[id]', 'page')
+  revalidatePath('/', 'layout')
   return { ok: true }
 }

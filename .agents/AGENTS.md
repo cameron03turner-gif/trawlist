@@ -1,6 +1,6 @@
 # UI Design Rules
 
-When creating or modifying components, please adhere to the following styling rules to maintain consistency across the Scrubbed web app:
+When creating or modifying components, please adhere to the following styling rules to maintain consistency across the Trawlist web app:
 
 ## Cards and Panels
 1. **Background**: All cards and panels should use `bg-surface` or `bg-surface-alt` (never Tailwind default grays like `bg-neutral-900`).

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { BarChart, Calendar, Trophy, PieChart, Tag, Sparkles } from 'lucide-react'
+import { BarChart, Calendar, Trophy, Sparkles } from 'lucide-react'
 import { ShareButton } from '@/components/ShareButton'
 
 export const dynamic = 'force-dynamic'
@@ -33,14 +33,6 @@ export default async function StatsPage(props: { params: Promise<{ username: str
 
   const ratedItems = ratings || []
 
-  // Fetch tags
-  const { data: tags } = await supabase
-    .from('video_tags')
-    .select('tag')
-    .eq('user_id', profile.id)
-
-  const userTags = tags || []
-
   // 1. Rating Distribution (Half stars)
   const starLevels = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
   const distribution = starLevels.map(star => {
@@ -70,17 +62,7 @@ export default async function StatsPage(props: { params: Promise<{ username: str
   const topChannel = topChannels.length > 0 ? topChannels[0].name : 'None'
   const overallAvgRating = ratedItems.length > 0 ? (totalRatingSum / ratedItems.length).toFixed(2) : '--'
 
-  // 3. Tag Breakdown
-  const tagCounts: Record<string, number> = {}
-  userTags.forEach(t => {
-    tagCounts[t.tag] = (tagCounts[t.tag] || 0) + 1
-  })
-  const sortedTags = Object.entries(tagCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-  const topTag = sortedTags.length > 0 ? sortedTags[0][0] : 'None'
-
-  // 4. Heatmap Activity
+  // 3. Heatmap Activity
   const activityMap: Record<string, number> = {}
   ratedItems.forEach(r => {
     const dateStr = new Date(r.updated_at).toISOString().split('T')[0]
@@ -131,10 +113,6 @@ export default async function StatsPage(props: { params: Promise<{ username: str
                 <p className="text-sm text-muted font-semibold uppercase tracking-wider mb-1">Top Channel</p>
                 <p className="text-3xl font-bold text-ink truncate max-w-[200px]">{topChannel}</p>
               </div>
-              <div>
-                <p className="text-sm text-muted font-semibold uppercase tracking-wider mb-1">Top Tag</p>
-                <p className="text-3xl font-bold text-ink truncate max-w-[150px]">{topTag}</p>
-              </div>
             </div>
           </div>
           <div className="shrink-0 mt-4 md:mt-0">
@@ -155,19 +133,19 @@ export default async function StatsPage(props: { params: Promise<{ username: str
             <h3 className="text-lg font-bold">Rating Distribution</h3>
           </div>
           
-          <div className="flex items-end gap-1 h-48 w-full justify-between">
+          <div className="flex items-end gap-1.5 h-48 w-full justify-between pt-6">
             {distribution.map(d => (
               <div key={d.star} className="flex-1 flex flex-col items-center gap-2 h-full">
-                <div className="w-full relative flex items-end justify-center group h-full">
-                  <div 
-                    className="w-full bg-amber/80 rounded-t-sm transition-all group-hover:bg-amber group-hover:brightness-110"
-                    style={{ height: `${(d.count / maxCount) * 100}%`, minHeight: d.count > 0 ? '4px' : '0' }}
-                  />
+                <div className="w-full bg-surface-alt rounded-sm relative flex items-end justify-center group h-full" title={`${d.count} rating${d.count === 1 ? '' : 's'}`}>
                   {d.count > 0 && (
-                    <div className="absolute -top-6 text-xs font-bold text-muted opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute -top-6 text-xs font-bold text-amber">
                       {d.count}
                     </div>
                   )}
+                  <div 
+                    className="w-full bg-amber rounded-sm transition-all group-hover:brightness-110"
+                    style={{ height: d.count > 0 ? `${(d.count / maxCount) * 100}%` : '0%' }}
+                  />
                 </div>
                 <div className="text-[10px] font-bold text-muted mt-1">{d.star}</div>
               </div>
@@ -194,27 +172,6 @@ export default async function StatsPage(props: { params: Promise<{ username: str
                       <span className="text-sm font-medium text-ink truncate group-hover:text-amber transition-colors">{c.name}</span>
                     </div>
                     <span className="text-sm text-muted font-mono bg-surface-alt px-2 py-0.5 rounded">{c.count}</span>
-                  </div>
-                ))
-              )}
-            </div>
-          </section>
-
-          {/* Top Tags */}
-          <section className="bg-surface rounded-xl p-6 border border-amber shadow-sm hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 transition-all duration-300">
-            <div className="flex items-center gap-2 mb-6 text-ink">
-              <Tag size={20} className="text-amber" />
-              <h3 className="text-lg font-bold">Favourite Tags</h3>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {sortedTags.length === 0 ? (
-                <p className="text-sm text-muted">No tags added yet.</p>
-              ) : (
-                sortedTags.map(([tag, count]) => (
-                  <div key={tag} className="bg-bg border border-amber px-3 py-1.5 rounded-lg flex items-center gap-2">
-                    <span className="text-sm font-medium text-ink">{tag}</span>
-                    <span className="text-xs text-muted font-mono">{count}</span>
                   </div>
                 ))
               )}

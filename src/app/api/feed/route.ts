@@ -80,16 +80,29 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: listsRes.error.message }, { status: 500 })
   }
 
+  // Filter out deleted content, missing videos/users, or empty rating logs
+  const validRatings = (ratingsRes.data || []).filter((r: any) => {
+    if (!r.user || !r.video) return false
+    const hasRating = r.rating !== null && r.rating !== undefined
+    const hasReview = r.review && typeof r.review === 'string' && r.review.trim() !== ''
+    const hasWatchStatus = Boolean(r.watch_status)
+    return hasRating || hasReview || hasWatchStatus
+  })
+
+  const validLists = (listsRes.data || []).filter((l: any) => {
+    return l.owner && l.id && !l.is_private
+  })
+
   // Normalize into a single feed
   const items = [
-    ...(ratingsRes.data || []).map((r) => ({
+    ...validRatings.map((r) => ({
       type: 'rating',
       id: `rating-${r.id}`,
       timestamp: r.updated_at,
       user: r.user,
       data: r,
     })),
-    ...(listsRes.data || []).map((l) => ({
+    ...validLists.map((l) => ({
       type: 'list_created',
       id: `list-${l.id}`,
       timestamp: l.created_at,

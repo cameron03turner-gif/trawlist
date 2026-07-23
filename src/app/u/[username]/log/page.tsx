@@ -61,7 +61,11 @@ export default function LogPage(props: { params: Promise<{ username: string }> }
       .or('watch_status.is.null,watch_status.neq.want_to_watch')
       .order('updated_at', { ascending: false })
 
-    setRows((data || []).map((d: any) => ({ 
+    const loggedRows = (data || []).filter((d: any) => 
+      d.rating != null || (d.review && d.review.trim() !== '') || (d.note && d.note.trim() !== '') || d.watch_status === 'watched'
+    )
+
+    setRows(loggedRows.map((d: any) => ({ 
       rating: d.rating, 
       review: d.review,
       note: session?.user?.id === prof.id ? d.note : null,

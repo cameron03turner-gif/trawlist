@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ChevronDown, ChevronUp, Send, Trash2, Reply as ReplyIcon, Heart } from 'lucide-react'
+import { ChevronDown, ChevronUp, Send, Trash2, Reply as ReplyIcon, Heart, Flag } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Avatar } from './Avatar'
 import { getReviewReplies, addReviewReply, deleteReviewReply, type ReviewReply } from '@/app/actions/review-replies'
 import { toggleReplyLike } from '@/app/actions/review-reply-likes'
+import { ReportModal } from './ReportModal'
 
 type Props = {
   ratingId: string
@@ -38,6 +39,7 @@ export function ReviewRepliesSection({
   const [parentReplyId, setParentReplyId] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [reportingReply, setReportingReply] = useState<{ id: string; username?: string } | null>(null)
 
   // Sync external reply trigger from parent ReviewCard
   useEffect(() => {
@@ -306,7 +308,7 @@ export function ReviewRepliesSection({
                           <ReplyIcon size={14} />
                         </button>
                       )}
-                      {isOwner && (
+                      {isOwner ? (
                         <button
                           onClick={() => handleDeleteReply(r.id)}
                           disabled={deletingId === r.id}
@@ -314,6 +316,14 @@ export function ReviewRepliesSection({
                           title="Delete reply"
                         >
                           <Trash2 size={14} />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setReportingReply({ id: r.id, username: r.profile?.username })}
+                          className="p-1 text-muted hover:text-amber transition opacity-80 sm:opacity-0 group-hover:opacity-100"
+                          title="Report reply"
+                        >
+                          <Flag size={13} />
                         </button>
                       )}
                     </div>
@@ -327,6 +337,17 @@ export function ReviewRepliesSection({
             )
           })}
         </div>
+      )}
+
+      {/* Report Modal */}
+      {reportingReply && (
+        <ReportModal
+          isOpen={!!reportingReply}
+          onClose={() => setReportingReply(null)}
+          targetType="reply"
+          targetId={reportingReply.id}
+          targetTitle={`Reply by @${reportingReply.username || 'user'}`}
+        />
       )}
     </div>
   )

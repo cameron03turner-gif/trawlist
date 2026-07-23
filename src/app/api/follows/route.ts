@@ -26,7 +26,14 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  return NextResponse.json({ isFollowing: !!data })
+  const isPending = data?.status === 'pending'
+  const isFollowing = !!data && (data.status === 'accepted' || !data.status)
+
+  return NextResponse.json({
+    isFollowing,
+    isPending,
+    status: data?.status || (data ? 'accepted' : null),
+  })
 }
 
 export async function POST(req: NextRequest) {
@@ -49,14 +56,35 @@ export async function POST(req: NextRequest) {
   }
 
   if (action === 'follow') {
+    // Check if target profile is private
+    const { data: targetProfile } = await supabase
+      .from('profiles')
+      .select('is_private')
+      .eq('id', targetUserId)
+      .single()
+
+    const isPrivate = Boolean(targetProfile?.is_private)
+    const initialStatus = isPrivate ? 'pending' : 'accepted'
+
     const { error } = await supabase
       .from('follows')
-      .insert({ follower_id: user.id, following_id: targetUserId })
+      .insert({
+        follower_id: user.id,
+        following_id: targetUserId,
+        status: initialStatus,
+      })
     
-    // Ignore conflict errors if already following
+    // Ignore conflict errors if already requested/following
     if (error && error.code !== '23505') { 
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    return NextResponse.json({
+      ok: true,
+      status: initialStatus,
+      isPending: isPrivate,
+      isFollowing: !isPrivate,
+    })
   } else if (action === 'unfollow') {
     const { error } = await supabase
       .from('follows')
@@ -67,9 +95,9 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    return NextResponse.json({ ok: true, status: null, isFollowing: false, isPending: false })
   } else {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
   }
-
-  return NextResponse.json({ ok: true })
 }

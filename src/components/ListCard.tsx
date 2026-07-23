@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { Lock, ListVideo, Heart } from 'lucide-react'
+import { Lock, ListVideo, Heart, Flag } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { toggleListLike } from '@/app/actions/list-likes'
 import { Avatar } from './Avatar'
+import { ReportModal } from './ReportModal'
 
 type List = {
   id: string
@@ -29,6 +30,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLiking, setIsLiking] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const handleLikeToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -196,10 +198,30 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
                 <Heart size={14} className={isLiked ? "fill-current" : ""} />
                 <span className="font-medium">{likesCount} {likesCount === 1 ? 'like' : 'likes'}</span>
               </button>
+
+              <button
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setIsReportOpen(true)
+                }}
+                className="text-muted hover:text-amber transition-colors p-1"
+                title="Report list"
+              >
+                <Flag size={14} />
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <ReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        targetType="list"
+        targetId={list.id}
+        targetTitle={`List: ${list.title}`}
+      />
     </div>
   )
 }
