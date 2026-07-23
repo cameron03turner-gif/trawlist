@@ -53,12 +53,13 @@ export const metadata: Metadata = {
   description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/logo.png', type: 'image/png' },
+      { url: '/icon-48x48.png', sizes: '48x48', type: 'image/png' },
+      { url: '/logo.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
     ],
     shortcut: ['/favicon.ico'],
     apple: [
-      { url: '/logo.png' },
+      { url: '/apple-icon.png', sizes: '512x512', type: 'image/png' },
     ],
   },
   openGraph: {
@@ -109,9 +110,11 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>
       <head>
         <ThemeScript />
-        <link rel="icon" href="/logo.png" type="image/png" sizes="any" />
+        <link rel="icon" href="/icon-48x48.png" sizes="48x48" type="image/png" />
+        <link rel="icon" href="/logo.png" sizes="512x512" type="image/png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/logo.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
       </head>
       <body className="bg-bg text-ink font-body min-h-screen flex flex-col justify-between" suppressHydrationWarning>
         <ThemeProvider>
