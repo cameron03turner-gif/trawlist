@@ -51,6 +51,11 @@ export const metadata: Metadata = {
     template: '%s | Trawlist',
   },
   description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
+  robots: {
+    index: true,
+    follow: true,
+    maxImagePreview: 'none',
+  },
   icons: {
     icon: [
       { url: '/icon-48x48.png', sizes: '48x48', type: 'image/png' },

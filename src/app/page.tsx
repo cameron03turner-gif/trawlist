@@ -43,6 +43,8 @@ export default async function HomePage() {
     const validNetworkVideos = (networkVideos || []).filter((v: any) => v.avg_rating !== null && Number(v.rating_count || 0) > 0)
 
     let userLogged: string[] = []
+    let userReviewed: string[] = []
+    let userLiked: string[] = []
     const videoStats: Record<string, { count: number }> = {}
     const reviewCounts: Record<string, number> = {}
     const likeCounts: Record<string, number> = {}
@@ -57,12 +59,14 @@ export default async function HomePage() {
       
       const { data: userRatings } = await supabase
         .from('ratings')
-        .select('video_id')
+        .select('video_id, review, liked')
         .eq('user_id', session.user.id)
         .in('video_id', vIdsArray)
         
       if (userRatings) {
         userLogged = userRatings.map(r => r.video_id)
+        userReviewed = userRatings.filter(r => r.review && r.review.trim().length > 0).map(r => r.video_id)
+        userLiked = userRatings.filter(r => r.liked).map(r => r.video_id)
       }
 
       const { data: stats } = await supabase
@@ -138,6 +142,8 @@ export default async function HomePage() {
                     detailUrl={`/videos/${v.video_id}`}
                     rating={v.avg_rating ? Number(v.avg_rating) : null}
                     isLogged={userLogged.includes(v.video_id)}
+                    hasUserReviewed={userReviewed.includes(v.video_id)}
+                    liked={userLiked.includes(v.video_id)}
                     count={videoStats[v.video_id]?.count || 0}
                     reviewsCount={reviewCounts[v.video_id] || 0}
                     likesCount={likeCounts[v.video_id] || 0}
@@ -181,6 +187,8 @@ export default async function HomePage() {
                     detailUrl={`/videos/${v.video_id}`}
                     rating={v.avg_rating ? Number(v.avg_rating) : null}
                     isLogged={userLogged.includes(v.video_id)}
+                    hasUserReviewed={userReviewed.includes(v.video_id)}
+                    liked={userLiked.includes(v.video_id)}
                     count={v.rating_count}
                     reviewsCount={reviewCounts[v.video_id] || 0}
                     likesCount={likeCounts[v.video_id] || 0}
@@ -281,6 +289,14 @@ export default async function HomePage() {
               className="w-full sm:w-auto px-7 py-3 bg-surface-alt text-ink font-bold rounded-full border border-amber hover:bg-surface hover:border-amber transition-all text-xs"
             >
               Explore Community Ratings
+            </Link>
+
+            <Link
+              href="/extension"
+              className="w-full sm:w-auto px-7 py-3 bg-surface-alt text-ink font-bold rounded-full border border-amber hover:bg-surface hover:border-amber transition-all text-xs flex items-center justify-center gap-2"
+            >
+              <Download size={14} className="text-amber" />
+              <span>Chrome Extension</span>
             </Link>
           </div>
         </div>

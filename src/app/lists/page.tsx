@@ -117,14 +117,7 @@ export default async function ListsPage(props: { searchParams: Promise<{ [key: s
           <div className="text-center py-16 px-4 bg-surface rounded-xl border border-amber shadow-sm">
             <ListVideo className="mx-auto text-muted mb-3" size={32} />
             <h3 className="text-lg font-bold text-ink mb-1">No lists yet</h3>
-            <p className="text-muted text-sm mb-4">Be the first to create a list!</p>
-            {user ? (
-              <CreateListButton />
-            ) : (
-              <Link href="/login" className="inline-flex items-center gap-2 px-4 py-2 bg-amber text-bg rounded-xl font-bold text-xs uppercase tracking-wider hover:brightness-110 transition shadow-sm">
-                <LogIn size={15} /> Sign in to Create List
-              </Link>
-            )}
+            <p className="text-muted text-sm">Be the first to create a list!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

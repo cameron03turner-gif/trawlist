@@ -134,7 +134,9 @@ export default async function ProfilePage(props: { params: Promise<{ username: s
                     thumbnail={r.videos.thumbnail_url}
                     url={r.videos.url}
                     rating={r.rating}
+                    review={r.review}
                     liked={!!r.liked}
+                    isLogged={r.rating != null}
                     watchStatus={r.watch_status}
                     editUrl={isOwnProfile ? `?logUrl=${encodeURIComponent(r.videos.url)}` : undefined}
                   />

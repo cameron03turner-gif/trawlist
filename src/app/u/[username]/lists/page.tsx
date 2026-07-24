@@ -75,16 +75,11 @@ export default async function UserListsPage(props: { params: Promise<{ username:
         <div className="text-center py-20 bg-surface rounded-xl border border-amber">
           <ListVideo className="mx-auto text-muted mb-4" size={32} />
           <h3 className="text-lg font-medium text-ink mb-2">No lists yet</h3>
-          <p className="text-muted mb-6">
+          <p className="text-muted">
             {isOwnProfile 
               ? "You haven't created any lists yet."
               : "This user hasn't created any public lists."}
           </p>
-          {isOwnProfile && (
-            <div className="flex justify-center">
-              <CreateListButton />
-            </div>
-          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

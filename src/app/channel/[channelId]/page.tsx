@@ -99,19 +99,21 @@ export default async function ChannelPage(props: Props) {
   const { data: { session } } = await supabase.auth.getSession()
   let userLikes = new Set<string>()
   let userLogged = new Set<string>()
+  let userReviewed = new Set<string>()
   
   if (session && videos) {
     const videoIds = videos.map(v => v.id)
     if (videoIds.length > 0) {
       const { data: ratingsData } = await supabase
         .from('ratings')
-        .select('video_id, liked')
+        .select('video_id, liked, review')
         .eq('user_id', session.user.id)
         .in('video_id', videoIds)
         
       if (ratingsData) {
         userLikes = new Set(ratingsData.filter(r => r.liked).map(l => l.video_id))
         userLogged = new Set(ratingsData.map(r => r.video_id))
+        userReviewed = new Set(ratingsData.filter(r => r.review && r.review.trim().length > 0).map(r => r.video_id))
       }
     }
   }
@@ -182,6 +184,7 @@ export default async function ChannelPage(props: Props) {
                 rank={index + 1}
                 liked={userLikes.has(v.id)}
                 isLogged={userLogged.has(v.id)}
+                hasUserReviewed={userReviewed.has(v.id)}
               />
             ))}
           </div>

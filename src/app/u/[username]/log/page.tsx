@@ -200,6 +200,7 @@ export default function LogPage(props: { params: Promise<{ username: string }> }
               note={r.note}
               watchStatus={r.watch_status}
               liked={!!r.liked}
+              isLogged={r.rating != null}
               onLikeToggle={isOwnProfile ? () => handleToggleLike(r.video.id, !!r.liked) : undefined}
               editUrl={isOwnProfile ? `?logUrl=${encodeURIComponent(r.video.url)}` : undefined}
               onDelete={isOwnProfile ? () => handleDelete(r.video.id) : undefined}

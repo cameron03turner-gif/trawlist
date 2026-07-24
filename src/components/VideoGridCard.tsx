@@ -31,6 +31,8 @@ type Props = {
   onLikeToggle?: () => void
   isLogged?: boolean
   isLoggedIn?: boolean
+  hasUserRated?: boolean
+  hasUserReviewed?: boolean
 }
 
 export function VideoGridCard(props: Props) {
@@ -102,19 +104,7 @@ export function VideoGridCard(props: Props) {
           </div>
         </div>
         <div className="flex items-center gap-1.5 shrink-0 relative z-10">
-          {(props.onLikeToggle !== undefined || props.liked) && (
-            <button 
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); props.onLikeToggle?.(); }}
-              className={`transition outline-none ${
-                props.liked 
-                  ? 'text-rec hover:brightness-110' 
-                  : 'text-muted hover:text-rec'
-              } ${!props.onLikeToggle ? 'pointer-events-none cursor-default' : ''}`}
-              title={props.liked ? "Liked" : "Like"}
-            >
-              <Heart size={13} className={props.liked ? "fill-current" : ""} />
-            </button>
-          )}
+
           {props.rating != null && (
             <div className="text-xs font-bold text-amber ml-0.5">{props.rating.toFixed(1)}</div>
           )}
@@ -141,19 +131,19 @@ export function VideoGridCard(props: Props) {
           <div className="flex items-center justify-end gap-2.5 text-[10px] text-muted font-medium">
             {props.likesCount !== undefined && props.likesCount > 0 && (
               <div className="flex items-center gap-1" title={`${props.likesCount} likes`}>
-                <Heart size={10} />
-                <span>{props.likesCount}</span>
+                <Heart size={10} className={props.liked ? "fill-rec text-rec" : ""} />
+                <span className={props.liked ? "text-rec font-bold" : ""}>{props.likesCount}</span>
               </div>
             )}
             {props.reviewsCount !== undefined && props.reviewsCount > 0 && (
               <div className="flex items-center gap-1" title={`${props.reviewsCount} reviews`}>
-                <MessageSquare size={10} />
-                <span>{props.reviewsCount}</span>
+                <MessageSquare size={10} className={(props.hasUserReviewed || !!props.review) ? "fill-amber text-amber" : ""} />
+                <span className={(props.hasUserReviewed || !!props.review) ? "text-amber font-bold" : ""}>{props.reviewsCount}</span>
               </div>
             )}
             <div className="flex items-center gap-1" title={`${props.count} ratings`}>
-              <Star size={10} />
-              <span>{props.count}</span>
+              <Star size={10} className={(props.isLogged || props.hasUserRated) ? "fill-amber text-amber" : ""} />
+              <span className={(props.isLogged || props.hasUserRated) ? "text-amber font-bold" : ""}>{props.count}</span>
             </div>
           </div>
         )}

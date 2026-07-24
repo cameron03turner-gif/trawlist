@@ -7,7 +7,7 @@ export function PasswordInput(props: PasswordInputProps) {
   const [show, setShow] = useState(false)
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center">
       <input
         {...props}
         type={show ? 'text' : 'password'}
@@ -16,7 +16,7 @@ export function PasswordInput(props: PasswordInputProps) {
       <button
         type="button"
         onClick={() => setShow(!show)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink transition-colors"
+        className="absolute right-3 text-muted hover:text-amber transition-colors z-20 p-1 rounded-md hover:bg-amber/10 flex items-center justify-center cursor-pointer"
         tabIndex={-1}
       >
         {show ? <EyeOff size={16} /> : <Eye size={16} />}

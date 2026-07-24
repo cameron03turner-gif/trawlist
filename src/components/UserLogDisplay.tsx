@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Scrubber } from './Scrubber'
 import Link from 'next/link'
-import { Heart, Clock, Edit2, ExternalLink, FileText } from 'lucide-react'
+import { Heart, Clock, Edit2, ExternalLink } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
@@ -59,7 +59,7 @@ function UserLogDisplayContent({ myRatingData, videoUrl, showFullReviewLink = tr
           )}
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1">
           {showFullReviewLink && myRatingData.id && (
             <a
               href={`/reviews/${myRatingData.id}`}
@@ -69,14 +69,11 @@ function UserLogDisplayContent({ myRatingData, videoUrl, showFullReviewLink = tr
                 window.location.href = `${window.location.origin}/reviews/${myRatingData.id}`
               }}
               title="View Full Review Page"
-              className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0"
+              className="p-2 text-muted hover:text-amber hover:bg-amber/10 rounded-lg transition flex items-center justify-center shrink-0 cursor-pointer"
             >
-              <FileText size={14} />
+              <ExternalLink size={16} />
             </a>
           )}
-          <span className="text-xs font-medium text-muted uppercase tracking-wider" suppressHydrationWarning>
-            {isMounted && myRatingData.updated_at ? new Date(myRatingData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
-          </span>
           <button 
             onClick={handleEdit}
             className="p-2 text-muted hover:text-amber hover:bg-amber/10 rounded-lg transition"
@@ -91,7 +88,9 @@ function UserLogDisplayContent({ myRatingData, videoUrl, showFullReviewLink = tr
         {myRatingData.review && (
           <div className="space-y-1">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Review</span>
+              <span className="text-[10px] font-semibold text-muted uppercase tracking-wider" suppressHydrationWarning>
+                Reviewed on {isMounted && myRatingData.updated_at ? new Date(myRatingData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+              </span>
               {myRatingData.like_count !== undefined && (
                 <div 
                   className="flex items-center gap-1.5 text-xs text-rec font-semibold bg-rec/10 px-2 py-0.5 rounded shadow-sm" 

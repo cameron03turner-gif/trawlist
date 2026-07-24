@@ -9,7 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 
 type Preview = { videoId: string; title: string; author: string; thumbnail: string; url: string; channelThumbnail?: string }
 
-export function RateModal() {
+export function RateModal({ onClose }: { onClose?: () => void }) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -23,7 +23,14 @@ export function RateModal() {
     params.delete('action')
     params.delete('onboarded')
     const qs = params.toString()
-    window.history.replaceState(null, '', `${pathname}${qs ? `?${qs}` : ''}`)
+    const targetUrl = `${pathname}${qs ? `?${qs}` : ''}`
+    
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', targetUrl)
+    }
+    if (onClose) {
+      onClose()
+    }
   }
 
   const [urlInput, setUrlInput] = useState('')

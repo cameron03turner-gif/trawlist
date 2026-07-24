@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { VideoGridCard } from './VideoGridCard'
 
-export function LeaderboardList({ data, userLikes = [], userLogged = [], isLoggedIn = false }: { data: any[], userLikes?: string[], userLogged?: string[], isLoggedIn?: boolean }) {
+export function LeaderboardList({ data, userLikes = [], userLogged = [], userReviewed = [], isLoggedIn = false }: { data: any[], userLikes?: string[], userLogged?: string[], userReviewed?: string[], isLoggedIn?: boolean }) {
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -23,6 +23,7 @@ export function LeaderboardList({ data, userLikes = [], userLogged = [], isLogge
             likesCount={v.likes_count}
             liked={userLikes.includes(v.id)}
             isLogged={userLogged.includes(v.id)}
+            hasUserReviewed={userReviewed.includes(v.id)}
             isLoggedIn={isLoggedIn}
             detailUrl={`/videos/${v.id}`}
           />

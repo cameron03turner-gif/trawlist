@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Search, Link as LinkIcon, ListVideo } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -15,7 +16,12 @@ export function AddToListModal({ listId, onClose }: Props) {
   const router = useRouter()
   const supabase = createClient()
   
+  const [mounted, setMounted] = useState(false)
   const [activeTab, setActiveTab] = useState<'log' | 'url'>('log')
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
   
   // Log Picker State
   const [query, setQuery] = useState('')
@@ -109,8 +115,10 @@ export function AddToListModal({ listId, onClose }: Props) {
     }
   }
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-bg/80 backdrop-blur-sm overflow-y-auto">
+  if (!mounted) return null
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
       <div className="relative w-full max-w-3xl bg-surface border border-amber rounded-2xl shadow-xl flex flex-col my-auto h-[80vh]">
         
         {/* Header */}
@@ -203,11 +211,11 @@ export function AddToListModal({ listId, onClose }: Props) {
                 </div>
               ) : (
                 <>
-                  <div className="p-4 flex gap-4 shrink-0">
+                  <div className="p-4 flex flex-col sm:flex-row gap-3 shrink-0">
                     <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-ink z-10" size={16} />
+                      <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted z-10 pointer-events-none" size={16} />
                       <input 
-                        className="w-full bg-bg border border-amber rounded-lg pl-10 pr-4 py-2 text-sm outline-none focus:border-amber"
+                        className="w-full bg-bg border border-amber rounded-xl pl-10 pr-4 py-2.5 text-sm outline-none focus:border-amber focus:ring-1 focus:ring-amber transition-colors"
                         placeholder="Search your logged videos..."
                         value={query}
                         onChange={e => setQuery(e.target.value)}
@@ -216,11 +224,11 @@ export function AddToListModal({ listId, onClose }: Props) {
                     <select
                       value={sort}
                       onChange={(e) => setSort(e.target.value)}
-                      className="w-full bg-surface border border-amber rounded-xl text-sm font-medium text-ink px-4 py-2 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors"
+                      className="w-full sm:w-48 shrink-0 bg-surface border border-amber rounded-xl text-sm font-medium text-ink px-4 py-2.5 outline-none focus:border-amber focus:ring-1 focus:ring-amber cursor-pointer transition-colors"
                     >
                       <option value="recent">Recently Logged</option>
                       <option value="rating">Highest Rated</option>
-                      <option value="liked">Liked</option>
+                      <option value="title">Title (A-Z)</option>
                     </select>
                   </div>
 
@@ -295,6 +303,7 @@ export function AddToListModal({ listId, onClose }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

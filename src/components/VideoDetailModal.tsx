@@ -94,14 +94,14 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
       let allRatings: any[] | null = null
       const { data: primaryRatings, error: ratingsError } = await supabase
         .from('ratings')
-        .select('*, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url)')
+        .select('*, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_replies(count)')
         .eq('video_id', videoId)
         .order('created_at', { ascending: false })
 
       if (ratingsError) {
         const { data: altRatings } = await supabase
           .from('ratings')
-          .select('*, profile:user_id(username, display_name, avatar_url)')
+          .select('*, profile:user_id(username, display_name, avatar_url), review_replies(count)')
           .eq('video_id', videoId)
           .order('created_at', { ascending: false })
         allRatings = altRatings
@@ -275,14 +275,15 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                 <div className="md:col-span-2 space-y-4">
                   <div>
                     <div className="relative mb-2">
-                      <a href={`/videos/${videoId}`} className="block pr-12 group/title">
-                        <h2 className="text-3xl font-extrabold text-ink leading-tight group-hover/title:text-amber transition-colors">{data.video.title}</h2>
+                      <a 
+                        href={`/videos/${videoId}`}
+                        onClick={() => {
+                          window.location.href = `/videos/${videoId}`;
+                        }}
+                        className="font-extrabold text-ink hover:text-amber text-xl sm:text-2xl transition block leading-tight"
+                      >
+                        {data.video.title}
                       </a>
-                      {data.myRatingData?.liked && (
-                        <div title="You liked this video" className="absolute top-0 right-0 mt-1 pointer-events-none">
-                          <Heart size={28} className="fill-rec text-rec" />
-                        </div>
-                      )}
                     </div>
                     <a 
                       href={`/channel/${encodeURIComponent(data.video.channel_id || data.video.channel)}`}

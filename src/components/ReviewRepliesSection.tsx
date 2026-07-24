@@ -31,11 +31,12 @@ export function ReviewRepliesSection({
   const [isMounted, setIsMounted] = useState(false)
   const [replies, setReplies] = useState<ReviewReply[]>([])
   const [loading, setLoading] = useState(false)
-  const [showReplies, setShowReplies] = useState(false)
+  const [showReplies, setShowReplies] = useState(true)
   const [fetched, setFetched] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
+    loadReplies()
   }, [])
 
   // Local reply input state
@@ -180,22 +181,11 @@ export function ReviewRepliesSection({
   const replyCount = replies.length
 
   return (
-    <div className="mt-2.5 pt-2 border-t border-amber/10">
-      <div className="flex items-center justify-between gap-4">
-        {/* Toggle Expand Replies Button */}
-        <button
-          onClick={handleToggleShow}
-          className="flex items-center gap-1.5 text-xs font-semibold text-amber hover:underline transition-all"
-        >
-          {showReplies ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          <span>
-            {showReplies 
-              ? 'Hide replies' 
-              : replyCount > 0 
-                ? `View ${replyCount} ${replyCount === 1 ? 'reply' : 'replies'}` 
-                : 'Replies'}
-          </span>
-        </button>
+    <div className="mt-3">
+      <div className="flex items-center justify-between gap-4 mb-1">
+        <span className="text-xs font-semibold text-muted uppercase tracking-wider">
+          Replies {replyCount > 0 ? `(${replyCount})` : ''}
+        </span>
       </div>
 
       {/* Inline Reply Composer */}

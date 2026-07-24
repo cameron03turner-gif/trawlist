@@ -51,14 +51,14 @@ export default async function VideoPage(props: Props) {
   let allRatings: any[] | null = null
   const { data: primaryRatings, error: ratingsError } = await supabase
     .from('ratings')
-    .select('id, user_id, rating, review, updated_at, liked, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url)')
+    .select('id, user_id, rating, review, updated_at, created_at, liked, profile:profiles!ratings_user_id_fkey(username, display_name, avatar_url), review_replies(count)')
     .eq('video_id', videoId)
     .order('updated_at', { ascending: false })
 
   if (ratingsError) {
     const { data: altRatings } = await supabase
       .from('ratings')
-      .select('id, user_id, rating, review, updated_at, liked, profile:user_id(username, display_name, avatar_url)')
+      .select('id, user_id, rating, review, updated_at, created_at, liked, profile:user_id(username, display_name, avatar_url), review_replies(count)')
       .eq('video_id', videoId)
       .order('updated_at', { ascending: false })
     allRatings = altRatings
@@ -238,12 +238,7 @@ export default async function VideoPage(props: Props) {
               <div className="md:col-span-2 space-y-6">
                 <div>
                 <div className="relative mb-2">
-                  <h1 className="text-3xl font-extrabold text-ink leading-tight pr-12">{videoData.title}</h1>
-                  {isLiked && (
-                    <div title="You liked this video" className="absolute top-0 right-0 mt-1 pointer-events-none">
-                      <Heart size={28} className="fill-rec text-rec" />
-                    </div>
-                  )}
+                  <h1 className="text-3xl font-extrabold text-ink leading-tight">{videoData.title}</h1>
                 </div>
                 <Link href={`/channel/${encodeURIComponent(videoData.channel_id || videoData.channel)}`} className="flex items-center gap-2 group/channel">
                   {videoData.channel_thumbnail_url && (

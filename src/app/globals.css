@@ -248,6 +248,17 @@ select option {
     0 2px 8px rgba(32, 208, 192, 0.1) !important;
 }
 
+.aero-toggle.aero-toggle-sm,
+[data-theme="aero"] .aero-toggle.aero-toggle-sm {
+  padding: 2px !important;
+}
+
+.aero-toggle.aero-toggle-sm button,
+[data-theme="aero"] .aero-toggle.aero-toggle-sm button {
+  padding: 2px 8px !important;
+  font-size: 0.68rem !important;
+}
+
 [data-theme="aero"] header nav a:not(.bg-amber):hover {
   color: var(--color-amber) !important;
   text-shadow: 0 0 12px rgba(32, 208, 192, 0.6) !important;
@@ -484,4 +495,10 @@ select option {
 
 .animate-fade-in-zoom {
   animation: custom-fade-in-zoom 0.2s ease-out forwards;
+}
+
+/* Hide native browser password reveal buttons */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
 }

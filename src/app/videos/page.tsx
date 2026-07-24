@@ -127,6 +127,7 @@ export default async function LeaderboardPage(props: {
   
   let userLikes: string[] = []
   let userLogged: string[] = []
+  let userReviewed: string[] = []
   
   if (data && data.length > 0) {
     const videoIds = data.map((v: any) => v.id)
@@ -166,17 +167,18 @@ export default async function LeaderboardPage(props: {
       likes_count: likesCounts[v.id] || 0
     }))
 
-    // Fetch user likes
+    // Fetch user ratings info (likes, logs, reviews)
     if (session) {
       const { data: userRatings } = await supabase
         .from('ratings')
-        .select('video_id, liked')
+        .select('video_id, liked, review')
         .eq('user_id', session.user.id)
         .in('video_id', videoIds)
         
       if (userRatings) {
         userLikes = userRatings.filter(r => r.liked).map(r => r.video_id)
         userLogged = userRatings.map(r => r.video_id)
+        userReviewed = userRatings.filter(r => r.review && r.review.trim().length > 0).map(r => r.video_id)
       }
     }
   }
@@ -215,7 +217,7 @@ export default async function LeaderboardPage(props: {
           )}
         </div>
       ) : (
-        <LeaderboardList data={data} userLikes={userLikes} userLogged={userLogged} isLoggedIn={!!session} />
+        <LeaderboardList data={data} userLikes={userLikes} userLogged={userLogged} userReviewed={userReviewed} isLoggedIn={!!session} />
       )}
     </div>
   )

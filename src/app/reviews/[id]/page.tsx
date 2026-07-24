@@ -131,10 +131,14 @@ export default async function FullReviewPage(props: Props) {
     isLiked = !!userLike
   }
 
+  const isEdited = ratingData.created_at && ratingData.updated_at && Math.abs(new Date(ratingData.updated_at).getTime() - new Date(ratingData.created_at).getTime()) > 60000
+
   const timeAgo = ratingData.updated_at ? (() => {
     try {
       const d = new Date(ratingData.updated_at)
-      return isNaN(d.getTime()) ? '' : formatDistanceToNow(d, { addSuffix: true })
+      if (isNaN(d.getTime())) return ''
+      const dist = formatDistanceToNow(d, { addSuffix: true })
+      return isEdited ? `edited ${dist}` : dist
     } catch {
       return ''
     }
@@ -195,8 +199,8 @@ export default async function FullReviewPage(props: Props) {
 
       {/* Main Review Card Panel */}
       <div className="bg-surface border border-amber rounded-2xl p-6 sm:p-7 space-y-6 shadow-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 hover:scale-[1.01] relative overflow-hidden transition-all duration-300">
-        {/* Author Header */}
-        <div className="flex items-start justify-between gap-4">
+        {/* Author Header & Top Action Controls */}
+        <div className="flex items-start justify-between gap-4 flex-wrap sm:flex-nowrap">
           <div className="flex items-center gap-3.5">
             <Link href={`/u/${profile?.username || 'user'}`}>
               <Avatar
@@ -220,17 +224,17 @@ export default async function FullReviewPage(props: Props) {
                   </span>
                 )}
               </div>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                 {numRating !== null && (
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-amber font-bold font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-amber font-bold font-mono">
                       {numRating.toFixed(1)} ★
                     </span>
-                    <Scrubber value={numRating} interactive={false} height={12} />
+                    <Scrubber value={numRating} interactive={false} height={16} />
                   </div>
                 )}
                 {timeAgo && (
-                  <span className="text-xs text-muted" suppressHydrationWarning>
+                  <span className="text-sm text-muted" suppressHydrationWarning>
                     {numRating !== null ? '• ' : ''}{timeAgo}
                   </span>
                 )}
@@ -238,19 +242,21 @@ export default async function FullReviewPage(props: Props) {
             </div>
           </div>
 
-          {numRating !== null && (
-            <div className="hidden sm:flex items-center gap-2 bg-amber/10 border border-amber/30 px-3.5 py-1.5 rounded-xl shrink-0">
-              <Star fill="currentColor" className="text-amber" size={18} />
-              <span className="font-mono text-xl font-bold text-amber">
-                {numRating.toFixed(1)}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2.5 shrink-0 flex-wrap justify-end">
+            <ReviewClientActions
+              reviewId={ratingData.id}
+              initialLikeCount={likeCount || 0}
+              initialIsLiked={isLiked}
+              currentUserId={user?.id}
+              isMine={!!(user && ratingData.user_id === user.id)}
+              authorUsername={profile?.username || 'user'}
+            />
+          </div>
         </div>
 
         {/* Review Body Text */}
         {ratingData.review ? (
-          <div className="text-base sm:text-lg text-ink leading-relaxed whitespace-pre-wrap font-sans">
+          <div className="text-base sm:text-lg text-ink leading-relaxed whitespace-pre-wrap font-sans pt-1">
             {ratingData.review}
           </div>
         ) : (
@@ -259,20 +265,8 @@ export default async function FullReviewPage(props: Props) {
           </div>
         )}
 
-        {/* Interactive Action Controls */}
-        <div className="border-t border-amber/20 pt-4">
-          <ReviewClientActions
-            reviewId={ratingData.id}
-            initialLikeCount={likeCount || 0}
-            initialIsLiked={isLiked}
-            currentUserId={user?.id}
-            isMine={!!(user && ratingData.user_id === user.id)}
-            authorUsername={profile?.username || 'user'}
-          />
-        </div>
-
         {/* Embedded Reply Chain */}
-        <div className="border-t border-amber/20 pt-4">
+        <div className="border-t border-amber/20 pt-4 mt-2">
           <ReviewRepliesSection
             ratingId={ratingData.id}
             currentUserId={user?.id}
