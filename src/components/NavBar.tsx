@@ -111,9 +111,9 @@ export function NavBar({ userEmail, profile }: { userEmail: string | null; profi
             </button>
 
             {userEmail ? (
-              <div className="flex items-center gap-3.5">
+              <div className="flex items-center gap-2">
                 {profile?.username ? (
-                  <Link href={`/u/${profile.username}`} className="flex items-center gap-2 text-sm font-medium hover:text-amber transition">
+                  <Link href={`/u/${profile.username}`} className="flex items-center gap-2 text-sm font-medium hover:text-amber transition mr-1">
                     <Avatar 
                       url={profile.avatar_url} 
                       username={profile.username} 
@@ -123,18 +123,18 @@ export function NavBar({ userEmail, profile }: { userEmail: string | null; profi
                     <span className="hidden lg:inline">{profile.display_name || profile.username}</span>
                   </Link>
                 ) : (
-                  <span className="text-xs text-muted hidden lg:inline">{userEmail}</span>
+                  <span className="text-xs text-muted hidden lg:inline mr-1">{userEmail}</span>
                 )}
                 {profile && <NotificationBell userId={profile.id} />}
-                <Link href="/settings" className="text-muted hover:text-ink transition" title="Settings">
-                  <Settings size={15} />
+                <Link href="/settings" className="text-muted hover:text-ink hover:bg-surface-alt p-1.5 rounded-lg transition-colors flex items-center justify-center" title="Settings">
+                  <Settings size={16} />
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-muted hover:text-rec transition"
+                  className="text-muted hover:text-rec hover:bg-surface-alt p-1.5 rounded-lg transition-colors flex items-center justify-center"
                   title="Sign out"
                 >
-                  <LogOut size={15} />
+                  <LogOut size={16} />
                 </button>
               </div>
             ) : null}

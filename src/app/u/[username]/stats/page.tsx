@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import { BarChart, Calendar, Trophy, Sparkles } from 'lucide-react'
-import { ShareButton } from '@/components/ShareButton'
+import { BarChart, Calendar, Trophy } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -89,41 +88,6 @@ export default async function StatsPage(props: { params: Promise<{ username: str
         <h2 className="text-2xl font-bold text-ink mb-2">{name}&apos;s Stats</h2>
         <p className="text-muted">A breakdown of your viewing habits and ratings.</p>
       </div>
-
-      {/* Year in Review Card */}
-      <section className="bg-gradient-to-br from-amber/20 to-surface-alt border border-amber/30 rounded-2xl p-8 relative overflow-hidden shadow-lg group">
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-          <Sparkles size={120} />
-        </div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
-            <h3 className="text-sm font-bold text-amber tracking-widest uppercase mb-1">Trawlist Wrapped</h3>
-            <h2 className="text-4xl font-extrabold text-ink mb-6">Year in Review</h2>
-            
-            <div className="flex flex-wrap gap-8">
-              <div>
-                <p className="text-sm text-muted font-semibold uppercase tracking-wider mb-1">Videos</p>
-                <p className="text-3xl font-bold text-ink">{ratedItems.length}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted font-semibold uppercase tracking-wider mb-1">Avg Rating</p>
-                <p className="text-3xl font-bold text-amber">{overallAvgRating}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted font-semibold uppercase tracking-wider mb-1">Top Channel</p>
-                <p className="text-3xl font-bold text-ink truncate max-w-[200px]">{topChannel}</p>
-              </div>
-            </div>
-          </div>
-          <div className="shrink-0 mt-4 md:mt-0">
-            <ShareButton 
-              title={`${name}'s Trawlist Stats`} 
-              text={`I rated ${ratedItems.length} videos with an average of ${overallAvgRating}. My top channel was ${topChannel}!`}
-              url={`https://trawlist.com/u/${profile.username}`}
-            />
-          </div>
-        </div>
-      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Rating Distribution */}

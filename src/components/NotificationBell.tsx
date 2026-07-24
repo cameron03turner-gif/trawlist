@@ -49,10 +49,10 @@ export function NotificationBell({ userId }: { userId: string }) {
   }, [userId])
 
   return (
-    <Link href="/notifications" className="relative text-muted hover:text-ink transition flex items-center justify-center p-1" title="Notifications">
-      <Bell size={18} />
+    <Link href="/notifications" className="relative text-muted hover:text-ink hover:bg-surface-alt p-1.5 rounded-lg transition-colors flex items-center justify-center" title="Notifications">
+      <Bell size={16} />
       {unreadCount > 0 && (
-        <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full border border-bg"></span>
+        <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-bg"></span>
       )}
     </Link>
   )

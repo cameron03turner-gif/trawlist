@@ -46,6 +46,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.trawlist.com'),
+  applicationName: 'Trawlist',
   title: {
     default: 'Trawlist — Log, rate, and discover YouTube videos',
     template: '%s | Trawlist',
@@ -115,10 +116,25 @@ export default async function RootLayout({
     profile = data
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Trawlist',
+    url: 'https://www.trawlist.com',
+    applicationCategory: 'EntertainmentApplication',
+    operatingSystem: 'All',
+    logo: 'https://www.trawlist.com/logo.png',
+    description: 'Trawlist is a social network for video enthusiasts. Track what you watch, write reviews, curate custom playlists, and discover great content.',
+  }
+
   return (
     <html lang="en" suppressHydrationWarning className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${nunito.variable} ${plusJakartaSans.variable}`}>
       <head>
         <ThemeScript />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <link rel="icon" href="/icon-48x48.png" sizes="48x48" type="image/png" />
         <link rel="icon" href="/logo.png" sizes="512x512" type="image/png" />
         <link rel="icon" href="/favicon.ico" sizes="any" />

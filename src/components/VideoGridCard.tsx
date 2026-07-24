@@ -91,13 +91,18 @@ export function VideoGridCard(props: Props) {
             ) : null}
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            {props.liked && props.count === undefined && (
+              <div className="text-rec flex items-center" title="Liked">
+                <Heart size={12} className="fill-rec text-rec" />
+              </div>
+            )}
             {props.review && (
-              <div className="text-ink" title="Has public review">
+              <div className="text-ink flex items-center" title="Has public review">
                 <MessageSquare size={12} />
               </div>
             )}
             {props.note && (
-              <div className="text-muted" title="Has private note">
+              <div className="text-muted flex items-center" title="Has private note">
                 <Lock size={12} />
               </div>
             )}
