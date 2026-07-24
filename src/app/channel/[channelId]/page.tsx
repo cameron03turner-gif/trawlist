@@ -11,7 +11,7 @@ type Props = {
 }
 
 async function resolveChannel(supabase: any, decodedId: string) {
-  // 1. Try exact match on `channels` table
+  // 1. Try exact match on `channels` table by ID
   let { data: channel } = await supabase
     .from('channels')
     .select('*')
@@ -28,14 +28,44 @@ async function resolveChannel(supabase: any, decodedId: string) {
     if (channelWithAt) channel = channelWithAt
   }
 
-  // 3. Fallback: Check if videos exist for this channel_id or channel name
+  // 3. Try match by channel name in `channels` table
   if (!channel) {
-    const { data: sampleVideo } = await supabase
+    const { data: channelByName } = await supabase
+      .from('channels')
+      .select('*')
+      .ilike('name', decodedId)
+      .maybeSingle()
+    if (channelByName) channel = channelByName
+  }
+
+  // 4. Fallback: Check if sample video exists in `videos` table
+  if (!channel) {
+    let { data: sampleVideo } = await supabase
       .from('videos')
       .select('channel, channel_id, channel_thumbnail_url')
-      .or(`channel_id.eq.${decodedId},channel_id.eq.@${decodedId},channel.ilike.${decodedId}`)
+      .eq('channel_id', decodedId)
       .limit(1)
       .maybeSingle()
+
+    if (!sampleVideo && !decodedId.startsWith('@')) {
+      const { data: sampleWithAt } = await supabase
+        .from('videos')
+        .select('channel, channel_id, channel_thumbnail_url')
+        .eq('channel_id', '@' + decodedId)
+        .limit(1)
+        .maybeSingle()
+      if (sampleWithAt) sampleVideo = sampleWithAt
+    }
+
+    if (!sampleVideo) {
+      const { data: sampleByName } = await supabase
+        .from('videos')
+        .select('channel, channel_id, channel_thumbnail_url')
+        .ilike('channel', decodedId)
+        .limit(1)
+        .maybeSingle()
+      if (sampleByName) sampleVideo = sampleByName
+    }
 
     if (sampleVideo) {
       const resolvedChannelId = sampleVideo.channel_id || decodedId
@@ -49,19 +79,46 @@ async function resolveChannel(supabase: any, decodedId: string) {
       }
 
       // Auto-upsert into `channels` table
-      await supabase.from('channels').upsert(
-        {
-          id: resolvedChannelId,
-          name: channelName,
-          ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
-        },
-        { onConflict: 'id' }
-      ).catch(() => null)
+      try {
+        await supabase.from('channels').upsert(
+          {
+            id: resolvedChannelId,
+            name: channelName,
+            ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
+          },
+          { onConflict: 'id' }
+        )
+      } catch {
+        // Ignore upsert errors
+      }
     }
   }
 
-  // 4. If thumbnail is missing, attempt to fetch from YouTube
-  if (channel && !channel.thumbnail_url) {
+  // 5. Universal Fallback: Guarantee channel object exists (never 404!)
+  if (!channel) {
+    const fallbackName = decodedId.startsWith('@') ? decodedId.slice(1) : decodedId
+    channel = {
+      id: decodedId,
+      name: fallbackName,
+      thumbnail_url: null,
+    }
+
+    // Auto-upsert into `channels` table
+    try {
+      await supabase.from('channels').upsert(
+        {
+          id: decodedId,
+          name: fallbackName,
+        },
+        { onConflict: 'id' }
+      )
+    } catch {
+      // Ignore upsert errors
+    }
+  }
+
+  // 6. If thumbnail is missing, attempt to fetch from YouTube
+  if (!channel.thumbnail_url) {
     let authorUrl = null
     if (channel.id.startsWith('@')) {
       authorUrl = `https://www.youtube.com/${channel.id}`
@@ -74,7 +131,7 @@ async function resolveChannel(supabase: any, decodedId: string) {
         const fetchedThumb = await fetchChannelThumbnail(authorUrl)
         if (fetchedThumb) {
           channel.thumbnail_url = fetchedThumb
-          await supabase.from('channels').update({ thumbnail_url: fetchedThumb }).eq('id', channel.id).catch(() => null)
+          await supabase.from('channels').update({ thumbnail_url: fetchedThumb }).eq('id', channel.id)
         }
       } catch {
         // Ignore fetch errors
@@ -91,14 +148,12 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const supabase = await createClient()
 
   const channel = await resolveChannel(supabase, decodedId)
-  if (!channel) return { title: 'Channel Not Found | Trawlist' }
-
-  const channelName = channel.name || channel.title || decodedId
+  const channelName = channel?.name || channel?.title || decodedId
 
   const { data: stats } = await supabase
     .from('channel_leaderboard')
     .select('video_count, total_ratings, avg_rating')
-    .or(`id.eq.${decodedId},id.eq.@${decodedId},id.eq.${channel.id}`)
+    .eq('id', channel.id)
     .maybeSingle()
 
   const title = `${channelName} | Trawlist`
@@ -140,26 +195,39 @@ export default async function ChannelPage(props: Props) {
   const supabase = await createClient()
 
   const channel = await resolveChannel(supabase, decodedId)
-
-  if (!channel) {
-    notFound()
-  }
-
   const channelName = channel.name || channel.title || decodedId
 
-  // Fetch channel aggregated stats
+  // Fetch channel aggregated stats safely
   const { data: stats } = await supabase
     .from('channel_leaderboard')
     .select('video_count, total_ratings, avg_rating')
-    .or(`id.eq.${decodedId},id.eq.@${decodedId},id.eq.${channel.id}`)
+    .eq('id', channel.id)
     .maybeSingle()
 
-  // Fetch videos for this channel, ordered by average rating
-  const { data: videos } = await supabase
+  // Fetch videos for this channel safely
+  let { data: videos } = await supabase
     .from('video_leaderboard')
     .select('*')
-    .or(`channel_id.eq.${decodedId},channel_id.eq.@${decodedId},channel_id.eq.${channel.id},channel.ilike.${decodedId},channel.ilike.${channelName}`)
+    .eq('channel_id', channel.id)
     .order('avg_rating', { ascending: false })
+
+  if ((!videos || videos.length === 0) && channel.id !== decodedId) {
+    const { data: videosByDecoded } = await supabase
+      .from('video_leaderboard')
+      .select('*')
+      .eq('channel_id', decodedId)
+      .order('avg_rating', { ascending: false })
+    if (videosByDecoded && videosByDecoded.length > 0) videos = videosByDecoded
+  }
+
+  if (!videos || videos.length === 0) {
+    const { data: videosByName } = await supabase
+      .from('video_leaderboard')
+      .select('*')
+      .ilike('channel', channelName)
+      .order('avg_rating', { ascending: false })
+    if (videosByName) videos = videosByName
+  }
 
   // Fetch current user likes and logs if logged in
   const { data: { session } } = await supabase.auth.getSession()
@@ -196,7 +264,7 @@ export default async function ChannelPage(props: Props) {
             referrerPolicy="no-referrer"
           />
         ) : (
-          <div className="w-32 h-32 rounded-full bg-surface-alt flex items-center justify-center text-4xl font-bold border-4 border-surface shadow-xl shrink-0 text-amber">
+          <div className="w-32 h-32 rounded-full bg-surface-alt flex items-center justify-center text-4xl font-bold border-4 border-amber/40 shadow-xl shrink-0 text-amber">
             {channelName.charAt(0).toUpperCase()}
           </div>
         )}
