@@ -1,11 +1,12 @@
 'use client'
 
-import { Youtube, Clock, Plus, Share, ListPlus, X, LogIn, Check } from 'lucide-react'
+import { Youtube, Clock, Plus, Share, ListPlus, X, LogIn, Check, Flag } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { ShareButton } from './ShareButton'
 import { SaveToListModal } from './SaveToListModal'
+import { ReportModal } from './ReportModal'
 import { toggleWatchlist, removeLog } from '@/app/actions/ratings'
 
 type Props = {
@@ -22,6 +23,8 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
   const [isLogged, setIsLogged] = useState(initialIsLogged)
   const [isPending, setIsPending] = useState(false)
   const [isRemovingLog, setIsRemovingLog] = useState(false)
+  const [showSaveModal, setShowSaveModal] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -67,8 +70,6 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
     }
     setIsRemovingLog(false)
   }
-
-  const [showSaveModal, setShowSaveModal] = useState(false)
 
   return (
     <>
@@ -159,6 +160,13 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
         >
           <Share size={16} /> Share Video
         </ShareButton>
+
+        <button 
+          onClick={() => setShowReportModal(true)}
+          className="flex items-center justify-center gap-2 w-full py-2.5 text-sm font-semibold text-muted hover:text-amber hover:bg-amber/10 rounded-xl transition cursor-pointer"
+        >
+          <Flag size={16} /> Report Video
+        </button>
       </div>
     </div>
     
@@ -168,6 +176,14 @@ export function VideoActionPanel({ videoId, videoUrl, title, initialIsOnWatchlis
         onClose={() => setShowSaveModal(false)}
       />
     )}
+
+    <ReportModal
+      isOpen={showReportModal}
+      onClose={() => setShowReportModal(false)}
+      targetType="video"
+      targetId={videoId}
+      targetTitle={title}
+    />
     </>
   )
 }

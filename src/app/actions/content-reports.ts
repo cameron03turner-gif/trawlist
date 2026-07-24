@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export interface ContentReportInput {
-  target_type: 'review' | 'reply' | 'list' | 'profile' | 'other'
+  target_type: 'video' | 'review' | 'reply' | 'list' | 'profile' | 'other'
   target_id: string
   target_url?: string
   reason: 'harassment' | 'hate_speech' | 'spam' | 'piracy_copyright' | 'inappropriate' | 'impersonation' | 'other'
@@ -19,7 +19,7 @@ export async function submitContentReport(input: ContentReportInput) {
     return { error: 'Invalid content target specified.' }
   }
 
-  const validTypes = ['review', 'reply', 'list', 'profile', 'other']
+  const validTypes = ['video', 'review', 'reply', 'list', 'profile', 'other']
   if (!validTypes.includes(input.target_type)) {
     return { error: 'Invalid target type.' }
   }

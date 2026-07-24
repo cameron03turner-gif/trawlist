@@ -86,16 +86,22 @@ export function ReviewClientActions({
         </div>
 
         {/* Flag / Report Button */}
-        {!isMine && (
-          <button
-            onClick={() => setIsReportOpen(true)}
-            title="Report review"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-surface-alt/40 border border-amber/20 text-muted hover:text-amber transition-all cursor-pointer"
-          >
-            <Flag size={14} />
-            <span>Report</span>
-          </button>
-        )}
+        <button
+          onClick={() => {
+            if (isMine) return
+            setIsReportOpen(true)
+          }}
+          disabled={isMine}
+          title={isMine ? "You cannot report your own review" : "Report review"}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+            isMine
+              ? 'opacity-30 cursor-not-allowed text-muted bg-surface-alt/20 border border-amber/10'
+              : 'bg-surface-alt/40 border border-amber/20 text-muted hover:text-amber cursor-pointer'
+          }`}
+        >
+          <Flag size={14} />
+          <span>Report</span>
+        </button>
       </div>
 
       <ReportModal

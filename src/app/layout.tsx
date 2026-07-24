@@ -116,7 +116,7 @@ export default async function RootLayout({
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-icon.png" />
       </head>
-      <body className="bg-bg text-ink font-body min-h-screen flex flex-col justify-between" suppressHydrationWarning>
+      <body className="bg-bg text-ink font-body min-h-screen flex flex-col justify-between" style={{}} suppressHydrationWarning>
         <ThemeProvider>
           <ThemeDecorations />
           <NavBar userEmail={user?.email ?? null} profile={profile} />

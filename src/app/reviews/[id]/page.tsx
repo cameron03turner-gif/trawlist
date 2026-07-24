@@ -143,60 +143,95 @@ export default async function FullReviewPage(props: Props) {
   const numRating = ratingData.rating != null && !isNaN(Number(ratingData.rating)) ? Number(ratingData.rating) : null
 
   return (
-    <div className="max-w-3xl mx-auto pb-16 space-y-6">
+    <div className="w-full pb-16 space-y-6">
       {/* Navigation Header */}
       <div className="flex items-center justify-between">
-        {video ? (
-          <Link
-            href={`/videos/${video.id}`}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-muted hover:text-amber transition-colors"
-          >
-            <ArrowLeft size={16} />
-            <span>Back to Video</span>
-          </Link>
-        ) : profile ? (
-          <Link
-            href={`/u/${profile.username}`}
-            className="inline-flex items-center gap-2 text-xs font-semibold text-muted hover:text-amber transition-colors"
-          >
-            <ArrowLeft size={16} />
-            <span>Back to @{profile.username}&apos;s Profile</span>
-          </Link>
-        ) : (
-          <Link
-            href="/videos"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-muted hover:text-amber transition-colors"
-          >
-            <ArrowLeft size={16} />
-            <span>Back to Videos</span>
-          </Link>
-        )}
+        <a
+          href={`/videos/${video?.id || ratingData.video_id}`}
+          className="inline-flex items-center gap-2 text-xs font-semibold text-muted hover:text-amber transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to Video Page</span>
+        </a>
       </div>
 
+      {/* Target Video Context Card (Above Review) */}
+      {video && (
+        <div className="space-y-3">
+          <h3 className="text-xs uppercase tracking-widest text-muted font-bold">Reviewed Video</h3>
+          <div className="bg-surface border border-amber rounded-xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
+            <a href={`/videos/${video.id}`} className="shrink-0 relative group">
+              <img
+                src={video.thumbnail_url}
+                alt={video.title}
+                className="w-48 sm:w-56 aspect-video object-cover rounded-lg border border-amber/30 group-hover:border-amber transition shadow-md"
+              />
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg">
+                <Play size={28} className="text-amber fill-amber" />
+              </div>
+            </a>
+            <div className="flex-1 min-w-0 space-y-1.5 text-center sm:text-left">
+              <a href={`/videos/${video.id}`} className="font-bold text-ink hover:text-amber text-lg sm:text-xl line-clamp-2 transition leading-snug">
+                {video.title}
+              </a>
+              {video.channel && (
+                <p className="text-sm text-muted font-medium">
+                  {video.channel}
+                </p>
+              )}
+              <div className="pt-2">
+                <a
+                  href={`/videos/${video.id}`}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber hover:underline"
+                >
+                  <span>View Video Page & All Reviews</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Review Card Panel */}
-      <div className="bg-surface border border-amber rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl relative overflow-hidden">
+      <div className="bg-surface border border-amber rounded-2xl p-6 sm:p-7 space-y-6 shadow-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 hover:scale-[1.01] relative overflow-hidden transition-all duration-300">
         {/* Author Header */}
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3.5">
             <Link href={`/u/${profile?.username || 'user'}`}>
               <Avatar
                 url={profile?.avatar_url}
                 username={profile?.username || 'user'}
                 displayName={profile?.display_name}
-                className="w-14 h-14 hover:ring-2 hover:ring-amber transition-all text-xl shrink-0"
+                className="w-12 h-12 text-ink hover:ring-2 hover:ring-amber transition-all shrink-0"
               />
             </Link>
             <div>
-              <Link href={`/u/${profile?.username || 'user'}`} className="text-xl font-bold text-ink hover:text-amber transition-colors">
-                {profile?.display_name || profile?.username || 'User'}
-              </Link>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Link href={`/u/${profile?.username || 'user'}`} className="text-lg font-bold text-ink hover:text-amber transition-colors">
+                  {profile?.display_name || profile?.username || 'User'}
+                </Link>
                 <Link href={`/u/${profile?.username || 'user'}`} className="text-xs text-muted hover:underline">
                   @{profile?.username || 'user'}
                 </Link>
+                {user && ratingData.user_id === user.id && (
+                  <span className="text-[10px] font-bold text-amber uppercase tracking-wider bg-amber/10 border border-amber/30 px-2 py-0.5 rounded">
+                    Your Review
+                  </span>
+                )}
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                {numRating !== null && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-amber font-bold font-mono">
+                      {numRating.toFixed(1)} ★
+                    </span>
+                    <Scrubber value={numRating} interactive={false} height={12} />
+                  </div>
+                )}
                 {timeAgo && (
                   <span className="text-xs text-muted" suppressHydrationWarning>
-                    • {timeAgo}
+                    {numRating !== null ? '• ' : ''}{timeAgo}
                   </span>
                 )}
               </div>
@@ -204,9 +239,9 @@ export default async function FullReviewPage(props: Props) {
           </div>
 
           {numRating !== null && (
-            <div className="flex items-center gap-2 bg-amber/10 border border-amber/30 px-4 py-2 rounded-xl shrink-0">
-              <Star fill="currentColor" className="text-amber" size={20} />
-              <span className="font-mono text-2xl font-bold text-amber">
+            <div className="hidden sm:flex items-center gap-2 bg-amber/10 border border-amber/30 px-3.5 py-1.5 rounded-xl shrink-0">
+              <Star fill="currentColor" className="text-amber" size={18} />
+              <span className="font-mono text-xl font-bold text-amber">
                 {numRating.toFixed(1)}
               </span>
             </div>
@@ -215,7 +250,7 @@ export default async function FullReviewPage(props: Props) {
 
         {/* Review Body Text */}
         {ratingData.review ? (
-          <div className="text-lg text-ink leading-relaxed whitespace-pre-wrap font-sans border-l-2 border-amber/40 pl-4 py-1">
+          <div className="text-base sm:text-lg text-ink leading-relaxed whitespace-pre-wrap font-sans">
             {ratingData.review}
           </div>
         ) : (
@@ -244,44 +279,6 @@ export default async function FullReviewPage(props: Props) {
           />
         </div>
       </div>
-
-      {/* Target Video Context Card */}
-      {video && (
-        <div className="space-y-3">
-          <h3 className="text-xs uppercase tracking-widest text-muted font-bold">Reviewed Video</h3>
-          <div className="bg-surface border border-amber rounded-xl p-4 flex flex-col sm:flex-row gap-4 items-center">
-            <Link href={`/videos/${video.id}`} className="shrink-0 relative group">
-              <img
-                src={video.thumbnail_url}
-                alt={video.title}
-                className="w-40 h-24 object-cover rounded-lg border border-amber/30 group-hover:border-amber transition"
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition rounded-lg">
-                <Play size={24} className="text-amber fill-amber" />
-              </div>
-            </Link>
-            <div className="flex-1 min-w-0 space-y-1">
-              <Link href={`/videos/${video.id}`} className="font-bold text-ink hover:text-amber text-base line-clamp-2 transition">
-                {video.title}
-              </Link>
-              {video.channel && (
-                <p className="text-xs text-muted font-medium">
-                  {video.channel}
-                </p>
-              )}
-              <div className="pt-2">
-                <Link
-                  href={`/videos/${video.id}`}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-amber hover:underline"
-                >
-                  <span>View Video Page & All Reviews</span>
-                  <ExternalLink size={12} />
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

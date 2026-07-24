@@ -104,10 +104,10 @@ export default async function NotificationsPage() {
                 <div className="flex gap-4">
                   <div className="pt-1">{icon}</div>
                   <div className="flex-1">
-                    <p className="text-sm text-muted">
+                    <div className="text-sm text-muted">
                       {content}
-                    </p>
-                    <p className="text-xs text-muted/70 mt-1 uppercase tracking-wider font-semibold">
+                    </div>
+                    <p className="text-xs text-muted/70 mt-1 uppercase tracking-wider font-semibold" suppressHydrationWarning>
                       {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
                     </p>
                   </div>

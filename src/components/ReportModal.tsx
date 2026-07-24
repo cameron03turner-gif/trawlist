@@ -25,7 +25,7 @@ const REPORT_REASONS = [
 type Props = {
   isOpen: boolean
   onClose: () => void
-  targetType: 'review' | 'reply' | 'list' | 'profile' | 'other'
+  targetType: 'video' | 'review' | 'reply' | 'list' | 'profile' | 'other'
   targetId: string
   targetTitle?: string
   targetUrl?: string

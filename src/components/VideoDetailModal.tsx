@@ -314,7 +314,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                   </div>
 
                   {data.myRatingData && (
-                    <UserLogDisplay myRatingData={data.myRatingData} videoUrl={data.video.url} />
+                    <UserLogDisplay myRatingData={data.myRatingData} videoUrl={data.video.url} showFullReviewLink={true} />
                   )}
 
                   <VideoReviewsList 
@@ -322,6 +322,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                     videoUrl={data.video.url} 
                     currentUserId={currentUser?.id} 
                     followingIds={data.followingIds}
+                    showFullReviewLink={true}
                   />
                 </div>
 

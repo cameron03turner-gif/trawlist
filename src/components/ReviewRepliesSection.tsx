@@ -280,7 +280,7 @@ export function ReviewRepliesSection({
                         {r.profile?.display_name || r.profile?.username || 'User'}
                       </Link>
                       {formattedTime && (
-                        <span className="text-xs text-muted">
+                        <span className="text-xs text-muted" suppressHydrationWarning>
                           • {formattedTime}
                         </span>
                       )}

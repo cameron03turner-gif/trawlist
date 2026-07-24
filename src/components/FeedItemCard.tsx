@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Star, MessageSquare, Plus, ListVideo, Eye, Flag, ExternalLink, Circle } from 'lucide-react'
+import { Star, MessageSquare, Plus, ListVideo, Eye, Flag, ExternalLink, FileText } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { BaseVideoCardWrapper } from './BaseVideoCard'
 import { ListCard } from './ListCard'
@@ -99,13 +99,18 @@ export function FeedItemCard({ item }: Props) {
               ) : <div />}
               
               {data?.id && (
-                <Link
+                <a
                   href={`/reviews/${data.id}`}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    window.location.href = `${window.location.origin}/reviews/${data.id}`
+                  }}
                   title="View Full Review Page"
                   className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0"
                 >
-                  <Circle size={14} />
-                </Link>
+                  <FileText size={14} />
+                </a>
               )}
             </div>
             

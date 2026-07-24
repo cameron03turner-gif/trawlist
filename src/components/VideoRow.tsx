@@ -77,13 +77,18 @@ export function VideoRow(props: Props) {
               {props.review}
             </div>
             {props.reviewId && (
-              <Link
+              <a
                 href={`/reviews/${props.reviewId}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.location.href = `${window.location.origin}/reviews/${props.reviewId}`
+                }}
                 title="View Full Review Page"
                 className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0 ml-2 relative z-10 pointer-events-auto"
               >
                 <Circle size={14} />
-              </Link>
+              </a>
             )}
           </div>
         </div>

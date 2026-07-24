@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Star } from 'lucide-react'
 
 export function Scrubber({
@@ -14,8 +14,17 @@ export function Scrubber({
   interactive?: boolean
   height?: number
 }) {
+  const [isMounted, setIsMounted] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const [hoverValue, setHoverValue] = useState<number | null>(null)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null
+  }
 
   function computeFromEvent(e: React.MouseEvent, rect: DOMRect) {
     const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width)
@@ -51,7 +60,8 @@ export function Scrubber({
     }
   }
 
-  const displayValue = hoverValue !== null ? hoverValue : (value !== null ? Math.max(0, Math.min(5, value)) : 0)
+  const numVal = value != null && !isNaN(Number(value)) ? Number(value) : null
+  const displayValue = hoverValue !== null ? hoverValue : (numVal !== null ? Math.max(0, Math.min(5, numVal)) : 0)
 
   return (
     <div
@@ -64,7 +74,7 @@ export function Scrubber({
       role={interactive ? 'slider' : undefined}
       aria-valuemin={0}
       aria-valuemax={5}
-      aria-valuenow={value ?? undefined}
+      aria-valuenow={numVal ?? 0}
       aria-label="Rating out of 5"
       className={`relative inline-flex items-center gap-1 outline-none focus-visible:ring-2 focus-visible:ring-amber rounded ${interactive ? 'cursor-pointer' : ''}`}
     >

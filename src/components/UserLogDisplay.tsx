@@ -3,16 +3,17 @@
 import { useState, useEffect } from 'react'
 import { Scrubber } from './Scrubber'
 import Link from 'next/link'
-import { Heart, Clock, Edit2, ExternalLink, Circle } from 'lucide-react'
+import { Heart, Clock, Edit2, ExternalLink, FileText } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
 type Props = {
   myRatingData: any
   videoUrl: string
+  showFullReviewLink?: boolean
 }
 
-function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
+function UserLogDisplayContent({ myRatingData, videoUrl, showFullReviewLink = true }: Props) {
   const [isMounted, setIsMounted] = useState(false)
   const [showNotes, setShowNotes] = useState(false)
   const [expanded, setExpanded] = useState(false)
@@ -35,18 +36,20 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
   }
 
   return (
-    <div className="bg-surface rounded-xl p-4 shadow-lg relative !overflow-visible">
+    <div className="bg-surface rounded-xl border border-amber p-4 shadow-lg relative !overflow-visible hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300">
       <div className="absolute top-0 right-4 -translate-y-1/2">
         <span className="inline-block text-[10px] font-black text-amber uppercase tracking-widest bg-[#091D24] px-3 py-1 rounded-full shadow-sm">
-          Your Log
+          YOUR LOG
         </span>
       </div>
       
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between flex-wrap gap-4 mb-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-bg/50 px-4 py-2 rounded-lg">
-            <span className="font-mono font-bold text-amber text-xl leading-none">{myRatingData.rating ? Number(myRatingData.rating).toFixed(1) : '-.-'}</span>
-            <Scrubber value={myRatingData.rating ? Number(myRatingData.rating) : 0} interactive={false} height={14} />
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xl font-bold text-amber">
+              {myRatingData.rating != null ? Number(myRatingData.rating).toFixed(1) : '—'}
+            </span>
+            <Scrubber value={myRatingData.rating != null ? Number(myRatingData.rating) : 0} interactive={false} height={16} />
           </div>
           {myRatingData.liked && (
             <div title="Liked"><Heart size={20} className="fill-rec text-rec" /></div>
@@ -57,14 +60,19 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
         </div>
         
         <div className="flex items-center gap-4">
-          {myRatingData.id && (
-            <Link
+          {showFullReviewLink && myRatingData.id && (
+            <a
               href={`/reviews/${myRatingData.id}`}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                window.location.href = `${window.location.origin}/reviews/${myRatingData.id}`
+              }}
               title="View Full Review Page"
               className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0"
             >
-              <Circle size={14} />
-            </Link>
+              <FileText size={14} />
+            </a>
           )}
           <span className="text-xs font-medium text-muted uppercase tracking-wider" suppressHydrationWarning>
             {isMounted && myRatingData.updated_at ? new Date(myRatingData.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
@@ -135,10 +143,10 @@ function UserLogDisplayContent({ myRatingData, videoUrl }: Props) {
   )
 }
 
-export function UserLogDisplay({ myRatingData, videoUrl }: Props) {
+export function UserLogDisplay({ myRatingData, videoUrl, showFullReviewLink = true }: Props) {
   return (
     <Suspense fallback={null}>
-      <UserLogDisplayContent myRatingData={myRatingData} videoUrl={videoUrl} />
+      <UserLogDisplayContent myRatingData={myRatingData} videoUrl={videoUrl} showFullReviewLink={showFullReviewLink} />
     </Suspense>
   )
 }

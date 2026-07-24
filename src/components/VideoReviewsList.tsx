@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { MessageSquare, Heart, Reply, LogIn, Flag, Circle } from 'lucide-react'
+import { MessageSquare, Heart, Reply, LogIn, Flag, FileText } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Scrubber } from './Scrubber'
 import { Avatar } from './Avatar'
@@ -15,6 +15,7 @@ type VideoReviewsListProps = {
   videoUrl: string
   currentUserId?: string
   followingIds?: string[]
+  showFullReviewLink?: boolean
 }
 
 /**
@@ -45,7 +46,7 @@ function MountedTimeAgo({ dateStr, prefix = '' }: { dateStr?: string | null; pre
   }
 }
 
-function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: string }) {
+function ReviewCard({ review, currentUserId, showFullReviewLink = true }: { review: any; currentUserId?: string; showFullReviewLink?: boolean }) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -81,12 +82,10 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
 
   return (
     <>
-      <div className={`p-4 sm:p-5 rounded-xl border transition-all ${
-        isMine ? 'bg-amber/5 border-amber shadow-sm' : 'bg-surface border-amber'
-      } relative hover:scale-[1.01] hover:shadow-xl hover:shadow-amber/10 duration-300`}>
+      <div className="p-4 sm:p-5 rounded-xl border border-amber bg-surface relative hover:scale-[1.02] hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300">
         
         {/* Review Header */}
-        <div className="flex items-start justify-between mb-3">
+        <div className="flex items-start justify-between gap-3 mb-3">
           <div className="flex items-center gap-3">
             <Link href={`/u/${review.profile?.username || 'user'}`}>
               <Avatar
@@ -109,9 +108,10 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 {numRating !== null && (
-                  <div className="flex items-center gap-1.5">
-                    <Scrubber value={numRating} interactive={false} height={12} />
-                    <span className="text-xs text-muted font-mono">{numRating.toFixed(1)}</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-amber font-bold font-mono">
+                      {numRating.toFixed(1)} ★
+                    </span>
                   </div>
                 )}
                 <MountedTimeAgo dateStr={review.updated_at} prefix={numRating !== null ? '• ' : ''} />
@@ -121,14 +121,19 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
 
           {/* Action Buttons: Full Review Link (Circle), Reply, Like, Flag */}
           <div className="flex items-center gap-1.5">
-            {review.id && (
-              <Link
+            {showFullReviewLink && review.id && (
+              <a
                 href={`/reviews/${review.id}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  window.location.href = `${window.location.origin}/reviews/${review.id}`
+                }}
                 title="View Full Review Page"
                 className="w-7 h-7 rounded-full bg-amber/15 text-amber border border-amber/40 hover:bg-amber hover:text-bg transition-all flex items-center justify-center shadow-sm shrink-0 cursor-pointer"
               >
-                <Circle size={14} />
-              </Link>
+                <FileText size={14} />
+              </a>
             )}
 
             <button
@@ -160,15 +165,21 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
               <span>{likeCount}</span>
             </button>
 
-            {!isMine && (
-              <button
-                onClick={() => setIsReportOpen(true)}
-                title="Report review"
-                className="p-2 rounded-lg text-xs font-semibold bg-surface-alt/50 text-muted hover:text-amber transition-all cursor-pointer"
-              >
-                <Flag size={14} />
-              </button>
-            )}
+            <button
+              onClick={() => {
+                if (isMine) return
+                setIsReportOpen(true)
+              }}
+              disabled={isMine}
+              title={isMine ? "You cannot report your own review" : "Report review"}
+              className={`p-2 rounded-lg text-xs font-semibold transition-all ${
+                isMine
+                  ? 'opacity-30 cursor-not-allowed text-muted bg-surface-alt/20'
+                  : 'bg-surface-alt/50 text-muted hover:text-amber cursor-pointer'
+              }`}
+            >
+              <Flag size={14} />
+            </button>
           </div>
         </div>
 
@@ -199,7 +210,7 @@ function ReviewCard({ review, currentUserId }: { review: any; currentUserId?: st
   )
 }
 
-export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingIds = [] }: VideoReviewsListProps) {
+export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingIds = [], showFullReviewLink = true }: VideoReviewsListProps) {
   const [sortOrder, setSortOrder] = useState<'recent' | 'popular'>('popular')
   const [network, setNetwork] = useState<'community' | 'following'>('community')
   const [currentPage, setCurrentPage] = useState(1)
@@ -230,16 +241,8 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
       })
     }
 
-    if (currentUserId) {
-      const myIndex = items.findIndex(r => r.user_id === currentUserId)
-      if (myIndex > -1) {
-        const [myReview] = items.splice(myIndex, 1)
-        items.unshift(myReview)
-      }
-    }
-
     return items
-  }, [reviews, network, sortOrder, followingIds, currentUserId])
+  }, [reviews, network, sortOrder, followingIds])
 
   const totalPages = Math.ceil(filteredReviews.length / pageSize) || 1
   const startIndex = (currentPage - 1) * pageSize
@@ -267,7 +270,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
         </div>
 
         {reviews.length > 0 && (
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 shrink-0">
             {followingIds.length > 0 && (
               <div className="aero-toggle">
                 <button
@@ -336,7 +339,7 @@ export function VideoReviewsList({ reviews, videoUrl, currentUserId, followingId
       ) : (
         <div className="space-y-4">
           {displayedReviews.map((r: any) => (
-            <ReviewCard key={r.id || r.user_id} review={r} currentUserId={currentUserId} />
+            <ReviewCard key={r.id || r.user_id} review={r} currentUserId={currentUserId} showFullReviewLink={showFullReviewLink} />
           ))}
 
           {/* Pagination Controls */}

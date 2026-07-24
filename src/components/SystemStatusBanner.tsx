@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckCircle2, AlertTriangle, Activity, RefreshCw } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface SystemService {
   name: string
@@ -10,7 +10,11 @@ interface SystemService {
 }
 
 export function SystemStatusBanner() {
-  const [lastChecked] = useState<string>(() => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+  const [lastChecked, setLastChecked] = useState<string>('')
+
+  useEffect(() => {
+    setLastChecked(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+  }, [])
 
   const services: SystemService[] = [
     { name: 'Web Application', status: 'operational', message: 'All systems normal' },
@@ -26,7 +30,7 @@ export function SystemStatusBanner() {
           <Activity className="w-5 h-5 text-amber animate-pulse" />
           <h2 className="font-display font-bold text-base text-ink tracking-tight">System Operational Status</h2>
         </div>
-        <div className="flex items-center gap-2 text-xs text-muted">
+        <div className="flex items-center gap-2 text-xs text-muted" suppressHydrationWarning>
           <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
           <span>All Core Services Operational</span>
           <span>•</span>

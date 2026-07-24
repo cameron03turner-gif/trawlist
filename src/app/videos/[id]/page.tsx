@@ -120,7 +120,7 @@ export default async function VideoPage(props: Props) {
   if (user) {
     const { data: userRating } = await supabase
       .from('ratings')
-      .select('watch_status, liked, rating, review, note, updated_at, review_likes(user_id)')
+      .select('id, watch_status, liked, rating, review, note, updated_at, review_likes(user_id)')
       .eq('video_id', videoId)
       .eq('user_id', user.id)
       .maybeSingle()
@@ -207,7 +207,7 @@ export default async function VideoPage(props: Props) {
   }
 
   return (
-    <div className="pt-4 px-4 pb-16 max-w-4xl mx-auto">
+    <div className="pt-4 px-4 pb-16 max-w-4xl mx-auto" suppressHydrationWarning>
       {/* YouTube Player */}
       <div className="mb-4 rounded-2xl overflow-hidden shadow-2xl border border-amber bg-black aspect-video relative z-0" style={{ transform: 'translateZ(0)' }}>
         <iframe 
@@ -300,7 +300,7 @@ export default async function VideoPage(props: Props) {
                   {['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0'].map(bucket => {
                     const count = distribution[bucket] || 0
                     const maxDist = Math.max(...Object.values(distribution), 1)
-                    const heightPct = (count / maxDist) * 100
+                    const heightPct = Math.round((count / maxDist) * 100)
                     return (
                       <div key={bucket} className="flex flex-col items-center flex-1 gap-1 group h-full">
                         <div className="w-full bg-surface-alt rounded-sm relative flex items-end justify-center flex-1 overflow-hidden" title={`${count} ratings`}>

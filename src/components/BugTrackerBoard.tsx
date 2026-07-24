@@ -303,7 +303,7 @@ export function BugTrackerBoard({ isLoggedIn }: { isLoggedIn: boolean }) {
                         )}
                       </div>
 
-                      <span>Reported {new Date(report.created_at).toLocaleDateString()}</span>
+                      <span suppressHydrationWarning>Reported {new Date(report.created_at).toLocaleDateString()}</span>
                     </div>
                   </div>
                 )}

@@ -88,7 +88,7 @@ export function ListCard({ list, initialIsLiked = false }: { list: List, initial
           animation: shuffle-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
       `}</style>
-      <div className="bg-surface rounded-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col relative">
+      <div className="bg-surface border border-amber rounded-xl hover:shadow-xl hover:shadow-amber/10 hover:brightness-110 transition-all duration-300 hover:scale-[1.02] h-full flex flex-col relative">
         
         {/* Top Thumbnail Stack - Clickable */}
         <Link href={`/lists/${list.id}`} className="relative w-full pt-[84px] shrink-0 flex items-end justify-center block">
