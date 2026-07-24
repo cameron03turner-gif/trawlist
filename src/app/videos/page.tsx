@@ -107,8 +107,6 @@ export default async function LeaderboardPage(props: {
       .gte('rating_count', minCount)
       .limit(50)
 
-
-
     if (sort === 'count') {
       query = query.order('rating_count', { ascending: false }).order('avg_rating', { ascending: false })
     } else if (sort === 'recent') {
@@ -132,13 +130,31 @@ export default async function LeaderboardPage(props: {
   if (data && data.length > 0) {
     const videoIds = data.map((v: any) => v.id)
     
-    // Fetch review counts
-    const { data: reviewsCountData } = await supabase
-      .from('ratings')
-      .select('video_id')
-      .in('video_id', videoIds)
-      .not('review', 'is', null)
-      .neq('review', '')
+    // Fetch review counts, likes counts, and user ratings info concurrently
+    const [
+      { data: reviewsCountData },
+      { data: likesCountData },
+      userRatingsRes
+    ] = await Promise.all([
+      supabase
+        .from('ratings')
+        .select('video_id')
+        .in('video_id', videoIds)
+        .not('review', 'is', null)
+        .neq('review', ''),
+      supabase
+        .from('ratings')
+        .select('video_id')
+        .in('video_id', videoIds)
+        .eq('liked', true),
+      session
+        ? supabase
+            .from('ratings')
+            .select('video_id, liked, review')
+            .eq('user_id', session.user.id)
+            .in('video_id', videoIds)
+        : Promise.resolve({ data: null })
+    ])
       
     const reviewCounts: Record<string, number> = {}
     if (reviewsCountData) {
@@ -147,13 +163,6 @@ export default async function LeaderboardPage(props: {
       })
     }
 
-    // Fetch likes counts
-    const { data: likesCountData } = await supabase
-      .from('ratings')
-      .select('video_id')
-      .in('video_id', videoIds)
-      .eq('liked', true)
-      
     const likesCounts: Record<string, number> = {}
     if (likesCountData) {
       likesCountData.forEach(r => {
@@ -167,19 +176,11 @@ export default async function LeaderboardPage(props: {
       likes_count: likesCounts[v.id] || 0
     }))
 
-    // Fetch user ratings info (likes, logs, reviews)
-    if (session) {
-      const { data: userRatings } = await supabase
-        .from('ratings')
-        .select('video_id, liked, review')
-        .eq('user_id', session.user.id)
-        .in('video_id', videoIds)
-        
-      if (userRatings) {
-        userLikes = userRatings.filter(r => r.liked).map(r => r.video_id)
-        userLogged = userRatings.map(r => r.video_id)
-        userReviewed = userRatings.filter(r => r.review && r.review.trim().length > 0).map(r => r.video_id)
-      }
+    const userRatings = userRatingsRes.data
+    if (userRatings) {
+      userLikes = userRatings.filter((r: any) => r.liked).map((r: any) => r.video_id)
+      userLogged = userRatings.map((r: any) => r.video_id)
+      userReviewed = userRatings.filter((r: any) => r.review && r.review.trim().length > 0).map((r: any) => r.video_id)
     }
   }
 

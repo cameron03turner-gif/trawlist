@@ -30,13 +30,11 @@ export default async function HomePage() {
       )
     }
 
-    // Fetch Network Popular
-    const { data: networkVideos } = await supabase
-      .rpc('get_network_popular_videos', { p_user_id: session.user.id, p_limit: 4 })
-
-    // Fetch Taste Based
-    const { data: tasteVideos } = await supabase
-      .rpc('get_taste_based_recommendations', { p_user_id: session.user.id, p_limit: 4 })
+    // Fetch Network Popular and Taste Based concurrently
+    const [{ data: networkVideos }, { data: tasteVideos }] = await Promise.all([
+      supabase.rpc('get_network_popular_videos', { p_user_id: session.user.id, p_limit: 4 }),
+      supabase.rpc('get_taste_based_recommendations', { p_user_id: session.user.id, p_limit: 4 }),
+    ])
 
     // Filter out watchlist-only videos (0 ratings / null average)
     const validTasteVideos = (tasteVideos || []).filter((v: any) => v.avg_rating !== null && Number(v.rating_count || v.rec_score || 1) > 0)
@@ -57,47 +55,35 @@ export default async function HomePage() {
     if (videoIds.size > 0) {
       const vIdsArray = Array.from(videoIds)
       
-      const { data: userRatings } = await supabase
-        .from('ratings')
-        .select('video_id, review, liked')
-        .eq('user_id', session.user.id)
-        .in('video_id', vIdsArray)
+      const [
+        { data: userRatings },
+        { data: stats },
+        { data: reviewsCountData },
+        { data: likesCountData }
+      ] = await Promise.all([
+        supabase.from('ratings').select('video_id, review, liked').eq('user_id', session.user.id).in('video_id', vIdsArray),
+        supabase.from('video_leaderboard').select('id, rating_count').in('id', vIdsArray),
+        supabase.from('ratings').select('video_id').in('video_id', vIdsArray).not('review', 'is', null).neq('review', ''),
+        supabase.from('ratings').select('video_id').in('video_id', vIdsArray).eq('liked', true),
+      ])
         
       if (userRatings) {
         userLogged = userRatings.map(r => r.video_id)
         userReviewed = userRatings.filter(r => r.review && r.review.trim().length > 0).map(r => r.video_id)
         userLiked = userRatings.filter(r => r.liked).map(r => r.video_id)
       }
-
-      const { data: stats } = await supabase
-        .from('video_leaderboard')
-        .select('id, rating_count')
-        .in('id', vIdsArray)
         
       if (stats) {
         stats.forEach(s => {
           videoStats[s.id] = { count: s.rating_count }
         })
       }
-
-      const { data: reviewsCountData } = await supabase
-        .from('ratings')
-        .select('video_id')
-        .in('video_id', vIdsArray)
-        .not('review', 'is', null)
-        .neq('review', '')
         
       if (reviewsCountData) {
         reviewsCountData.forEach(r => {
           reviewCounts[r.video_id] = (reviewCounts[r.video_id] || 0) + 1
         })
       }
-
-      const { data: likesCountData } = await supabase
-        .from('ratings')
-        .select('video_id')
-        .in('video_id', vIdsArray)
-        .eq('liked', true)
         
       if (likesCountData) {
         likesCountData.forEach(r => {
@@ -208,48 +194,48 @@ export default async function HomePage() {
   }
 
   // For Signed-Out Users (Interactive High-Polish Landing Page)
-  const { data: topVideos } = await supabase
-    .from('video_leaderboard')
-    .select('*')
-    .gt('rating_count', 0)
-    .not('avg_rating', 'is', null)
-    .order('avg_rating', { ascending: false })
-    .order('rating_count', { ascending: false })
-    .limit(4)
-
-  const { data: popularLists } = await supabase
-    .from('custom_lists')
-    .select(`
-      id,
-      title,
-      description,
-      is_private,
-      is_ranked,
-      created_at,
-      owner:profiles!custom_lists_owner_id_fkey(username, display_name, avatar_url),
-      items:list_items(
-        position,
-        video:videos(thumbnail_url)
-      ),
-      items_count:list_items(count)
-    `)
-    .eq('is_private', false)
-    .limit(3)
-
-  const { data: recentReviews } = await supabase
-    .from('ratings')
-    .select(`
-      id,
-      video_id,
-      rating,
-      review,
-      created_at,
-      profiles:user_id(username, display_name, avatar_url)
-    `)
-    .not('review', 'is', null)
-    .neq('review', '')
-    .order('created_at', { ascending: false })
-    .limit(4)
+  const [{ data: topVideos }, { data: popularLists }, { data: recentReviews }] = await Promise.all([
+    supabase
+      .from('video_leaderboard')
+      .select('*')
+      .gt('rating_count', 0)
+      .not('avg_rating', 'is', null)
+      .order('avg_rating', { ascending: false })
+      .order('rating_count', { ascending: false })
+      .limit(4),
+    supabase
+      .from('custom_lists')
+      .select(`
+        id,
+        title,
+        description,
+        is_private,
+        is_ranked,
+        created_at,
+        owner:profiles!custom_lists_owner_id_fkey(username, display_name, avatar_url),
+        items:list_items(
+          position,
+          video:videos(thumbnail_url)
+        ),
+        items_count:list_items(count)
+      `)
+      .eq('is_private', false)
+      .limit(3),
+    supabase
+      .from('ratings')
+      .select(`
+        id,
+        video_id,
+        rating,
+        review,
+        created_at,
+        profiles:user_id(username, display_name, avatar_url)
+      `)
+      .not('review', 'is', null)
+      .neq('review', '')
+      .order('created_at', { ascending: false })
+      .limit(4),
+  ])
 
   return (
     <div className="overflow-hidden bg-transparent">

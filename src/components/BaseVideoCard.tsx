@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { extractVideoId } from '@/lib/youtube'
 
 export type BaseVideoCardProps = {
@@ -46,6 +47,17 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
   const extractedId = extractVideoId(props.url)
   const effectiveDetailUrl = props.detailUrl || (extractedId ? `/videos/${extractedId}` : undefined)
   
+  const renderThumbnail = () => (
+    <Image 
+      src={props.thumbnail} 
+      alt={props.title} 
+      fill 
+      sizes={isGrid ? "(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 300px" : "250px"}
+      className="object-cover transition duration-300 group-hover/thumb:scale-105"
+      unoptimized={props.thumbnail?.startsWith('data:')}
+    />
+  )
+
   const thumbnailNode = (
     <div className={`relative bg-surface group/thumb shrink-0 overflow-hidden ${
       isGrid ? 'aspect-video w-full border-b border-amber/30' : 
@@ -54,15 +66,15 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
     }`}>
       {props.onClick ? (
         <button onClick={props.onClick} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden cursor-pointer outline-none text-left">
-          <img src={props.thumbnail} alt="" className="w-full h-full object-cover transition duration-300 group-hover/thumb:scale-105" />
+          {renderThumbnail()}
         </button>
       ) : effectiveDetailUrl ? (
         <Link href={effectiveDetailUrl} className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden">
-          <img src={props.thumbnail} alt="" className="w-full h-full object-cover transition duration-300 group-hover/thumb:scale-105" />
+          {renderThumbnail()}
         </Link>
       ) : (
         <a href={props.url} target="_blank" rel="noreferrer" className="absolute inset-0 w-full h-full rounded-inherit overflow-hidden">
-          <img src={props.thumbnail} alt="" className="w-full h-full object-cover transition duration-300 group-hover/thumb:scale-105" />
+          {renderThumbnail()}
         </a>
       )}
       

@@ -103,11 +103,21 @@ export default async function ProfileLayout(props: {
   let reviewsCount = 0
   let listsCount = 0
 
+  let followersCount = 0
+  let followingCount = 0
+
   if (canViewContent) {
-    const { data: allRatings } = await supabase
-      .from('ratings')
-      .select('rating, review, liked, watch_status')
-      .eq('user_id', profile.id)
+    const [
+      { data: allRatings },
+      { count: lCount },
+      { count: fCount },
+      { count: fgCount }
+    ] = await Promise.all([
+      supabase.from('ratings').select('rating, review, liked, watch_status').eq('user_id', profile.id),
+      supabase.from('custom_lists').select('*', { count: 'exact', head: true }).eq('owner_id', profile.id),
+      supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', profile.id),
+      supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', profile.id),
+    ])
 
     if (allRatings && allRatings.length > 0) {
       const ratedItems = allRatings.filter(r => r.rating !== null && r.rating !== undefined)
@@ -119,19 +129,17 @@ export default async function ProfileLayout(props: {
       reviewsCount = allRatings.filter(r => r.review && r.review.trim().length > 0).length
     }
 
-    const { count: lCount } = await supabase
-      .from('custom_lists')
-      .select('*', { count: 'exact', head: true })
-      .eq('owner_id', profile.id)
-
     listsCount = lCount || 0
+    followersCount = fCount || 0
+    followingCount = fgCount || 0
+  } else {
+    const [{ count: fCount }, { count: fgCount }] = await Promise.all([
+      supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', profile.id),
+      supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', profile.id),
+    ])
+    followersCount = fCount || 0
+    followingCount = fgCount || 0
   }
-
-  // Fetch followers/following counts
-  const [{ count: followersCount }, { count: followingCount }] = await Promise.all([
-    supabase.from('follows').select('*', { count: 'exact', head: true }).eq('following_id', profile.id),
-    supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', profile.id),
-  ])
 
   return (
     <div className="space-y-8">

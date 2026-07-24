@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 type AvatarProps = {
   url?: string | null
@@ -14,12 +15,17 @@ export function Avatar({ url, username, displayName, className = "w-6 h-6" }: Av
   
   if (url && !error) {
     return (
-      <img 
-        src={url} 
-        alt={displayName || username} 
-        className={`rounded-full object-cover ${className}`}
-        onError={() => setError(true)}
-      />
+      <div className={`relative rounded-full overflow-hidden shrink-0 ${className}`}>
+        <Image 
+          src={url} 
+          alt={displayName || username} 
+          fill
+          sizes="96px"
+          className="object-cover rounded-full"
+          onError={() => setError(true)}
+          unoptimized={url.startsWith('data:')}
+        />
+      </div>
     )
   }
   
