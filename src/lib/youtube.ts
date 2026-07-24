@@ -29,6 +29,11 @@ export function extractVideoId(raw: string): string | null {
   return null
 }
 
+export function cleanVideoTitle(title: string | null | undefined): string {
+  if (!title) return ''
+  return title.replace(/^\(\d+\+?\)\s*/, '').trim()
+}
+
 export type OEmbedResult = { title: string; author_name: string; author_url: string }
 
 export async function fetchOEmbed(videoId: string): Promise<OEmbedResult | null> {

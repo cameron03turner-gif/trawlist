@@ -7,6 +7,24 @@ const signInBtn = document.getElementById('sign-in-btn')
 const statusEl = document.getElementById('status')
 const userEmailEl = document.getElementById('user-email')
 
+const togglePasswordBtn = document.getElementById('toggle-password-btn')
+const eyeIconOpen = document.getElementById('eye-icon-open')
+const eyeIconClosed = document.getElementById('eye-icon-closed')
+
+if (togglePasswordBtn) {
+  togglePasswordBtn.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password'
+    passwordInput.type = isPassword ? 'text' : 'password'
+    if (isPassword) {
+      eyeIconOpen.classList.add('hidden')
+      eyeIconClosed.classList.remove('hidden')
+    } else {
+      eyeIconClosed.classList.add('hidden')
+      eyeIconOpen.classList.remove('hidden')
+    }
+  })
+}
+
 async function render() {
   const session = await getValidSession()
   if (session) {

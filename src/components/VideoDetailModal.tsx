@@ -5,6 +5,7 @@ import { X, Heart, Star, ListPlus } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { cleanVideoTitle } from '@/lib/youtube'
 import { Scrubber } from './Scrubber'
 import { VideoActionPanel } from './VideoActionPanel'
 import { UserLogDisplay } from './UserLogDisplay'
@@ -50,6 +51,10 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
           setLoading(false)
         }
         return
+      }
+
+      if (videoData.title) {
+        videoData.title = cleanVideoTitle(videoData.title)
       }
 
       if (videoData.channels) {
@@ -282,7 +287,7 @@ export function VideoDetailModal({ videoId, onClose }: VideoDetailModalProps) {
                         }}
                         className="font-extrabold text-ink hover:text-amber text-xl sm:text-2xl transition block leading-tight"
                       >
-                        {data.video.title}
+                        {cleanVideoTitle(data.video.title)}
                       </a>
                     </div>
                     <a 

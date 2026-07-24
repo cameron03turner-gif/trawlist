@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { Youtube, Share, Star, ListVideo, Heart } from 'lucide-react'
 import Link from 'next/link'
+import { cleanVideoTitle } from '@/lib/youtube'
 import { Scrubber } from '@/components/Scrubber'
 import { VideoReviewsList } from '@/components/VideoReviewsList'
 import { VideoGridCard } from '@/components/VideoGridCard'
@@ -26,7 +27,7 @@ export async function generateMetadata(props: Props) {
     .single()
 
   if (!video) return { title: 'Video Not Found | Trawlist' }
-  return { title: `${video.title} | Trawlist` }
+  return { title: `${cleanVideoTitle(video.title)} | Trawlist` }
 }
 
 export default async function VideoPage(props: Props) {
@@ -45,6 +46,10 @@ export default async function VideoPage(props: Props) {
 
   if (!videoData) {
     notFound()
+  }
+
+  if (videoData.title) {
+    videoData.title = cleanVideoTitle(videoData.title)
   }
 
   // Fetch all ratings for distribution & reviews
@@ -238,7 +243,7 @@ export default async function VideoPage(props: Props) {
               <div className="md:col-span-2 space-y-6">
                 <div>
                 <div className="relative mb-2">
-                  <h1 className="text-3xl font-extrabold text-ink leading-tight">{videoData.title}</h1>
+                  <h1 className="text-3xl font-extrabold text-ink leading-tight">{cleanVideoTitle(videoData.title)}</h1>
                 </div>
                 <Link href={`/channel/${encodeURIComponent(videoData.channel_id || videoData.channel)}`} className="flex items-center gap-2 group/channel">
                   {videoData.channel_thumbnail_url && (

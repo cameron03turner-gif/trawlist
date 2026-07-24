@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { extractVideoId } from '@/lib/youtube'
+import { extractVideoId, cleanVideoTitle } from '@/lib/youtube'
 
 export type BaseVideoCardProps = {
   layout?: 'grid' | 'row' | 'large-row'
@@ -85,25 +85,27 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
     </div>
   )
 
+  const displayTitle = cleanVideoTitle(props.title)
+
   const textNode = (
     <div className={`flex flex-col flex-1 min-w-0 ${isGrid ? 'p-3 pt-2' : ''}`}>
       {/* Title */}
       {props.onClick ? (
         <button onClick={props.onClick} className="block text-left w-full outline-none group/title relative z-10">
-          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={props.title}>
-            {props.title}
+          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={displayTitle}>
+            {displayTitle}
           </div>
         </button>
       ) : effectiveDetailUrl ? (
         <Link href={effectiveDetailUrl} className="block group/title relative z-10">
-          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={props.title}>
-            {props.title}
+          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={displayTitle}>
+            {displayTitle}
           </div>
         </Link>
       ) : (
         <a href={props.url} target="_blank" rel="noreferrer" className="block group/title relative z-10">
-          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={props.title}>
-            {props.title}
+          <div className={`font-medium leading-snug line-clamp-2 group-hover/title:text-amber transition ${isGrid ? 'text-sm min-h-[40px]' : layout === 'large-row' ? 'text-lg' : 'text-sm'}`} title={displayTitle}>
+            {displayTitle}
           </div>
         </a>
       )}
