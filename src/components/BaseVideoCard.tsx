@@ -98,8 +98,8 @@ export function BaseVideoCard(props: BaseVideoCardProps) {
       
       {/* Channel */}
       <div className={`flex items-center gap-2 mt-2 relative z-10`}>
-        {props.channelId ? (
-          <Link href={`/channel/${encodeURIComponent(props.channelId)}`} className="flex items-center gap-2 group/channel min-w-0">
+        {props.channelId || props.channel ? (
+          <Link href={`/channel/${encodeURIComponent(props.channelId || props.channel!)}`} className="flex items-center gap-2 group/channel min-w-0">
             {props.channelThumbnail ? (
               <img src={props.channelThumbnail} alt="" className="w-6 h-6 rounded-full object-cover border border-amber/50 shrink-0 group-hover/channel:border-amber transition-colors" referrerPolicy="no-referrer" />
             ) : (

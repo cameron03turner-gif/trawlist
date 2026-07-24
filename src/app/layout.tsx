@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    maxImagePreview: 'none',
+    'max-image-preview': 'none',
   },
   icons: {
     icon: [
